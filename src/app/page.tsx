@@ -1,65 +1,84 @@
-import Image from "next/image";
+import Link from "next/link";
+import Header from "@/components/Header";
+import BreakingTicker from "@/components/BreakingTicker";
+import NumberedList from "@/components/NumberedList";
+import HeroCard from "@/components/HeroCard";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen pb-20 bg-background text-foreground font-serif">
+      <Header />
+      <BreakingTicker />
+
+      {/* Main Grid: The heart of the layout */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 divide-x-0 lg:divide-x divide-gray-100">
+          
+          {/* Column 1: Latest News (Width 3) - Order 2 on Mobile, Order 1 on Desktop */}
+          <div className="lg:col-span-3 lg:pr-6 order-2 lg:order-1">
+            <NumberedList />
+          </div>
+
+          {/* Column 2: Hero & Feature Stories (Width 6) - Order 1 on Mobile, Order 2 on Desktop */}
+          <div className="lg:col-span-6 lg:px-6 order-1 lg:order-2">
+            <HeroCard />
+            
+            {/* Sub-grid of smaller standard cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12 pt-8 border-t border-gray-100">
+               {[1, 2].map((i) => (
+                 <div key={i} className="group">
+                    <div className="aspect-video bg-gray-100 rounded-lg mb-3 relative overflow-hidden">
+                       {/* Placeholder for standard card image */}
+                       <div className="absolute inset-0 bg-gray-200 animate-pulse group-hover:bg-gray-300 transition-colors"></div>
+                    </div>
+                    <h3 className="text-xl font-bold leading-snug group-hover:text-brand-red transition-colors">
+                      বিশ্ববাজারে তেলের দাম কমলেও দেশে প্রভাব নেই কেন?
+                    </h3>
+                    <span className="text-sm text-gray-500 mt-2 block">বাণিজ্য • ৩০ মিনিট আগে</span>
+                 </div>
+               ))}
+            </div>
+          </div>
+
+          {/* Column 3: Sidebar / Opinions (Width 3) - Order 3 on Mobile & Desktop */}
+          <div className="lg:col-span-3 lg:pl-6 bg-gray-50/50 p-4 rounded-xl h-fit order-3">
+            <div className="flex items-center gap-2 mb-4">
+               <span className="w-1 h-6 bg-brand-orange rounded-full"></span>
+               <h2 className="text-xl font-bold text-gray-800">মতামত</h2>
+            </div>
+            
+            <div className="space-y-6">
+               {[1, 2, 3].map((i) => (
+                 <div key={i} className="flex gap-4 items-center group cursor-pointer">
+                    <div className="w-12 h-12 rounded-full bg-gray-300 flex-shrink-0 border-2 border-white shadow-sm overflow-hidden">
+                       {/* Avatar Placeholder */}
+                    </div>
+                    <div>
+                       <h4 className="font-bold text-gray-900 leading-tight group-hover:text-brand-orange">
+                         গণতন্ত্রের পুনরুদ্ধারে আমাদের করণীয়
+                       </h4>
+                       <p className="text-xs text-gray-500 font-medium mt-1">ড. আসিফ নজরুল</p>
+                    </div>
+                 </div>
+               ))}
+            </div>
+
+            <div className="mt-8 pt-8 border-t border-gray-200">
+               <div className="flex items-center gap-2 mb-4">
+                 <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                 <h2 className="text-xl font-bold text-red-600">সরাসরি</h2>
+               </div>
+               <div className="aspect-video bg-black rounded-lg flex items-center justify-center text-white relative overflow-hidden group cursor-pointer">
+                  <span className="z-10 bg-white/20 backdrop-blur px-4 py-2 rounded-full font-bold flex items-center gap-2">
+                     <div className="w-3 h-3 bg-red-600 rounded-full animate-ping"></div>
+                     লাইভ দেখুন
+                  </span>
+               </div>
+            </div>
+          </div>
+
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
