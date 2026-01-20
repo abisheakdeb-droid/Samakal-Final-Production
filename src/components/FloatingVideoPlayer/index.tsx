@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
-import { useRouteChange } from '@/hooks/useRouteChange';
+import { usePathname } from 'next/navigation';
 import PausePromptModal from './PausePromptModal';
 import SettingsPanel from './SettingsPanel';
 import { X, Maximize2, Minimize2, Settings as SettingsIcon, Volume2, VolumeX } from 'lucide-react';
@@ -30,7 +30,7 @@ export default function FloatingVideoPlayer() {
   const [showPausePrompt, setShowPausePrompt] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   
-  const { pathname } = useRouteChange();
+  const pathname = usePathname();
   const prevPathRef = useRef(pathname);
 
   // Smart Pause Logic

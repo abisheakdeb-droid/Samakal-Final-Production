@@ -1,16 +1,14 @@
-"use client";
+'use client';
 
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
-export function useRouteChange() {
+export function useRouteChange(callback: () => void) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [route, setRoute] = useState({ pathname, searchParams });
-
+  // Note: Removed useSearchParams to avoid SSR issues
+  // If you need searchParams, wrap the component using this hook in <Suspense>
+  
   useEffect(() => {
-    setRoute({ pathname, searchParams });
-  }, [pathname, searchParams]);
-
-  return route;
+    callback();
+  }, [pathname, callback]);
 }

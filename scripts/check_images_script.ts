@@ -15,7 +15,7 @@ const uniqueIds = [...new Set(matches.map(m => m[1]))];
 
 console.log(`Found ${uniqueIds.length} unique image IDs.`);
 
-async function checkImage(id) {
+async function checkImage(id: string) {
     const url = `https://images.unsplash.com/photo-${id}?q=80&w=100&auto=format&fit=crop`;
     try {
         const response = await fetch(url, { method: 'HEAD' });
