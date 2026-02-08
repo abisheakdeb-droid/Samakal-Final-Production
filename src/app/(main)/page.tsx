@@ -263,7 +263,7 @@ export default async function Home() {
                 <div className="hidden lg:block w-px bg-gray-300 mx-auto"></div>
 
                 {/* 4 Items Grid (Right) */}
-                <div className="lg:col-span-6 grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-gray-200 md:border-none">
+                <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-gray-200 md:border-none">
                      {selectedSide.map((news, idx) => (
                          <Link href={`/article/${news.id}`} key={news.id} className={clsx(
                              "group block p-4 border-b border-gray-200",

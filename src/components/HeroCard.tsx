@@ -53,7 +53,7 @@ export default function HeroCard({ news }: HeroCardProps) {
         </p>
         
         <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-4">
-          <div className="flex items-center gap-2 text-sm text-gray-500">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
             <span className="font-semibold text-gray-900">{news.author}</span>
             <span>•</span>
             <span>{news.time}</span>
