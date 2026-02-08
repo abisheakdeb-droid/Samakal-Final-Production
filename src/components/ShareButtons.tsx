@@ -86,7 +86,7 @@ export default function ShareButtons({ title, slug, className }: ShareButtonsPro
       <div 
         className={clsx(
             "flex items-center overflow-hidden transition-all duration-500 ease-out",
-            isHovered ? "w-40 opacity-100 mr-2" : "w-0 opacity-0 mr-0"
+            isHovered ? "w-52 opacity-100 mr-2" : "w-0 opacity-0 mr-0"
         )}
       >
           <div className="flex bg-gray-100/80 backdrop-blur-sm rounded-full p-1 border border-gray-200 shadow-sm gap-1">
