@@ -97,7 +97,7 @@ export default function ShareButtons({ title, slug, className }: ShareButtonsPro
                 target="_blank"
                 rel="noopener noreferrer"
                 className={clsx(
-                    "p-2 rounded-full transition-colors",
+                    "p-2 rounded-full transition-all duration-300 hover:scale-125 active:scale-95",
                     link.color,
                     "hover:bg-white hover:shadow-sm"
                 )}
@@ -112,14 +112,14 @@ export default function ShareButtons({ title, slug, className }: ShareButtonsPro
       {/* Trigger Button */}
       <button
         className={clsx(
-          "flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 font-bold text-sm shadow-sm border border-gray-200 z-10",
+          "flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 font-bold text-sm shadow-sm border border-gray-200 z-10 hover:scale-105 active:scale-95",
           isHovered
             ? "bg-gray-100 text-gray-900 border-brand-red/20" 
             : "bg-brand-red text-white hover:bg-red-700 hover:shadow-md border-transparent"
         )}
       >
         <Share2 size={18} />
-        <span>শেয়ার</span>
+        <span>শেয়ার</span>
       </button>
     </div>
   );

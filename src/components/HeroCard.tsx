@@ -27,7 +27,7 @@ export default function HeroCard({ news }: HeroCardProps) {
 
   return (
     <Link href={`/article/${news.id}`} className="group cursor-pointer block">
-      <div className="relative aspect-video w-full overflow-hidden rounded-xl mb-4">
+      <div className="relative aspect-video w-full overflow-hidden rounded-xl mb-4 shadow-md hover:shadow-xl transition-all duration-300">
         <Image 
           src={news.image} 
           alt={news.title}
@@ -38,7 +38,7 @@ export default function HeroCard({ news }: HeroCardProps) {
           className="object-cover group-hover:scale-105 transition-transform duration-700"
         />
         <div className="absolute top-4 left-4">
-          <span className="bg-brand-red text-white px-3 py-1 rounded text-sm font-bold shadow-sm">
+          <span className="bg-brand-red text-white px-3 py-1 rounded text-sm font-bold shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-300">
             {news.category}
           </span>
         </div>
@@ -63,7 +63,7 @@ export default function HeroCard({ news }: HeroCardProps) {
              <button 
                 onClick={handleShare}
                 className={clsx(
-                    "p-2 rounded-full transition relative z-20",
+                    "p-2 rounded-full transition-all duration-300 relative z-20 hover:scale-110 active:scale-95",
                     copied ? "bg-green-100 text-green-600" : "text-gray-400 hover:text-gray-800 hover:bg-gray-100"
                 )}
              >
