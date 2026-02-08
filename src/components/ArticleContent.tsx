@@ -134,7 +134,7 @@ export default function ArticleContent({ article, authorNews, relatedNews, comme
 
             {/* Article Body */}
             <article 
-                className="prose prose-lg max-w-none w-full md:w-[85%] mb-12 prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-brand-red prose-a:no-underline hover:prose-a:underline"
+                className="prose prose-lg max-w-none w-full md:w-[85%] mb-12 text-justify prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-brand-red prose-a:no-underline hover:prose-a:underline"
                 dangerouslySetInnerHTML={{ __html: sanitizedContent }}
             />
             
