@@ -2,9 +2,8 @@
 
 import { useState, Dispatch, SetStateAction } from 'react';
 import {
-  Settings, Image as ImageIcon, MapPin, Tag,
-  Users, Link as LinkIcon, Search, Globe, ChevronRight,
-  Clock, Calendar, Save, Upload, FileText
+  Search,
+  Clock, Calendar, Upload, FileText
 } from 'lucide-react';
 import NewsTypeSelector from './NewsTypeSelector';
 import LocationSelector from './LocationSelector';
@@ -14,11 +13,12 @@ import VideoEmbedder from './VideoEmbedder';
 import ContributorSelector from './ContributorSelector';
 import SourceInput from './SourceInput';
 import SEOPanel from './SEOPanel';
-import { NewsType } from './types';
-import AdSlot from '@/components/AdSlot';
+import { NewsType, ArticleData, ArticleImage, Contributor, Event } from './types';
+import type { LucideIcon } from 'lucide-react';
+
 
 interface SidebarProps {
-  onPublish: (metadata: any) => void;
+  onPublish: (_metadata: ArticleData) => void;
   isPublishing: boolean;
 
   // State Props
@@ -34,14 +34,14 @@ interface SidebarProps {
   setKeywords: (val: string[]) => void;
 
   // Media
-  images: any[];
-  setImages: Dispatch<SetStateAction<any[]>>;
+  images: ArticleImage[];
+  setImages: Dispatch<SetStateAction<ArticleImage[]>>;
   videoUrl: string;
   setVideoUrl: (val: string) => void;
 
   // Attribution
-  contributors: any[];
-  setContributors: (val: any[]) => void;
+  contributors: Contributor[];
+  setContributors: (val: Contributor[]) => void;
   source: string;
   setSource: (val: string) => void;
   sourceUrl: string;
@@ -58,7 +58,7 @@ interface SidebarProps {
   isGeneratingAI?: boolean;
 
   // Events
-  events: any[];
+  events: Event[];
   eventId: string;
   setEventId: (val: string) => void;
 
@@ -74,8 +74,8 @@ interface SidebarProps {
 type Tab = 'publishing' | 'media' | 'details' | 'seo';
 
 export default function Sidebar({ 
-    onPublish, 
-    isPublishing, 
+    onPublish: _onPublish, 
+    isPublishing: _isPublishing, 
     category, 
     setCategory,
     newsType,
@@ -111,12 +111,12 @@ export default function Sidebar({
     setStatus,
     publishedAt,
     setPublishedAt,
-    scheduledAt,
-    setScheduledAt
+    scheduledAt: _scheduledAt,
+    setScheduledAt: _setScheduledAt,
 }: SidebarProps) {
   const [activeTab, setActiveTab] = useState<Tab>('publishing');
   
-  const tabs: { id: Tab; label: string; icon: any }[] = [
+  const tabs: { id: Tab; label: string; icon: LucideIcon }[] = [
       { id: 'publishing', label: 'Publication', icon: Calendar },
       { id: 'media', label: 'Media Assets', icon: Upload },
       { id: 'details', label: 'Details & Tags', icon: FileText },

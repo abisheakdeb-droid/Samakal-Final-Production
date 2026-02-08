@@ -5,7 +5,7 @@ import { revalidatePath, unstable_cache } from "next/cache";
 import { cache } from "react";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import type { ArticleRow, ArticleImageRow, ArticleContributorRow, ArticleSEOData, ExtraArticleData } from "@/types/database";
+import type { ArticleRow, ArticleImageRow, ArticleContributorRow, ArticleSEOData } from "@/types/database";
 import { getBengaliCategory } from "@/utils/category";
 import { normalizeCategory } from "@/utils/normalize-category";
 import { mapArticleToNewsItem } from "@/lib/actions-article-helpers";
@@ -832,7 +832,7 @@ export async function deleteArticle(id: string) {
     try {
         await sql`DELETE FROM articles WHERE id = ${id}`;
         revalidatePath('/admin/dashboard/articles');
-    } catch (error) {
+    } catch {
         return { message: 'Database Error: Failed to Delete Article.' };
     }
 }
@@ -1104,7 +1104,7 @@ export async function getLastModifiedTimestamp() {
         LIMIT 1
       `;
       return data.rows.length > 0 ? new Date(data.rows[0].created_at).getTime() : 0;
-  } catch (error) {
+  } catch {
       // Return 0 on error effectively making the client think "no update" 
       return 0;
   }

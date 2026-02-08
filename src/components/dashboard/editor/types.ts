@@ -125,13 +125,36 @@ export interface ArticleData {
 
   // Phase 2 Media
   video_url?: string;
-  images?: any[]; // specific type can be added later
+  images?: ArticleImage[];
 
   // Phase 3 Attribution & SEO
-  contributors?: any[]; // specific type can be added later
+  contributors?: Contributor[];
   source?: string;
   source_url?: string;
   seo_title?: string;
   seo_description?: string;
   canonical_url?: string;
+}
+
+export interface ArticleImage {
+  id?: string;
+  url: string;
+  caption?: string; 
+  type: 'featured' | 'gallery' | 'thumbnail';
+  file?: File;
+}
+
+export interface Contributor {
+  id?: string;
+  name: string;
+  role: string;
+  email?: string;
+  avatar?: string;
+}
+
+export interface Event {
+  id: string;
+  title: string;
+  slug?: string;
+  description?: string;
 }
