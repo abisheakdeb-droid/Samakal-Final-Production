@@ -68,6 +68,11 @@ export default function ArticleContent({ article, authorNews, relatedNews, comme
                 </p>
             )}
 
+            {/* Font Size Control */}
+            <div className="flex justify-end mb-6">
+               <FontSizeToggle />
+            </div>
+
             {/* Author & Meta */}
             <div className="flex flex-col md:flex-row justify-between items-center border-t border-b border-gray-100 py-4 mb-8 gap-6">
                 {/* Author Info */}
@@ -103,9 +108,8 @@ export default function ArticleContent({ article, authorNews, relatedNews, comme
                </div>
     
     
-               {/* Share Button Group (Top) */}\n               <div className="flex flex-wrap items-center gap-3">
-                   <FontSizeToggle />
-                   
+               {/* Share Button Group (Top) */}
+               <div className="flex items-center gap-3">
                    <ShareButtons title={article.title} slug={article.slug} />
                    
                    <BookmarkButton articleId={article.id} className="p-2 border border-gray-200 rounded-full hover:bg-gray-50 text-gray-600 transition-colors" />
