@@ -74,9 +74,14 @@ export default function Header({ settings }: HeaderProps) {
             <span className="flex items-center gap-2">
               ঢাকা <span className="text-gray-300">|</span> {date}
             </span>
-            <button className="bg-brand-red text-white px-4 py-1 rounded text-sm hover:opacity-90 transition">
+            <Link
+              href="https://epaper.samakal.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-brand-red text-white px-4 py-1 rounded text-sm hover:opacity-90 transition"
+            >
               ই-পেপার
-            </button>
+            </Link>
           </div>
         </div>
 

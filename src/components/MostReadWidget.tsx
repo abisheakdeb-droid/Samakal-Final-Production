@@ -33,16 +33,16 @@ export default function MostReadWidget({ opinionNews, mostReadNews, hideOpinion 
   const newsToShow = activeTab === 'opinion' ? opinionNews : mostReadNews;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden mb-8">
+    <div className="bg-transparent mb-8">
       {/* Tabs */}
-      <div className="flex border-b border-gray-200">
+      <div className="flex border-b-2 border-brand-red mb-2">
         {!hideOpinion && (
           <button
             onClick={() => setActiveTab('opinion')}
-            className={`flex-1 px-4 py-3 font-bold text-sm transition ${
+            className={`flex-1 px-4 py-2 font-bold text-sm transition ${
               activeTab === 'opinion'
-                ? 'bg-brand-red text-white'
-                : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                ? 'text-brand-red'
+                : 'text-gray-500 hover:text-gray-800'
             }`}
           >
             মতামত
@@ -50,11 +50,11 @@ export default function MostReadWidget({ opinionNews, mostReadNews, hideOpinion 
         )}
         <button
           onClick={() => setActiveTab('mostRead')}
-          className={`flex-1 px-4 py-3 font-bold text-sm transition ${
-            activeTab === 'mostRead'
-              ? 'bg-brand-red text-white'
-              : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-          }`}
+          className={`flex-1 px-4 py-2 font-bold text-sm transition ${
+             activeTab === 'mostRead'
+               ? 'text-brand-red'
+               : 'text-gray-500 hover:text-gray-800'
+           }`}
         >
           সর্বাধিক পঠিত
         </button>
@@ -66,11 +66,11 @@ export default function MostReadWidget({ opinionNews, mostReadNews, hideOpinion 
           <Link 
             key={news.id} 
             href={`/article/${news.id}`} 
-            className="group flex gap-4 p-4 border-b border-gray-50 last:border-none hover:bg-gray-50 transition"
+            className="group flex gap-4 py-3 border-b border-gray-100 dark:border-gray-800 last:border-none transition"
           >
             {/* Number Counter or Author Image */}
             {activeTab === 'opinion' ? (
-               <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden relative shrink-0 border border-gray-100 mt-1">
+               <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 overflow-hidden relative shrink-0 border border-gray-100 dark:border-gray-700 mt-1">
                    {/* Author profile images from Unsplash */}
                    <Image 
                       src={`https://images.unsplash.com/photo-${getAuthorImageId(index)}?w=100&h=100&fit=crop&crop=faces`} 
@@ -80,17 +80,17 @@ export default function MostReadWidget({ opinionNews, mostReadNews, hideOpinion 
                    />
                </div>
             ) : (
-                <span className="text-3xl font-bold text-gray-200 group-hover:text-brand-red/20 transition-colors -mt-1 w-8 shrink-0 text-center">
+                <span className="text-3xl font-bold text-gray-200 dark:text-gray-700 group-hover:text-brand-red/20 transition-colors -mt-1 w-8 shrink-0 text-center">
                   {toBanglaDigits(index + 1)}
                 </span>
             )}
             
             <div className="flex-1">
-               <h4 className="text-sm font-bold text-gray-800 leading-snug group-hover:text-brand-red line-clamp-2">
+               <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 group-hover:text-brand-red line-clamp-2">
                  {news.title}
                </h4>
                {activeTab === 'opinion' && (
-                   <p className="text-xs text-gray-500 mt-1">{news.author}</p>
+                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{news.author}</p>
                )}
             </div>
           </Link>
@@ -101,7 +101,7 @@ export default function MostReadWidget({ opinionNews, mostReadNews, hideOpinion 
       {/* Footer Link */}
       <Link 
         href={activeTab === 'opinion' ? '/category/opinion' : '/category/latest'} 
-        className="block bg-gray-50 p-3 text-center text-xs font-bold text-brand-red hover:bg-gray-100 transition border-t border-gray-100"
+        className="block bg-gray-50 dark:bg-gray-800 p-3 text-center text-xs font-bold text-brand-red hover:bg-gray-100 dark:hover:bg-gray-700 transition border-t border-gray-100 dark:border-gray-700"
       >
         {activeTab === 'opinion' ? 'সব মতামত পড়ুন' : 'সব খবর পড়ুন'}
       </Link>

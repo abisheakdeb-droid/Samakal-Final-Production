@@ -7,7 +7,6 @@
 // this context acts as a client-side bridge/state holder.
 
 import { SessionProvider, useSession } from "next-auth/react";
-import { useEffect } from 'react';
 import { handleSignOut } from '@/lib/actions';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -23,16 +22,7 @@ export function useAuth() {
   const { data: session, status } = useSession();
   const isLoading = status === "loading";
   
-  // Tab-specific session guard
-  useEffect(() => {
-     if (status === "authenticated") {
-         const isActive = sessionStorage.getItem('samakal_session_active');
-         if (!isActive) {
-             // If authenticated but no session flag (meaning new tab/re-opened tab), force logout
-             handleSignOut();
-         }
-     }
-  }, [status]);
+  // No longer using tab-specific session guard as it conflicts with NextAuth state
   
   return {
     user: session?.user ? {
@@ -45,8 +35,6 @@ export function useAuth() {
     isLoading,
     login: () => {}, 
     logout: async () => {
-        // Clear session flag
-        sessionStorage.removeItem('samakal_session_active');
         await handleSignOut();
     } 
   };

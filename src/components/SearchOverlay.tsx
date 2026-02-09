@@ -143,8 +143,18 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                     onChange={(e) => setQuery(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="কী খুঁজতে চান? (লিখে Enter চাপুন...)"
-                    className="w-full bg-transparent border-b-2 border-gray-200 dark:border-gray-700 py-6 pl-14 text-3xl md:text-5xl font-light text-gray-900 dark:text-white placeholder:text-gray-300 focus:outline-none focus:border-brand-red transition-all"
+                    className="w-full bg-transparent border-b-2 border-gray-200 dark:border-gray-700 py-6 pl-14 pr-12 text-3xl md:text-5xl font-light text-gray-900 dark:text-white placeholder:text-gray-300 focus:outline-none focus:border-brand-red transition-all"
                 />
+
+                {query && !isLoading && (
+                    <button 
+                        onClick={() => { setQuery(''); inputRef.current?.focus(); }}
+                        className="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-brand-red transition-colors"
+                        aria-label="Clear search"
+                    >
+                        <X size={24} />
+                    </button>
+                )}
                 
                 {isLoading && (
                     <div className="absolute right-0 top-1/2 -translate-y-1/2 text-brand-red">
@@ -157,24 +167,48 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                 গুগল স্টাইলে সার্চ করুন, অথবা শিরোনাম লিখুন
             </p>
             
-            {/* Popular Searches */}
+            {/* Popular Searches & Categories */}
             {!query && (
-                <div className="mt-8">
-                    <h4 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-3">জনপ্রিয় অনুসন্ধান</h4>
-                    <div className="flex flex-wrap gap-2">
-                        {['ফ্যাসিবাদ', 'নির্বাচন', 'দ্রব্যমূল্য', 'ক্রিকেট', 'শেখ হাসিনা', 'বন্যা', 'রোহিঙ্গা'].map((tag) => (
-                            <button
-                                key={tag}
-                                onClick={() => {
-                                    setQuery(tag);
-                                    // Optional: automatically trigger search or just populate input
-                                    // router.push(`/search?q=${encodeURIComponent(tag)}`); onClose();
-                                }}
-                                className="px-3 py-1 bg-gray-100 dark:bg-gray-800 hover:bg-brand-red hover:text-white text-gray-600 dark:text-gray-300 text-sm rounded-full transition-colors"
-                            >
-                                #{tag}
-                            </button>
-                        ))}
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in-up">
+                    <div>
+                        <h4 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <Search size={14} /> জনপ্রিয় অনুসন্ধান
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                            {['ফ্যাসিবাদ', 'নির্বাচন', 'দ্রব্যমূল্য', 'ক্রিকেট', 'শেখ হাসিনা', 'বন্যা', 'রোহিঙ্গা'].map((tag) => (
+                                <button
+                                    key={tag}
+                                    onClick={() => setQuery(tag)}
+                                    className="px-3 py-1 bg-gray-100 dark:bg-gray-800 hover:bg-brand-red hover:text-white text-gray-600 dark:text-gray-300 text-sm rounded-full transition-all duration-300"
+                                >
+                                    #{tag}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 className="text-gray-500 text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <Search size={14} className="rotate-90" /> জনপ্রিয় বিভাগ
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                            {[
+                                { name: 'রাজনীতি', slug: 'politics' },
+                                { name: 'বাংলাদেশ', slug: 'bangladesh' },
+                                { name: 'আন্তর্জাতিক', slug: 'international' },
+                                { name: 'খেলা', slug: 'sports' },
+                                { name: 'বিনোদন', slug: 'entertainment' }
+                            ].map((cat) => (
+                                <Link
+                                    key={cat.slug}
+                                    href={`/category/${cat.slug}`}
+                                    onClick={onClose}
+                                    className="px-3 py-1 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm rounded-lg transition-all duration-300"
+                                >
+                                    {cat.name}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </div>
             )}

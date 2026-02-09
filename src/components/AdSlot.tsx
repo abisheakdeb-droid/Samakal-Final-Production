@@ -52,22 +52,22 @@ export default function AdSlot({ slotId, format = 'rectangle', className = '' }:
   return (
     <div
       ref={adRef}
-      className={`ad-slot ${getDimensions()} bg-gray-100 border border-gray-200 rounded-lg flex items-center justify-center ${className}`}
+      className={`ad-slot ${getDimensions()} bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-sm flex items-center justify-center ${className}`}
       data-ad-slot={slotId}
       data-ad-format={format}
     >
       {isVisible ? (
         <div className="text-center p-4">
-          <p className="text-xs text-gray-400 mb-2">বিজ্ঞাপন</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">বিজ্ঞাপন</p>
           {/* Google AdSense code will go here */}
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-500 dark:text-gray-400">
             Ad Slot: {slotId}
             <br />
             <span className="text-xs">({format})</span>
           </div>
         </div>
       ) : (
-        <div className="text-gray-400 text-sm">Loading ad...</div>
+        <div className="text-gray-400 dark:text-gray-500 text-sm">Loading ad...</div>
       )}
     </div>
   );

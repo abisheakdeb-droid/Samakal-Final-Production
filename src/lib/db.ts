@@ -10,9 +10,11 @@ import type { QueryResultRow, QueryResult } from "@vercel/postgres";
  */
 const globalForSql = global as unknown as { fallbackClient: ReturnType<typeof createClient> };
 
+type Primitive = string | number | boolean | null | undefined;
+
 export async function sql<O extends QueryResultRow>(
   strings: TemplateStringsArray, 
-  ...values: any[]
+  ...values: Primitive[]
 ): Promise<QueryResult<O>> {
   try {
     return await vercelSql<O>(strings, ...values);

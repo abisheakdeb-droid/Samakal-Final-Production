@@ -56,12 +56,12 @@ export default async function SearchPage({
             
             {/* Left Sidebar: Filters */}
             <aside className="w-full md:w-64 shrink-0 space-y-8">
-                <div>
-                     <h3 className="font-bold text-gray-900 border-b pb-2 mb-4">ফিল্টার</h3>
+                <div className="sticky top-24">
+                     <h3 className="font-bold text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-800 pb-2 mb-4">ফিল্টার</h3>
                      
                      {/* Date Filter */}
                      <div className="mb-6">
-                         <h4 className="text-sm font-semibold text-gray-500 uppercase mb-3">সময়</h4>
+                         <h4 className="font-semibold text-gray-500 dark:text-gray-400 uppercase mb-3 text-xs tracking-wider">সময়</h4>
                          <div className="space-y-2">
                              {[
                                  { id: 'all', label: 'সব সময়' },
@@ -72,7 +72,7 @@ export default async function SearchPage({
                                  <Link 
                                     key={opt.id}
                                     href={`/search?q=${query}&category=${category}&date=${opt.id}&sort=${sort}`}
-                                    className={`block text-sm ${dateRange === opt.id ? 'text-brand-red font-bold' : 'text-gray-600 hover:text-brand-red'}`}
+                                    className={`block text-sm transition-colors ${dateRange === opt.id ? 'text-brand-red font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-brand-red dark:hover:text-brand-red'}`}
                                  >
                                     {opt.label}
                                  </Link>
@@ -82,11 +82,11 @@ export default async function SearchPage({
 
                      {/* Category Filter */}
                      <div>
-                         <h4 className="text-sm font-semibold text-gray-500 uppercase mb-3">বিভাগ</h4>
-                         <div className="space-y-2 max-h-[400px] overflow-y-auto scrollbar-thin">
+                         <h4 className="font-semibold text-gray-500 dark:text-gray-400 uppercase mb-3 text-xs tracking-wider">বিভাগ</h4>
+                         <div className="space-y-2 max-h-[400px] overflow-y-auto scrollbar-thin dark:scrollbar-thumb-gray-700">
                              <Link 
                                 href={`/search?q=${query}&category=all&date=${dateRange}&sort=${sort}`}
-                                className={`block text-sm ${category === 'all' ? 'text-brand-red font-bold' : 'text-gray-600 hover:text-brand-red'}`}
+                                className={`block text-sm transition-colors ${category === 'all' ? 'text-brand-red font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-brand-red dark:hover:text-brand-red'}`}
                              >
                                 সব বিভাগ
                              </Link>
@@ -94,7 +94,7 @@ export default async function SearchPage({
                                  <Link 
                                     key={cat}
                                     href={`/search?q=${query}&category=${CATEGORY_MAP[cat] || cat}&date=${dateRange}&sort=${sort}`}
-                                    className={`block text-sm ${category === (CATEGORY_MAP[cat] || cat) ? 'text-brand-red font-bold' : 'text-gray-600 hover:text-brand-red'}`}
+                                    className={`block text-sm transition-colors ${category === (CATEGORY_MAP[cat] || cat) ? 'text-brand-red font-bold' : 'text-gray-600 dark:text-gray-400 hover:text-brand-red dark:hover:text-brand-red'}`}
                                  >
                                     {CATEGORY_MAP[cat]}
                                  </Link>
@@ -106,34 +106,34 @@ export default async function SearchPage({
 
             {/* Main Content: Results */}
             <main className="flex-1">
-                <div className="mb-6 pb-4 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                             &quot;{query}&quot; - এর জন্য ফলাফল
                         </h1>
-                        <p className="text-gray-500 mt-1">
+                        <p className="text-gray-500 dark:text-gray-400 mt-1">
                             {results.length} টি সংবাদ পাওয়া গেছে
                         </p>
                     </div>
 
                     {/* Sorting Dropdown */}
                     <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-500">সাজান:</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">সাজান:</span>
                         <div className="relative group">
-                            <button className="flex items-center gap-2 text-sm font-bold text-gray-700 bg-gray-100 px-3 py-1.5 rounded-lg hover:bg-gray-200 transition">
+                            <button className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition">
                                 {sort === 'newest' ? 'সর্বশেষ' : 'প্রাসঙ্গিকতা'}
                                 <ChevronDown size={14} />
                             </button>
-                            <div className="absolute right-0 top-full mt-2 w-32 bg-white border border-gray-100 shadow-xl rounded-lg overflow-hidden hidden group-hover:block z-20">
+                            <div className="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-xl rounded-lg overflow-hidden hidden group-hover:block z-20">
                                 <Link 
                                     href={`/search?q=${query}&category=${category}&date=${dateRange}&sort=newest`}
-                                    className={`block px-4 py-2 text-sm hover:bg-gray-50 ${sort === 'newest' ? 'text-brand-red font-bold' : 'text-gray-700'}`}
+                                    className={`block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${sort === 'newest' ? 'text-brand-red font-bold' : 'text-gray-700 dark:text-gray-300'}`}
                                 >
                                     সর্বশেষ
                                 </Link>
                                 <Link 
                                     href={`/search?q=${query}&category=${category}&date=${dateRange}&sort=relevance`}
-                                    className={`block px-4 py-2 text-sm hover:bg-gray-50 ${sort === 'relevance' ? 'text-brand-red font-bold' : 'text-gray-700'}`}
+                                    className={`block px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${sort === 'relevance' ? 'text-brand-red font-bold' : 'text-gray-700 dark:text-gray-300'}`}
                                 >
                                     প্রাসঙ্গিকতা
                                 </Link>
@@ -150,7 +150,7 @@ export default async function SearchPage({
                                 href={`/article/${article.id}`}
                                 className="group flex flex-col md:flex-row gap-4 md:gap-6"
                             >
-                                <div className="w-full md:w-56 aspect-4/3 relative overflow-hidden rounded-lg bg-gray-100 shrink-0">
+                                <div className="w-full md:w-56 aspect-4/3 relative overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 shrink-0">
                                     <Image 
                                         src={article.image}
                                         alt={article.title}
@@ -163,14 +163,14 @@ export default async function SearchPage({
                                         <span className="text-xs font-bold text-brand-red uppercase">
                                             {CATEGORY_MAP[article.category] || article.category}
                                         </span>
-                                        <span className="text-xs text-gray-400">
+                                        <span className="text-xs text-gray-400 dark:text-gray-500">
                                             {localizeTime(article.time)}
                                         </span>
                                     </div>
-                                    <h2 className="text-xl md:text-2xl font-bold text-gray-800 group-hover:text-brand-red leading-tight mb-2">
+                                    <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white group-hover:text-brand-red leading-tight mb-2 transition-colors">
                                         <HighlightText text={article.title} highlight={query} />
                                     </h2>
-                                    <p className="text-gray-600 text-sm md:text-base line-clamp-2 md:line-clamp-3">
+                                    <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base line-clamp-2 md:line-clamp-3">
                                         <HighlightText text={article.summary || ''} highlight={query} />
                                     </p>
                                 </div>
@@ -178,9 +178,9 @@ export default async function SearchPage({
                         ))}
                     </div>
                 ) : (
-                    <div className="bg-gray-50 rounded-xl p-12 text-center">
-                        <p className="text-xl text-gray-500 mb-2">দুঃখিত, কোনো খবর পাওয়া যায়নি</p>
-                        <p className="text-sm text-gray-400">বানান সঠিক কিনা যাচাই করুন অথবা অন্য শব্দ দিয়ে খুঁজুন</p>
+                    <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-12 text-center border border-gray-100 dark:border-gray-800 animate-fade-in-up">
+                        <p className="text-xl text-gray-500 dark:text-gray-400 mb-2 font-bold">দুঃখিত, কোনো খবর পাওয়া যায়নি</p>
+                        <p className="text-sm text-gray-400 dark:text-gray-500">বানান সঠিক কিনা যাচাই করুন অথবা অন্য শব্দ দিয়ে খুঁজুন</p>
                     </div>
                 )}
             </main>

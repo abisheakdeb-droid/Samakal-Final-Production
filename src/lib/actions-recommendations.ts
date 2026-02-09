@@ -68,32 +68,60 @@ export async function fetchRecommendedArticles(limit: number = 6) {
     // Let's iterate or finding a better query.
     // Actually, `category = ANY(${topCategories})` works in postgres if passed as string array.
     
-    // We also need to exclude viewed IDs.
+    // Build separate queries based on category count to avoid sql.unsafe
+    let articlesData;
     
-    const articlesData = await sql`
-      SELECT 
-        articles.id,
-        articles.title,
-        articles.slug,
-        articles.status,
-        articles.category,
-        articles.views,
-        articles.image,
-        articles.created_at,
-        users.name as author
-      FROM articles
-      LEFT JOIN users ON articles.author_id = users.id
-      WHERE 
-        articles.status = 'published'
-        AND articles.category = ANY(${topCategories}::text[])
-        AND articles.id NOT IN (
-            SELECT article_id FROM reading_history WHERE user_id = ${userId}
-        )
-      ORDER BY articles.created_at DESC
-      LIMIT ${limit}
-    `;
+    if (topCategories.length === 1) {
+      articlesData = await sql`
+        SELECT 
+          articles.id, articles.title, articles.slug, articles.status, articles.category,
+          articles.views, articles.image, articles.created_at, users.name as author
+        FROM articles
+        LEFT JOIN users ON articles.author_id = users.id
+        WHERE 
+          articles.status = 'published'
+          AND articles.category = ${topCategories[0]}
+          AND articles.id NOT IN (
+              SELECT article_id FROM reading_history WHERE user_id = ${userId}
+          )
+        ORDER BY articles.created_at DESC
+        LIMIT ${limit}
+      `;
+    } else if (topCategories.length === 2) {
+      articlesData = await sql`
+        SELECT 
+          articles.id, articles.title, articles.slug, articles.status, articles.category,
+          articles.views, articles.image, articles.created_at, users.name as author
+        FROM articles
+        LEFT JOIN users ON articles.author_id = users.id
+        WHERE 
+          articles.status = 'published'
+          AND (articles.category = ${topCategories[0]} OR articles.category = ${topCategories[1]})
+          AND articles.id NOT IN (
+              SELECT article_id FROM reading_history WHERE user_id = ${userId}
+          )
+        ORDER BY articles.created_at DESC
+        LIMIT ${limit}
+      `;
+    } else {
+      articlesData = await sql`
+        SELECT 
+          articles.id, articles.title, articles.slug, articles.status, articles.category,
+          articles.views, articles.image, articles.created_at, users.name as author
+        FROM articles
+        LEFT JOIN users ON articles.author_id = users.id
+        WHERE 
+          articles.status = 'published'
+          AND (articles.category = ${topCategories[0]} OR articles.category = ${topCategories[1]} OR articles.category = ${topCategories[2]})
+          AND articles.id NOT IN (
+              SELECT article_id FROM reading_history WHERE user_id = ${userId}
+          )
+        ORDER BY articles.created_at DESC
+        LIMIT ${limit}
+      `;
+    }
 
-    return articlesData.rows.map(row => mapArticleToNewsItem(row as ArticleRow));
+    return articlesData.rows.map((row: any) => mapArticleToNewsItem(row as ArticleRow));
 
   } catch (error) {
     console.error("Recommendation Error:", error);

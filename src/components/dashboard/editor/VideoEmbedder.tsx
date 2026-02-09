@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { Video, X, Loader2, ExternalLink } from 'lucide-react';
-import { getVideoThumbnail, isValidVideoUrl } from '@/lib/upload';
+import { useState, useEffect } from "react";
+import { Video, X, Loader2, ExternalLink } from "lucide-react";
+import Image from "next/image";
+import { getVideoThumbnail, isValidVideoUrl } from "@/lib/upload";
 
 interface VideoEmbedderProps {
   value: string;
@@ -16,12 +17,13 @@ export default function VideoEmbedder({ value, onChange }: VideoEmbedderProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (value) {
+    if (value && value !== url) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUrl(value);
       const thumb = getVideoThumbnail(value);
       setThumbnail(thumb);
     }
-  }, [value]);
+  }, [value, url]);
 
   const handleUrlChange = (newUrl: string) => {
     setUrl(newUrl);
@@ -31,17 +33,17 @@ export default function VideoEmbedder({ value, onChange }: VideoEmbedderProps) {
 
   const handleApply = () => {
     if (!url) {
-      onChange('');
+      onChange("");
       setThumbnail(null);
       setError(null);
       return;
     }
 
     setIsValidating(true);
-    
+
     // Validate URL
     if (!isValidVideoUrl(url)) {
-      setError('শুধুমাত্র YouTube বা Facebook ভিডিও URL সমর্থিত');
+      setError("শুধুমাত্র YouTube বা Facebook ভিডিও URL সমর্থিত");
       setIsValidating(false);
       return;
     }
@@ -55,10 +57,10 @@ export default function VideoEmbedder({ value, onChange }: VideoEmbedderProps) {
   };
 
   const handleClear = () => {
-    setUrl('');
+    setUrl("");
     setThumbnail(null);
     setError(null);
-    onChange('');
+    onChange("");
   };
 
   return (
@@ -75,7 +77,7 @@ export default function VideoEmbedder({ value, onChange }: VideoEmbedderProps) {
             value={url}
             onChange={(e) => handleUrlChange(e.target.value)}
             onBlur={handleApply}
-            onKeyDown={(e) => e.key === 'Enter' && handleApply()}
+            onKeyDown={(e) => e.key === "Enter" && handleApply()}
             placeholder="YouTube বা Facebook ভিডিও URL..."
             className="flex-1 p-2.5 text-sm border border-gray-200 rounded-lg outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
           />
@@ -114,10 +116,11 @@ export default function VideoEmbedder({ value, onChange }: VideoEmbedderProps) {
           <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden group">
             {thumbnail ? (
               <>
-                <img 
-                  src={thumbnail} 
+                <Image
+                  src={thumbnail}
                   alt="Video thumbnail"
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                 />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center">

@@ -56,7 +56,7 @@ export default function ImageLightbox({ images, initialIndex, onClose }: ImageLi
 
   const lightboxContent = (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md"
+      className="fixed inset-0 z-100 flex items-center justify-center bg-black/95 backdrop-blur-md"
       onClick={onClose}
     >
       {/* Close Button */}

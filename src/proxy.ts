@@ -5,23 +5,29 @@ import { NextResponse } from 'next/server';
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
+  const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-  const isOnAdminPanel = req.nextUrl.pathname.startsWith('/admin');
-  const isOnLoginPage = req.nextUrl.pathname === '/admin/login';
+  const isOnAdminPanel = nextUrl.pathname.startsWith('/admin');
+  const isOnLoginPage = nextUrl.pathname === '/admin/login';
+
+  console.log(`Middleware: ${req.method} ${nextUrl.pathname} [isLoggedIn: ${isLoggedIn}]`);
 
   // 1. If trying to access Admin Panel
   if (isOnAdminPanel) {
     if (isOnLoginPage) {
-        // If already logged in, redirect to Dashboard
-        if (isLoggedIn) {
-             return NextResponse.redirect(new URL('/admin/dashboard', req.nextUrl));
+        // If already logged in, redirect to Dashboard (only for GET requests)
+        // This prevents intercepting Server Action POST requests which causes the "Unexpected response" error
+        if (isLoggedIn && req.method === 'GET') {
+             console.log('Middleware: Redirecting logged-in user to dashboard (GET)');
+             return NextResponse.redirect(new URL('/admin/dashboard', nextUrl));
         }
         return NextResponse.next(); // Allow access to Login Page
     }
 
     // If NOT logged in, Redirect to Login
     if (!isLoggedIn) {
-      return NextResponse.redirect(new URL('/admin/login', req.nextUrl));
+      console.log('Middleware: Redirecting unauthenticated user to login');
+      return NextResponse.redirect(new URL('/admin/login', nextUrl));
     }
     
     // If Logged in -> Allow

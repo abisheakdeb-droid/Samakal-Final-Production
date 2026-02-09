@@ -117,7 +117,7 @@ export default async function Home() {
 
 
   return (
-    <main className="min-h-screen pb-20 bg-background text-foreground font-serif">
+    <main className="min-h-screen pb-20 bg-white text-foreground font-serif">
       
       {/* Recommended for You (Personalized) */}
       <Suspense fallback={
@@ -138,7 +138,7 @@ export default async function Home() {
 
       {/* --- TOP SECTION (Lead News & Sidebar) --- */}
       <div className="container mx-auto px-4 py-8 mb-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 divide-x-0 lg:divide-x divide-gray-100 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 divide-x-0 lg:divide-x divide-gray-200 mb-8">
           
           {/* Column 1: Latest News List (Width 3) */}
           <div className="lg:col-span-3 lg:pr-6 order-2 lg:order-1">
@@ -159,11 +159,11 @@ export default async function Home() {
             </ScrollReveal>
             
             {/* B. Sub-Hero (Staggered Grid) */}
-            <StaggerWrapper className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 pb-8 border-b border-gray-100">
+            <StaggerWrapper className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 pb-8 border-b border-gray-200">
                {subHeroNews.map((news) => (
                  <StaggerItem key={news.id}>
                     <Link href={`/article/${news.id}`} className="group block">
-                        <div className="aspect-video relative bg-gray-100 rounded-lg mb-3 overflow-hidden">
+                        <div className="aspect-video relative bg-gray-100 rounded-sm mb-3 overflow-hidden">
                         <Image 
                             src={news.image} 
                             alt={news.title} 
@@ -194,7 +194,7 @@ export default async function Home() {
                 {gridNews.map((news) => (
                     <StaggerItem key={news.id}>
                         <Link href={`/article/${news.id}`} className="group block">
-                            <div className="aspect-video relative bg-gray-100 rounded mb-2 overflow-hidden">
+                            <div className="aspect-video relative bg-gray-100 rounded-sm mb-2 overflow-hidden">
                                 <Image 
                                     src={news.image} 
                                     alt={news.title} 
@@ -246,7 +246,7 @@ export default async function Home() {
                 {/* 1 Big Item (Left) */}
                 <div className="lg:col-span-5 relative group">
                     <Link href={`/article/${selectedMain.id}`}>
-                        <div className="aspect-video relative overflow-hidden rounded-xl mb-4">
+                        <div className="aspect-video relative overflow-hidden rounded-sm mb-4">
                             <Image src={selectedMain.image} alt={selectedMain.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700"/>
                              {(selectedMain.is_featured || selectedMain.is_prime) && (
                                 <div className="absolute top-4 left-4 bg-brand-red text-white text-xs px-2 py-1 rounded">কিউরেটেড</div>
@@ -270,7 +270,7 @@ export default async function Home() {
                              // Add right border to odd items (0, 2) on Desktop
                              idx % 2 === 0 ? "md:border-r" : ""
                          )}>
-                             <div className="aspect-video relative overflow-hidden rounded mb-3">
+                             <div className="aspect-video relative overflow-hidden rounded-sm mb-3">
                                  <Image src={news.image} alt={news.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500"/>
                              </div>
                              <h3 className="text-lg font-bold text-gray-800 leading-snug group-hover:text-brand-red line-clamp-2">

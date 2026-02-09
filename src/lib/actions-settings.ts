@@ -28,7 +28,7 @@ export interface SiteSettings {
   footer_copyright?: string;
   
   // Molecular Control: Navigation
-  navigation_menu?: any[]; // JSON array of links
+  navigation_menu?: unknown[]; // JSON array of links
   
   updated_at: Date;
 }

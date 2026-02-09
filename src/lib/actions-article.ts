@@ -56,6 +56,7 @@ export const fetchArticles = cache(
             articles.views,
             articles.image,
             articles.created_at,
+            articles.scheduled_at,
             users.name as author
           FROM articles
           LEFT JOIN users ON articles.author_id = users.id
@@ -74,6 +75,7 @@ export const fetchArticles = cache(
           category: article.category,
           image: article.image,
           created_at: article.created_at,
+          scheduled_at: article.scheduled_at,
           author: article.author,
           views: article.views || 0,
           date: new Date(article.created_at).toLocaleDateString('en-US', {
@@ -495,51 +497,135 @@ export async function fetchArticlesBySearch({
         const decodedQuery = decodeURIComponent(query);
         const searchPattern = `%${decodedQuery}%`;
         
-        // Date Filter Logic
-        let dateFilter = sql`AND 1=1`; // Default neutral
+        // Simple approach: build separate queries for different filter combinations
+        let data;
         
-        if (dateRange === 'today') {
-            dateFilter = sql`AND articles.created_at >= NOW() - INTERVAL '24 HOURS'`;
-        } else if (dateRange === 'week') {
-            dateFilter = sql`AND articles.created_at >= NOW() - INTERVAL '7 DAYS'`;
-        } else if (dateRange === 'month') {
-            dateFilter = sql`AND articles.created_at >= NOW() - INTERVAL '30 DAYS'`;
+        if (!dateRange || dateRange === 'all') {
+            if (!category || category === 'all') {
+                // No filters
+                data = await sql`
+                    SELECT 
+                        articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
+                        articles.views, articles.image, articles.created_at, articles.content, 
+                        articles.sub_headline, users.name as author
+                    FROM articles
+                    LEFT JOIN users ON articles.author_id = users.id
+                    WHERE 
+                        articles.status = 'published'
+                        AND (
+                            articles.title ILIKE ${searchPattern} OR 
+                            articles.sub_headline ILIKE ${searchPattern} OR
+                            articles.content ILIKE ${searchPattern}
+                        )
+                    ORDER BY articles.created_at DESC
+                    LIMIT ${limit}
+                    OFFSET ${offset}
+                `;
+            } else {
+                // Category filter only
+                data = await sql`
+                    SELECT 
+                        articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
+                        articles.views, articles.image, articles.created_at, articles.content, 
+                        articles.sub_headline, users.name as author
+                    FROM articles
+                    LEFT JOIN users ON articles.author_id = users.id
+                    WHERE 
+                        articles.status = 'published'
+                        AND (articles.category = ${category} OR articles.parent_category = ${category})
+                        AND (
+                            articles.title ILIKE ${searchPattern} OR 
+                            articles.sub_headline ILIKE ${searchPattern} OR
+                            articles.content ILIKE ${searchPattern}
+                        )
+                    ORDER BY articles.created_at DESC
+                    LIMIT ${limit}
+                    OFFSET ${offset}
+                `;
+            }
+        } else {
+            // Has date filter
+            const hasCategory = category && category !== 'all';
+            
+            if (dateRange === 'today') {
+                data = hasCategory ? await sql`
+                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
+                        articles.views, articles.image, articles.created_at, articles.content, 
+                        articles.sub_headline, users.name as author
+                    FROM articles
+                    LEFT JOIN users ON articles.author_id = users.id
+                    WHERE articles.status = 'published'
+                        AND articles.created_at >= NOW() - INTERVAL '24 HOURS'
+                        AND (articles.category = ${category} OR articles.parent_category = ${category})
+                        AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
+                    ORDER BY articles.created_at DESC
+                    LIMIT ${limit} OFFSET ${offset}
+                ` : await sql`
+                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
+                        articles.views, articles.image, articles.created_at, articles.content, 
+                        articles.sub_headline, users.name as author
+                    FROM articles
+                    LEFT JOIN users ON articles.author_id = users.id
+                    WHERE articles.status = 'published'
+                        AND articles.created_at >= NOW() - INTERVAL '24 HOURS'
+                        AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
+                    ORDER BY articles.created_at DESC
+                    LIMIT ${limit} OFFSET ${offset}
+                `;
+            } else if (dateRange === 'week') {
+                data = hasCategory ? await sql`
+                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
+                        articles.views, articles.image, articles.created_at, articles.content, 
+                        articles.sub_headline, users.name as author
+                    FROM articles
+                    LEFT JOIN users ON articles.author_id = users.id
+                    WHERE articles.status = 'published'
+                        AND articles.created_at >= NOW() - INTERVAL '7 DAYS'
+                        AND (articles.category = ${category} OR articles.parent_category = ${category})
+                        AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
+                    ORDER BY articles.created_at DESC
+                    LIMIT ${limit} OFFSET ${offset}
+                ` : await sql`
+                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
+                        articles.views, articles.image, articles.created_at, articles.content, 
+                        articles.sub_headline, users.name as author
+                    FROM articles
+                    LEFT JOIN users ON articles.author_id = users.id
+                    WHERE articles.status = 'published'
+                        AND articles.created_at >= NOW() - INTERVAL '7 DAYS'
+                        AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
+                    ORDER BY articles.created_at DESC
+                    LIMIT ${limit} OFFSET ${offset}
+                `;
+            } else { // month
+                data = hasCategory ? await sql`
+                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
+                        articles.views, articles.image, articles.created_at, articles.content, 
+                        articles.sub_headline, users.name as author
+                    FROM articles
+                    LEFT JOIN users ON articles.author_id = users.id
+                    WHERE articles.status = 'published'
+                        AND articles.created_at >= NOW() - INTERVAL '30 DAYS'
+                        AND (articles.category = ${category} OR articles.parent_category = ${category})
+                        AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
+                    ORDER BY articles.created_at DESC
+                    LIMIT ${limit} OFFSET ${offset}
+                ` : await sql`
+                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
+                        articles.views, articles.image, articles.created_at, articles.content, 
+                        articles.sub_headline, users.name as author
+                    FROM articles
+                    LEFT JOIN users ON articles.author_id = users.id
+                    WHERE articles.status = 'published'
+                        AND articles.created_at >= NOW() - INTERVAL '30 DAYS'
+                        AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
+                    ORDER BY articles.created_at DESC
+                    LIMIT ${limit} OFFSET ${offset}
+                `;
+            }
         }
 
-        // Category Filter Logic
-        let categoryFilter = sql`AND 1=1`;
-        if (category && category !== 'all') {
-             // Check if it's a parent category to include children
-             // We can optimize this later, for now exact match or parent match
-             categoryFilter = sql`AND (articles.category = ${category} OR articles.parent_category = ${category})`;
-        }
-
-    const orderBy = offset === 0 && sort === 'relevance' 
-        ? sql`ORDER BY ts_rank(to_tsvector('english', articles.title || ' ' || articles.content), plainto_tsquery('english', ${decodedQuery})) DESC, articles.created_at DESC`
-        : sql`ORDER BY articles.created_at DESC`;
-
-    const data = await sql`
-        SELECT 
-            articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
-            articles.views, articles.image, articles.created_at, articles.content, 
-            articles.sub_headline, users.name as author
-        FROM articles
-        LEFT JOIN users ON articles.author_id = users.id
-        WHERE 
-            articles.status = 'published'
-            AND (
-                articles.title ILIKE ${searchPattern} OR 
-                articles.sub_headline ILIKE ${searchPattern} OR
-                articles.content ILIKE ${searchPattern}
-            )
-            ${dateFilter}
-            ${categoryFilter}
-        ${orderBy}
-        LIMIT ${limit}
-        OFFSET ${offset}
-    `;
-
-        return data.rows.map(row => mapArticleToNewsItem(row as ArticleRow));
+        return data.rows.map((row) => mapArticleToNewsItem(row as ArticleRow));
     } catch (error) {
         console.error('Search Error:', error);
         return [];
@@ -667,7 +753,8 @@ export async function createArticle(formData: FormData) {
 
     const { 
         title, slug, content, status, category, image, 
-        sub_headline, news_type, location, keywords: validatedKeywords, tags: validatedTags 
+        sub_headline, news_type, location, keywords: validatedKeywords, tags: validatedTags,
+        published_at, scheduled_at 
     } = validatedFields.data;
 
     try {
@@ -684,7 +771,8 @@ export async function createArticle(formData: FormData) {
         const result = await sql`
         INSERT INTO articles (
             title, slug, content, status, category, parent_category, image, author_id,
-            sub_headline, news_type, location, keywords, event_id
+            sub_headline, news_type, location, keywords, event_id,
+            published_at, scheduled_at
         )
         VALUES (
             ${title}, 
@@ -699,7 +787,9 @@ export async function createArticle(formData: FormData) {
             ${news_type || 'regular'},
             ${location || null},
             ${keywordsArray},
-            ${validatedFields.data.event_id || null}
+            ${validatedFields.data.event_id || null},
+            ${published_at || (status === 'published' ? 'NOW()' : null)},
+            ${scheduled_at || (status === 'scheduled' ? published_at : null)}
         )
         RETURNING id
         `;
@@ -769,7 +859,8 @@ export async function updateArticle(formData: FormData) {
 
     const { 
         title, slug, content, status, category, image, 
-        sub_headline, news_type, location, keywords: validatedKeywords, tags: validatedTags 
+        sub_headline, news_type, location, keywords: validatedKeywords, tags: validatedTags,
+        published_at, scheduled_at
     } = validatedFields.data;
 
     try {
@@ -795,6 +886,8 @@ export async function updateArticle(formData: FormData) {
             location = ${location || null},
             keywords = ${keywordsArray},
             event_id = ${validatedFields.data.event_id || null},
+            published_at = ${published_at || null},
+            scheduled_at = ${scheduled_at || null},
             updated_at = NOW()
         WHERE id = ${id}
         `;

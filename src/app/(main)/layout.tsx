@@ -50,7 +50,7 @@ export default async function MainLayout({
           </Script>
         </>
       )}
-      <div className={`${tiroBangla.variable} font-serif antialiased bg-slate-50 min-h-screen`}>
+      <div className={`${tiroBangla.variable} font-serif antialiased bg-white dark:bg-white min-h-screen`}>
         <Toaster position="top-center" richColors />
         <SkipToContent />
         <Header settings={settings} />

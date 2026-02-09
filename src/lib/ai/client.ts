@@ -63,14 +63,12 @@ export async function getAICompletion(
   const {
     model = 'gemini-3-flash-preview', // Use Gemini 3 Flash for better performance
     systemInstruction,
-    temperature = 0.7,
-    maxTokens = 1000,
   } = options;
 
   const client = getGeminiClient();
   
   // System instruction supported in all Gemini 2.x and 3.x models
-  const modelConfig: any = { model };
+  const modelConfig: { model: string; systemInstruction?: string } = { model };
   if (systemInstruction && (model.includes('gemini-2') || model.includes('gemini-3'))) {
     modelConfig.systemInstruction = systemInstruction;
   }
@@ -78,14 +76,15 @@ export async function getAICompletion(
   const generativeModel = client.getGenerativeModel(modelConfig);
 
   // All modern models support system instruction natively
-  let fullPrompt = prompt;
+  const fullPrompt = prompt;
 
   try {
     const result = await generativeModel.generateContent(fullPrompt);
     const response = await result.response;
     return response.text();
-  } catch (error: any) {
-    if (error.status === 429 || error.message?.includes('429')) {
+  } catch (error) {
+    const err = error as { status?: number; message?: string };
+    if (err.status === 429 || err.message?.includes('429')) {
       throw new Error('AI Usage Limit Exceeded. Please try again later.');
     }
     console.error('AI Generation Error:', error);
@@ -114,14 +113,14 @@ export async function* getAICompletionStream(
 
   const client = getGeminiClient();
   
-  const modelConfig: any = { model };
+  const modelConfig: { model: string; systemInstruction?: string } = { model };
   if (systemInstruction && (model.includes('gemini-2') || model.includes('gemini-3'))) {
     modelConfig.systemInstruction = systemInstruction;
   }
   
   const generativeModel = client.getGenerativeModel(modelConfig);
 
-  let fullPrompt = prompt;
+  const fullPrompt = prompt;
 
   try {
     const result = await generativeModel.generateContentStream(fullPrompt);
@@ -132,8 +131,9 @@ export async function* getAICompletionStream(
         yield chunkText;
       }
     }
-  } catch (error: any) {
-    if (error.status === 429 || error.message?.includes('429')) {
+  } catch (error) {
+    const err = error as { status?: number; message?: string };
+    if (err.status === 429 || err.message?.includes('429')) {
       throw new Error('AI Usage Limit Exceeded. Please try again later.');
     }
     console.error('AI Stream Error:', error);

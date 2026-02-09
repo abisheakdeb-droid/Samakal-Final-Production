@@ -1,4 +1,4 @@
-import type { ArticleRow, ArticleImageRow, ArticleContributorRow, ExtraArticleData } from "@/types/database";
+import type { ArticleRow, ExtraArticleData } from "@/types/database";
 import { getBengaliCategory } from "@/utils/category";
 
 // Helper to map DB result to UI NewsItem shape

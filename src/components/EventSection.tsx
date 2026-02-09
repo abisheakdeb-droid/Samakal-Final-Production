@@ -19,12 +19,12 @@ export default async function EventSection() {
   }
 
   return (
-    <section className="container mx-auto px-4 py-8 border-b border-gray-100 mb-8 w-full max-w-[1280px]">
+    <section className="container mx-auto px-4 py-8 border-b border-gray-100 dark:border-gray-800 mb-8 w-full max-w-[1280px]">
       {/* Event Header / Banner */}
       <div className="flex items-center justify-between mb-6">
            <div className="flex items-center gap-3">
                <div className="w-1.5 h-6 bg-red-600 rounded-full"></div>
-               <h2 className="text-2xl font-bold text-gray-900 font-serif">
+               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 font-serif">
                    {activeEvent.title}
                </h2>
            </div>
@@ -40,7 +40,7 @@ export default async function EventSection() {
       {/* Banner + Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
            {/* Primary Banner / Featured Item */}
-           <div className="lg:col-span-1 relative group overflow-hidden rounded-xl border border-gray-100 shadow-sm bg-gray-50">
+           <div className="lg:col-span-1 relative group overflow-hidden rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm bg-gray-50 dark:bg-gray-900">
                {activeEvent.banner_image ? (
                    <Link href={`/events/${activeEvent.slug}`} className="block h-full relative aspect-[4/5] lg:aspect-auto min-h-[300px]">
                        <Image 
@@ -75,7 +75,7 @@ export default async function EventSection() {
            <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                {articles.slice(0, 4).map((article) => (
                    <Link key={article.id} href={`/${article.category}/${article.slug}`} className="group space-y-3">
-                       <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-100">
+                       <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
                            <Image
                                src={article.image || '/placeholder.svg'}
                                alt={article.title}
@@ -84,10 +84,10 @@ export default async function EventSection() {
                            />
                        </div>
                        <div>
-                           <h3 className="text-base font-semibold text-gray-900 group-hover:text-red-600 transition-colors leading-snug font-serif line-clamp-3">
+                           <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100 group-hover:text-red-600 transition-colors leading-snug font-serif line-clamp-3">
                                {article.title}
                            </h3>
-                           <p className="text-xs text-gray-500 mt-2 font-medium">
+                           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 font-medium">
                                {article.time}
                            </p>
                        </div>

@@ -49,7 +49,7 @@ export async function unsubscribeUser(endpoint: string) {
     try {
         await sql`DELETE FROM push_subscriptions WHERE endpoint = ${endpoint}`;
         return { success: true };
-    } catch (error) {
+    } catch {
         return { success: false };
     }
 }

@@ -17,6 +17,7 @@ interface Article {
   date: string;
   image: string | null;
   category: string;
+  scheduled_at?: string;
 }
 
 interface ArticleTableProps {
@@ -92,7 +93,16 @@ export default function ArticleTable({ articles }: ArticleTableProps) {
                          <StatusBadge status={article.status} />
                       </td>
                       <td className="p-4 text-sm text-gray-600 font-medium">{article.views}</td>
-                      <td className="p-4 text-sm text-gray-500">{article.date}</td>
+                       <td className="p-4 text-sm text-gray-500">
+                          {article.status === 'scheduled' && article.scheduled_at ? (
+                             <div className="flex flex-col text-xs">
+                                <span className="text-blue-600 font-bold uppercase tracking-tighter">Scheduled</span>
+                                <span className="text-[10px] text-gray-400">{new Date(article.scheduled_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                             </div>
+                          ) : (
+                             article.date
+                          )}
+                       </td>
                       <td className="p-4 text-right">
                          <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button className="p-1.5 hover:bg-gray-100 rounded text-gray-500 hover:text-blue-600" title="Preview">

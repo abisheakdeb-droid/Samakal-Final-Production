@@ -46,7 +46,7 @@ export default function LoginPage() {
         <div className="relative z-10 space-y-4">
             <h1 className="text-5xl font-bold tracking-tight">Samakal Studio AI</h1>
             <p className="text-xl text-gray-300 max-w-md">
-                The journalist's superweapon. Write, optimize, and dominate the news cycle.
+                The journalist&apos;s superweapon. Write, optimize, and dominate the news cycle.
             </p>
         </div>
       </div>
@@ -65,12 +65,6 @@ export default function LoginPage() {
             <form 
                 action={dispatch} 
                 className="space-y-6 mt-8"
-                onSubmit={() => {
-                    // Set session flag for tab-specific persistence
-                    if (typeof window !== 'undefined') {
-                        sessionStorage.setItem('samakal_session_active', 'true');
-                    }
-                }}
             >
                  <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -118,7 +112,7 @@ export default function LoginPage() {
                 <p className="font-semibold mb-2">Demo Access (Password: <code>password</code>)</p>
                 <div className="space-y-1">
                     <p><span className="font-medium">Master Admin:</span> Any email (e.g. admin@samakal.com)</p>
-                    <p><span className="font-medium">Journalist:</span> Email with 'journalist' (e.g. journalist@samakal.com)</p>
+                    <p><span className="font-medium">Journalist:</span> Email with &apos;journalist&apos; (e.g. journalist@samakal.com)</p>
                 </div>
             </div>
         </div>

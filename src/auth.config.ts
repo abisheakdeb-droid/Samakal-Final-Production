@@ -12,8 +12,6 @@ export const authConfig = {
       if (isOnAdmin) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL('/admin/dashboard', nextUrl));
       }
       return true;
     },
