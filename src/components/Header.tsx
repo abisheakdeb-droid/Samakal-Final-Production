@@ -29,6 +29,8 @@ export default function Header({ settings }: HeaderProps) {
   const navItems: NavItem[] = (settings?.navigation_menu as NavItem[]) || [
     { label: "সর্বশেষ", href: "/category/latest" },
     { label: "বাংলাদেশ", href: "/category/bangladesh" },
+    { label: "সারাদেশ", href: "/category/saradesh" },
+    { label: "রাজধানী", href: "/category/capital" },
     { label: "রাজনীতি", href: "/category/politics" },
     { label: "বিশ্ব", href: "/category/world" },
     { label: "অর্থনীতি", href: "/category/economics" },
