@@ -542,7 +542,7 @@ export default function FloatingVideoPlayer() {
           onNeverAsk={handlePromptNeverAsk}
         />
         <div
-          className="fixed z-[9999] bg-black rounded-xl shadow-2xl overflow-hidden transition-all duration-300 border-2 border-white/10 opacity-50 pointer-events-none"
+          className="fixed z-9999 bg-black rounded-xl shadow-2xl overflow-hidden transition-all duration-300 border-2 border-white/10 opacity-50 pointer-events-none"
           style={{
             left: `${position.x}px`,
             top: `${position.y}px`,
@@ -559,7 +559,7 @@ export default function FloatingVideoPlayer() {
   return (
     <div
       className={clsx(
-        "fixed z-[9999] bg-black rounded-xl shadow-2xl overflow-hidden transition-all duration-300 animate-in fade-in slide-in-from-bottom-4 zoom-in-95",
+        "fixed z-9999 bg-black rounded-xl shadow-2xl overflow-hidden transition-all duration-300 animate-in fade-in slide-in-from-bottom-4 zoom-in-95",
         "border-2 border-white/10",
       )}
       style={{
@@ -588,7 +588,7 @@ export default function FloatingVideoPlayer() {
       )}
 
       {/* Control Overlay */}
-      <div className="player-controls absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent p-3 opacity-0 hover:opacity-100 transition-opacity z-10">
+      <div className="player-controls absolute top-0 left-0 right-0 bg-linear-to-b from-black/80 to-transparent p-3 opacity-0 hover:opacity-100 transition-opacity z-10">
         <div className="flex items-center justify-between">
           <h4 className="text-white text-sm font-bold flex-1 line-clamp-1 mr-2">
             {currentVideo.title}
@@ -632,7 +632,7 @@ export default function FloatingVideoPlayer() {
 
       {/* Bottom Controls */}
       {!isMinimized && (
-        <div className="player-controls absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 opacity-0 hover:opacity-100 transition-opacity z-10">
+        <div className="player-controls absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-3 opacity-0 hover:opacity-100 transition-opacity z-10">
           <div className="flex items-center gap-3 pointer-events-auto">
             {/* Play/Pause Button */}
             <button
@@ -644,7 +644,7 @@ export default function FloatingVideoPlayer() {
                 {isPlaying ? (
                   <div className="w-3 h-3 bg-white rounded-sm" />
                 ) : (
-                  <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-white border-b-[6px] border-b-transparent ml-1" />
+                  <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-10 border-l-white border-b-[6px] border-b-transparent ml-1" />
                 )}
               </div>
             </button>
