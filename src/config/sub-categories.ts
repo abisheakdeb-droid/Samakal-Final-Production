@@ -10,6 +10,40 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
     'environment',
     'struggle',
   ],
+  saradesh: [
+    'dhaka',
+    'chattogram',
+    'rajshahi',
+    'khulna',
+    'barishal',
+    'sylhet',
+    'rangpur',
+    'mymensingh'
+  ],
+  dhaka: [
+    'dhaka', 'faridpur', 'gazipur', 'gopalganj', 'kishoreganj', 'madaripur', 'manikganj', 'munshiganj', 'narayanganj', 'narsingdi', 'rajbari', 'shariatpur', 'tangail'
+  ],
+  chattogram: [
+    'bandarban', 'brahmanbaria', 'chandpur', 'chattogram', 'comilla', 'coxs-bazar', 'feni', 'khagrachari', 'lakshmipur', 'noakhali', 'rangamati'
+  ],
+  rajshahi: [
+    'bogra', 'joypurhat', 'naogaon', 'natore', 'pabna', 'rajshahi', 'sirajganj', 'chapainawabganj'
+  ],
+  khulna: [
+    'bagerhat', 'chuadanga', 'jessore', 'jhenaidah', 'khulna', 'kushtia', 'magura', 'meherpur', 'narail', 'satkhira'
+  ],
+  barishal: [
+    'barguna', 'barishal', 'bhola', 'jhalokati', 'patuakhali', 'pirojpur'
+  ],
+  sylhet: [
+    'habiganj', 'moulvibazar', 'sunamganj', 'sylhet'
+  ],
+  rangpur: [
+    'dinajpur', 'gaibandha', 'kurigram', 'lalmonirhat', 'nilphamari', 'panchagarh', 'rangpur', 'thakurgaon'
+  ],
+  mymensingh: [
+    'jamalpur', 'mymensingh', 'netrokona', 'sherpur'
+  ],
   economics: [
     'industry-trade',
     'share-market',
@@ -78,12 +112,12 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
     'relationship',
     'religion',
   ],
-  education: [
+  /* education: [
     'campus',
     'admission',
     'exam-results',
     'scholarship',
-  ],
+  ], */
   crime: [
     'murder',
     'corruption',
@@ -99,8 +133,6 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
   ],
   other: [
     'literature',
-    'religion',
-    'jobs',
   ],
 };
 

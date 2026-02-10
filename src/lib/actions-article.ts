@@ -692,6 +692,60 @@ export async function fetchArticlesByDate(date: string) {
     }
 }
 
+export async function fetchArchiveArticles({
+    startDate,
+    endDate,
+    category,
+    limit = 20,
+    offset = 0
+}: {
+    startDate?: string;
+    endDate?: string;
+    category?: string;
+    limit?: number;
+    offset?: number;
+}) {
+    try {
+        const normalizedCategory = category && category !== 'all' ? normalizeCategory(category) : null;
+        
+        // Use parameterized query with logic to ignore null filters
+        // If startDate is null, the condition (startDate IS NULL) becomes true, so we essentially ignore the date check.
+        // However, standard SQL for this pattern often looks like: (param IS NULL OR column = param)
+        
+        const data = await sql`
+            SELECT 
+                articles.id,
+                articles.title,
+                articles.slug,
+                articles.status,
+                articles.category,
+                articles.parent_category,
+                articles.views,
+                articles.image,
+                articles.created_at,
+                articles.content,
+                articles.sub_headline,
+                users.name as author
+            FROM articles
+            LEFT JOIN users ON articles.author_id = users.id
+            WHERE 
+                articles.status = 'published' AND
+                (${startDate || null}::text IS NULL OR articles.created_at >= ${startDate}::date) AND
+                (${endDate || null}::text IS NULL OR articles.created_at <= (${endDate}::date + INTERVAL '1 day' - INTERVAL '1 second')) AND
+                (${normalizedCategory}::text IS NULL OR (articles.category = ${normalizedCategory} OR articles.parent_category = ${normalizedCategory}))
+            ORDER BY articles.created_at DESC
+            LIMIT ${limit}
+            OFFSET ${offset}
+        `;
+
+        return data.rows.map(row => mapArticleToNewsItem(row as ArticleRow));
+
+    } catch (error) {
+        console.error('Archive Fetch Error:', error);
+        return [];
+    }
+}
+
 
 
 

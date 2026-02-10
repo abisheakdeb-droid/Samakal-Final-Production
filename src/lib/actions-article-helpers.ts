@@ -1,5 +1,6 @@
 import type { ArticleRow, ExtraArticleData } from "@/types/database";
 import { getBengaliCategory } from "@/utils/category";
+import { formatBanglaDate } from "@/lib/utils";
 
 // Helper to map DB result to UI NewsItem shape
 import { formatRelativeTime } from "@/utils/bn";
@@ -61,7 +62,7 @@ export function mapArticleToNewsItem(
         category: getBengaliCategory(article.category),
         catSlug: (article.category || 'uncategorized').toLowerCase(),
         author: article.author || 'ডেস্ক রিপোর্ট',
-        date: dateObj.toLocaleDateString('bn-BD', { day: 'numeric', month: 'long', year: 'numeric' }),
+        date: formatBanglaDate(dateObj),
         time: formatRelativeTime(dateObj.toISOString()),
         summary: stripHtml(article.content || '').substring(0, 150) + '...',
         content: article.content || '',

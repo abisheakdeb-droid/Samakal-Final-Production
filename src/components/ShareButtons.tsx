@@ -105,7 +105,7 @@ export default function ShareButtons({
           isHovered ? "w-52 opacity-100 mr-2" : "w-0 opacity-0 mr-0",
         )}
       >
-        <div className="flex bg-gray-100/80 backdrop-blur-sm rounded-full p-1 border border-gray-200 shadow-sm gap-1">
+        <div className="flex bg-gray-100/80 backdrop-blur-sm rounded-lg p-1 border border-gray-200 shadow-sm gap-1">
           {shareLinks.map((link) => (
             <a
               key={link.name}
@@ -113,7 +113,7 @@ export default function ShareButtons({
               target="_blank"
               rel="noopener noreferrer"
               className={clsx(
-                "p-2 rounded-full transition-all duration-300 hover:scale-125 active:scale-95",
+                "p-2 rounded-lg transition-all duration-300 hover:scale-125 active:scale-95",
                 link.color,
                 "hover:bg-white hover:shadow-sm",
               )}
@@ -128,7 +128,7 @@ export default function ShareButtons({
       {/* Trigger Button */}
       <button
         className={clsx(
-          "flex items-center justify-center p-2.5 rounded-full transition-all duration-300 font-bold text-sm shadow-sm border border-gray-200 z-10 hover:scale-105 active:scale-95",
+          "flex items-center justify-center p-2.5 rounded-lg transition-all duration-300 font-bold text-sm shadow-sm border border-gray-200 z-10 hover:scale-105 active:scale-95",
           isHovered
             ? "bg-gray-100 text-gray-900 border-brand-red/20"
             : "bg-brand-red text-white hover:bg-red-700 hover:shadow-md border-transparent",

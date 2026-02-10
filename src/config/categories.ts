@@ -26,6 +26,7 @@ export const CATEGORY_MAP: Record<string, string> = {
   offbeat: "অফবিট",
   shilpomancha: "শিল্পমঞ্চ",
   "special-arrangement": "বিশেষ আয়োজন",
+  // Divisions
   dhaka: "ঢাকা",
   chattogram: "চট্টগ্রাম",
   rajshahi: "রাজশাহী",
@@ -34,6 +35,78 @@ export const CATEGORY_MAP: Record<string, string> = {
   sylhet: "সিলেট",
   rangpur: "রংপুর",
   mymensingh: "ময়মনসিংহ",
+
+  // Dhaka Division Districts
+  faridpur: "ফরিদপুর",
+  gazipur: "গাজীপুর",
+  gopalganj: "গোপালগঞ্জ",
+  kishoreganj: "কিশোরগঞ্জ",
+  madaripur: "মাদারীপুর",
+  manikganj: "মানিকগঞ্জ",
+  munshiganj: "মুন্সিগঞ্জ",
+  narayanganj: "নারায়ণগঞ্জ",
+  narsingdi: "নরসিংদী",
+  rajbari: "রাজবাড়ী",
+  shariatpur: "শরীয়তপুর",
+  tangail: "টাঙ্গাইল",
+
+  // Chattogram Division Districts
+  bandarban: "বান্দরবান",
+  brahmanbaria: "ব্রাহ্মণবাড়িয়া",
+  chandpur: "চাঁদপুর",
+  comilla: "কুমিল্লা",
+  "coxs-bazar": "কক্সবাজার",
+  feni: "ফেনী",
+  khagrachari: "খাগড়াছড়ি",
+  lakshmipur: "লক্ষ্মীপুর",
+  noakhali: "নোয়াখালী",
+  rangamati: "রাঙামাটি",
+
+  // Rajshahi Division Districts
+  bogra: "বগুড়া",
+  joypurhat: "জয়পুরহাট",
+  naogaon: "নওগাঁ",
+  natore: "নাটোর",
+  pabna: "পাবনা",
+  sirajganj: "সিরাজগঞ্জ",
+  chapainawabganj: "চাপাইনবাবগঞ্জ",
+
+  // Khulna Division Districts
+  bagerhat: "বাগেরহাট",
+  chuadanga: "চুয়াডাঙ্গা",
+  jessore: "যশোর",
+  jhenaidah: "ঝিনাইদহ",
+  kushtia: "কুষ্টিয়া",
+  magura: "মাগুরা",
+  meherpur: "মেহেরপুর",
+  narail: "নড়াইল",
+  satkhira: "সাতক্ষীরা",
+
+  // Barishal Division Districts
+  barguna: "বরগুনা",
+  bhola: "ভোলা",
+  jhalokati: "ঝালকাঠি",
+  patuakhali: "পটুয়াখালী",
+  pirojpur: "পিরোজপুর",
+
+  // Sylhet Division Districts
+  habiganj: "হবিগঞ্জ",
+  moulvibazar: "মৌলভীবাজার",
+  sunamganj: "সুনামগঞ্জ",
+
+  // Rangpur Division Districts
+  dinajpur: "দিনাজপুর",
+  gaibandha: "গাইবান্ধা",
+  kurigram: "কুড়িগ্রাম",
+  lalmonirhat: "লালমনিরহাট",
+  nilphamari: "নীলফামারী",
+  panchagarh: "পঞ্চগড়",
+  thakurgaon: "ঠাকুরগাঁও",
+
+  // Mymensingh Division Districts
+  jamalpur: "জামালপুর",
+  netrokona: "নেত্রকোনা",
+  sherpur: "শেরপুর",
   
   // Sub-categories
   "law-courts": "আইন ও বিচার",

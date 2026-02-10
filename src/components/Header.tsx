@@ -13,11 +13,13 @@ import SearchOverlay from "@/components/SearchOverlay";
 import MobileMenu from "@/components/MobileMenu";
 // import ThemeToggle from '@/components/ThemeToggle';
 import { SiteSettings } from "@/lib/actions-settings";
+import { SUB_CATEGORIES } from "@/config/sub-categories";
+import { formatBanglaDate } from "@/lib/utils";
 
 type NavItem = {
   label: string;
   href: string;
-  subItems?: { label: string; href: string }[];
+  subItems?: NavItem[];
   megaMenu?: boolean;
 };
 
@@ -35,16 +37,18 @@ export default function Header({ settings }: HeaderProps) {
     { label: "বিশ্ব", href: "/category/world" },
     { label: "অর্থনীতি", href: "/category/economics" },
     { label: "খেলা", href: "/category/sports" },
+    { label: "অপরাধ", href: "/category/crime" },
     { label: "বিনোদন", href: "/category/entertainment" },
     { label: "মতামত", href: "/category/opinion" },
     { label: "চাকরি", href: "/category/jobs" },
     { label: "আর্কাইভ", href: "/archive" },
-    { label: "গ্যালারি", href: "/photo" },
     {
       label: "সব",
       href: "#",
       megaMenu: true,
       subItems: [
+        { label: "ছবি", href: "/photo" },
+        { label: "ভিডিও", href: "/video" },
         { label: "প্রবাস", href: "/category/probash" },
         { label: "জীবন সংগ্রাম", href: "/category/jibon-songram" },
         { label: "ভ্রমণ", href: "/category/travel" },
@@ -59,16 +63,21 @@ export default function Header({ settings }: HeaderProps) {
     },
   ];
 
+  // Hard override: Ensure Saradesh has NO subItems (per user request)
+  const processedNavItems = navItems.map((item) => {
+    if (item.href === "/category/saradesh" || item.label === "সারাদেশ") {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { subItems, megaMenu, ...rest } = item;
+      return rest;
+    }
+    return item;
+  });
+
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const date = new Date().toLocaleDateString("bn-BD", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const date = formatBanglaDate(new Date());
 
   return (
     <>
@@ -107,8 +116,15 @@ export default function Header({ settings }: HeaderProps) {
           <div className="container mx-auto px-4 flex justify-between items-center h-12">
             {/* Main Nav Links */}
             <nav className="hidden md:flex gap-1 text-gray-800 dark:text-gray-200 font-medium overflow-visible">
-              {navItems.map((item: NavItem, idx) => {
-                const isActive = pathname === item.href;
+              {processedNavItems.map((item: NavItem, idx: number) => {
+                // Logic to highlight parent if on subcategory (e.g. Bangladesh highlighted when on Law & Courts)
+                const itemSlug = item.href.split("/").pop() || "";
+                const currentSlug = pathname?.split("/").pop() || "";
+
+                const isSubOfItem =
+                  SUB_CATEGORIES[itemSlug]?.includes(currentSlug);
+
+                const isActive = pathname === item.href || isSubOfItem;
                 const hasSub = !!item.subItems;
                 const isHamburger = item.label === "সব" || item.label === "আরও";
 
@@ -117,7 +133,7 @@ export default function Header({ settings }: HeaderProps) {
                     <Link
                       href={item.href}
                       className={clsx(
-                        "whitespace-nowrap transition-colors px-3 py-3 flex items-center gap-1 hover:text-brand-red",
+                        "h-full whitespace-nowrap transition-colors px-3 py-3 flex items-center gap-1 hover:text-brand-red",
                         isActive && "text-brand-red font-bold",
                         isHamburger && "px-4", // Extra padding for the icon
                       )}
@@ -131,11 +147,6 @@ export default function Header({ settings }: HeaderProps) {
                       )}
                     </Link>
 
-                    {/* Active Indicator Line (Bottom) - Only for text items */}
-                    {isActive && !isHamburger && (
-                      <div className="absolute bottom-0 left-3 right-3 h-0.5 bg-brand-red"></div>
-                    )}
-
                     {/* Dropdown Menu */}
                     {hasSub && (
                       <div
@@ -145,7 +156,9 @@ export default function Header({ settings }: HeaderProps) {
                             ? "w-[400px]" // User asked for 2 columns, 400px is enough
                             : "min-w-[200px]",
                           // Align right for the last few items to prevent overflow
-                          idx > navItems.length - 3 ? "right-0" : "left-0",
+                          idx > processedNavItems.length - 3
+                            ? "right-0"
+                            : "left-0",
                         )}
                       >
                         <div
@@ -157,8 +170,43 @@ export default function Header({ settings }: HeaderProps) {
                               : "grid-cols-1",
                           )}
                         >
-                          {item.subItems?.map(
-                            (sub: { label: string; href: string }) => (
+                          {item.subItems?.map((sub: NavItem) => {
+                            const hasNested = !!sub.subItems;
+
+                            if (hasNested) {
+                              return (
+                                <div
+                                  key={sub.label}
+                                  className="group/nested relative"
+                                >
+                                  <Link
+                                    href={sub.href}
+                                    className="text-sm text-gray-600 dark:text-gray-300 hover:text-brand-red hover:bg-gray-50 dark:hover:bg-gray-700 px-2 py-1.5 rounded transition flex items-center justify-between w-full"
+                                  >
+                                    {sub.label}
+                                    <ChevronDown
+                                      size={12}
+                                      className="-rotate-90"
+                                    />
+                                  </Link>
+
+                                  {/* Nested Flyout Menu */}
+                                  <div className="absolute left-full top-0 hidden group-hover/nested:block w-48 bg-white dark:bg-gray-800 shadow-xl border-l border-gray-100 dark:border-gray-700 p-2 rounded-r-lg -ml-1 z-60 h-[300px] overflow-y-auto">
+                                    {sub.subItems?.map((nested) => (
+                                      <Link
+                                        key={nested.label}
+                                        href={nested.href}
+                                        className="text-sm text-gray-600 dark:text-gray-300 hover:text-brand-red hover:bg-gray-50 dark:hover:bg-gray-700 px-2 py-1.5 rounded transition block"
+                                      >
+                                        {nested.label}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </div>
+                              );
+                            }
+
+                            return (
                               <Link
                                 key={sub.label}
                                 href={sub.href}
@@ -166,8 +214,8 @@ export default function Header({ settings }: HeaderProps) {
                               >
                                 {sub.label}
                               </Link>
-                            ),
-                          )}
+                            );
+                          })}
                         </div>
                       </div>
                     )}

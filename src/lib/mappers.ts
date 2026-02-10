@@ -47,6 +47,8 @@ export function mapArticleToNewsItem(
         time: getTimeAgo(dateObj),
         summary: stripHtml(article.content || '').substring(0, 150) + '...', // Simple extract
         content: article.content || '',
+
+        status: article.status || 'published',
         // New Fields
         news_type: article.news_type,
         location: article.location,

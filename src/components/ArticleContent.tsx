@@ -14,7 +14,7 @@ import {
   Link as LinkIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { formatRelativeTime } from "@/utils/bn";
+import { formatBanglaTime } from "@/lib/utils";
 import { generateBlurPlaceholder } from "@/utils/image";
 import HistoryTracker from "@/components/HistoryTracker";
 import ImageLightbox from "@/components/ImageLightbox";
@@ -132,7 +132,7 @@ export default function ArticleContent({
               </span>
               <span className="flex items-center gap-1">
                 <Clock size={14} />
-                {formatRelativeTime(article.published_at || article.date)}
+                {formatBanglaTime(article.published_at || article.date)}
               </span>
             </div>
           </div>
@@ -144,12 +144,12 @@ export default function ArticleContent({
 
           <BookmarkButton
             articleId={article.id}
-            className="p-2 border border-gray-200 rounded-full hover:bg-gray-50 text-gray-600 transition-colors"
+            className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600 transition-colors"
           />
 
           <button
             onClick={handlePrint}
-            className="p-2 border border-gray-200 rounded-full hover:bg-gray-50 text-gray-600 transition-colors"
+            className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600 transition-colors"
             title="প্রিন্ট করুন"
           >
             <Printer size={20} />
@@ -157,7 +157,7 @@ export default function ArticleContent({
 
           <button
             onClick={handleCopy}
-            className="p-2 border border-gray-200 rounded-full hover:bg-gray-50 text-gray-600 transition-colors"
+            className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600 transition-colors"
             title="লিংক কপি করুন"
           >
             <LinkIcon size={20} />
@@ -202,34 +202,37 @@ export default function ArticleContent({
 
       {/* Bottom Share Section */}
       <div className="w-full md:w-[85%] border-t border-gray-100 dark:border-gray-800 mt-4 pt-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl">
-          <span className="font-bold text-gray-700 dark:text-gray-300">
-            শেয়ার / সংরক্ষণ:
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-gray-50 dark:bg-gray-800/50 px-6 py-5 rounded-xl">
+          <span className="font-bold text-gray-700 dark:text-gray-300 text-sm">
+            শেয়ার / সংরক্ষণ:
           </span>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <ShareButtons title={article.title} slug={article.slug} />
-            <div className="h-6 w-px bg-gray-300 dark:bg-gray-700 mx-2"></div>
+
+            <div className="h-6 w-px bg-gray-300 dark:bg-gray-700"></div>
 
             <BookmarkButton
               articleId={article.id}
               showText
-              className="hover:text-brand-red transition-colors"
+              className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:border-brand-red hover:bg-brand-red/5 text-gray-600 hover:text-brand-red transition-all font-medium text-sm"
             />
 
             <button
               onClick={handlePrint}
-              className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-brand-red transition-colors font-medium text-sm"
+              className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:border-brand-red hover:bg-brand-red/5 text-gray-600 dark:text-gray-400 hover:text-brand-red transition-all font-medium text-sm"
+              title="প্রিন্ট করুন"
             >
               <Printer size={18} />
-              <span className="hidden md:inline">প্রিন্ট</span>
+              <span>প্রিন্ট</span>
             </button>
 
             <button
               onClick={handleCopy}
-              className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-brand-red transition-colors font-medium text-sm"
+              className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:border-brand-red hover:bg-brand-red/5 text-gray-600 dark:text-gray-400 hover:text-brand-red transition-all font-medium text-sm"
+              title="লিংক কপি করুন"
             >
               <LinkIcon size={18} />
-              <span className="hidden md:inline">কপি</span>
+              <span>কপি</span>
             </button>
           </div>
         </div>
@@ -376,7 +379,7 @@ export default function ArticleContent({
               <Link
                 key={news.id}
                 href={`/article/${news.id}`}
-                className="group block bg-white rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
+                className="group block bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
               >
                 <div className="aspect-video relative overflow-hidden">
                   <Image

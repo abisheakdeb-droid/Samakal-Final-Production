@@ -15,6 +15,59 @@
   --color-brand-green: #10b981;
 
   --color-bg-subtle: #f3f4f6;
+  
+  /* Typography Scale - Responsive with clamp() */
+  /* Formula: clamp(min, preferred, max) */
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);      /* 12-14px */
+  --text-sm: clamp(0.875rem, 0.825rem + 0.25vw, 1rem);        /* 14-16px */
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);       /* 16-18px */
+  --text-lg: clamp(1.125rem, 1.05rem + 0.375vw, 1.25rem);     /* 18-20px */
+  --text-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);         /* 20-24px */
+  --text-2xl: clamp(1.5rem, 1.35rem + 0.75vw, 1.875rem);      /* 24-30px */
+  --text-3xl: clamp(1.875rem, 1.65rem + 1.125vw, 2.25rem);    /* 30-36px */
+  --text-4xl: clamp(2.25rem, 1.95rem + 1.5vw, 3rem);          /* 36-48px */
+  --text-5xl: clamp(3rem, 2.5rem + 2.5vw, 4rem);              /* 48-64px */
+  
+  /* Line Heights - Optimized for Bengali text readability */
+  --leading-tight: 1.25;      /* For large headlines */
+  --leading-snug: 1.375;      /* For subheadings */
+  --leading-normal: 1.5;      /* For UI text */
+  --leading-relaxed: 1.75;    /* For body text (Bengali optimal) */
+  --leading-loose: 2;         /* For very long-form content */
+  
+  /* Letter Spacing - Subtle adjustments for Bengali */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  
+  /* Spacing Scale (4px/8px grid) */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  
+  /* Shadow System */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem;   /* 4px */
+  --radius-md: 0.375rem;  /* 6px */
+  --radius-lg: 0.5rem;    /* 8px */
+  --radius-xl: 0.75rem;   /* 12px */
+  --radius-2xl: 1rem;     /* 16px */
+  --radius-full: 9999px;  /* Fully rounded */
 }
 
 :root {
@@ -31,8 +84,30 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-tiro-bangla), serif;
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed); /* 1.75 - optimal for Bengali */
+  letter-spacing: var(--tracking-normal);
   transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Typography Utility Classes */
+.text-xs { font-size: var(--text-xs); }
+.text-sm { font-size: var(--text-sm); }
+.text-base { font-size: var(--text-base); }
+.text-lg { font-size: var(--text-lg); }
+.text-xl { font-size: var(--text-xl); }
+.text-2xl { font-size: var(--text-2xl); }
+.text-3xl { font-size: var(--text-3xl); }
+.text-4xl { font-size: var(--text-4xl); }
+.text-5xl { font-size: var(--text-5xl); }
+
+.leading-tight { line-height: var(--leading-tight); }
+.leading-snug { line-height: var(--leading-snug); }
+.leading-normal { line-height: var(--leading-normal); }
+.leading-relaxed { line-height: var(--leading-relaxed); }
+.leading-loose { line-height: var(--leading-loose); }
 
 /* Global Selection Color */
 ::selection {
@@ -97,6 +172,177 @@ body {
 
 .animate-marquee:hover {
   animation-play-state: paused;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Smooth Scroll Behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Micro-interactions and Transitions */
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Card Hover Effects - More specific selectors to avoid affecting non-card layouts */
+.hover-lift,
+a.group,
+[class*="card"] {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover,
+a.group:hover,
+[class*="card"]:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg) !important;
+}
+
+/* Subtle scale on image hover - only for grouped card layouts */
+a.group img,
+.hover-scale img {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+a.group:hover img,
+.hover-scale:hover img {
+  transform: scale(1.05);
+}
+
+/* Button Interactions */
+button,
+[role="button"],
+a[class*="btn"] {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:hover,
+[role="button"]:hover,
+a[class*="btn"]:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+button:active,
+[role="button"]:active,
+a[class*="btn"]:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Ripple Effect for Buttons */
+button::after,
+[role="button"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+@media (hover: hover) {
+  button:hover::after,
+  [role="button"]:hover::after {
+    animation: ripple 0.6s ease-out;
+  }
+}
+
+/* Focus States */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-brand-orange);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Navigation Item Transitions */
+nav a,
+.nav-link {
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+nav a::after,
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-brand-orange);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Only show underline on hover for non-active items */
+nav a:hover::after,
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Remove underline from active state completely - only color highlight needed */
+nav a.text-brand-red::after,
+.nav-link.text-brand-red::after,
+nav a[aria-current="page"]::after,
+.nav-link.active::after {
+  width: 0 !important;
+  display: none;
+}
+
+/* Fade-in animation for dynamic content */
+.fade-in-up {
+  animation: fade-in-up 0.6s ease-out;
+}
+
+/* Loading shimmer enhancement */
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #f8f8f8 50%,
+    #f0f0f0 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+.dark .animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    #1a1a1a 0%,
+    #2a2a2a 50%,
+    #1a1a1a 100%
+  );
+  background-size: 200% 100%;
 }
 /* Scrollbar Styling */
 .scrollbar-thin::-webkit-scrollbar {
@@ -214,8 +460,10 @@ div.ProseMirror table .selectedCell:after {
 .article-content > div p,
 .article-content > div div {
   text-align: justify !important;
-  margin-bottom: 0.8em !important;
+  margin-bottom: var(--space-4) !important; /* 16px consistent spacing */
   margin-top: 0 !important;
+  line-height: var(--leading-relaxed) !important; /* 1.75 for Bengali */
+  font-size: var(--text-base) !important; /* Responsive 16-18px */
 }
 
 /* Hide empty paragraphs that cause huge gaps */
@@ -224,14 +472,45 @@ div.ProseMirror table .selectedCell:after {
   display: none !important;
 }
 
-/* Center align headings for better aesthetics */
+/* Headings with proper hierarchy and Bengali-optimized spacing */
 .article-content.prose h1,
-.article-content.prose h2,
-.article-content.prose h3,
-.article-content > div h1,
-.article-content > div h2,
-.article-content > div h3 {
+.article-content > div h1 {
+  font-size: var(--text-4xl) !important; /* 36-48px */
+  line-height: var(--leading-tight) !important; /* 1.25 */
+  font-weight: 700;
+  margin-bottom: var(--space-6) !important;
+  margin-top: var(--space-8) !important;
   text-align: center !important;
+  letter-spacing: var(--tracking-tight);
+}
+
+.article-content.prose h2,
+.article-content > div h2 {
+  font-size: var(--text-3xl) !important; /* 30-36px */
+  line-height: var(--leading-snug) !important; /* 1.375 */
+  font-weight: 600;
+  margin-bottom: var(--space-5) !important;
+  margin-top: var(--space-8) !important;
+  text-align: center !important;
+}
+
+.article-content.prose h3,
+.article-content > div h3 {
+  font-size: var(--text-2xl) !important; /* 24-30px */
+  line-height: var(--leading-snug) !important;
+  font-weight: 600;
+  margin-bottom: var(--space-4) !important;
+  margin-top: var(--space-6) !important;
+  text-align: center !important;
+}
+
+.article-content.prose h4,
+.article-content > div h4 {
+  font-size: var(--text-xl) !important; /* 20-24px */
+  line-height: var(--leading-normal) !important;
+  font-weight: 600;
+  margin-bottom: var(--space-3) !important;
+  margin-top: var(--space-5) !important;
 }
 
 /* Ensure lists don't get justified */
@@ -240,6 +519,27 @@ div.ProseMirror table .selectedCell:after {
 .article-content > div ul,
 .article-content > div ol {
   text-align: left !important;
+  margin-bottom: var(--space-5) !important;
+  margin-top: var(--space-3) !important;
+  padding-left: var(--space-6);
+}
+
+.article-content.prose li,
+.article-content > div li {
+  margin-bottom: var(--space-2) !important;
+  line-height: var(--leading-relaxed) !important;
+}
+
+/* Blockquotes */
+.article-content.prose blockquote,
+.article-content > div blockquote {
+  border-left: 4px solid var(--color-brand-orange);
+  padding-left: var(--space-5);
+  margin: var(--space-6) 0;
+  font-style: italic;
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: rgb(107 114 128); /* gray-500 */
 }
 
 
@@ -317,4 +617,9 @@ div.ProseMirror table .selectedCell:after {
   a[href^="/"]::after {
     content: "";
   }
+}
+
+/* Global Container Restriction (User Request: Print from both sides) */
+.container {
+  max-width: 80rem !important; /* 1280px */
 }
