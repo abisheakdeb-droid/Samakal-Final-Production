@@ -22,12 +22,20 @@ const nextConfig: NextConfig = {
         hostname: "**.samakal.com",
       },
       {
-        protocol: "https",
-        hostname: "**.vercel.app",
+        protocol: "http",
+        hostname: "**.samakal.com",
       },
       {
         protocol: "https",
         hostname: "samakal.com",
+      },
+      {
+        protocol: "http",
+        hostname: "samakal.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.vercel.app",
       },
       {
         protocol: "https",

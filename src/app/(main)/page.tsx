@@ -49,21 +49,32 @@ export default async function Home() {
     "চাকরি",
   ];
 
-  const [
-    leadNewsFull,
-    selectedNewsInitial,
-    opinionNews,
-    mostReadNews,
-    ...categoryData
-  ] = await Promise.all([
-    fetchLatestArticles(20),
-    fetchFeaturedArticles(10),
-    fetchArticlesByCategory("মতামত", 5, true),
-    fetchMostReadArticles(5),
-    ...categories.map((cat) =>
-      fetchArticlesByCategory(cat, cat === "চাকরি" ? 8 : 6, cat !== "চাকরি"),
-    ), // Fetch aggregated (true) except for Jobs (false)
-  ]);
+  let leadNewsFull = [];
+  let selectedNewsInitial = [];
+  let opinionNews = [];
+  let mostReadNews = [];
+  let categoryData = [];
+
+  try {
+    const results = await Promise.all([
+      fetchLatestArticles(20),
+      fetchFeaturedArticles(10),
+      fetchArticlesByCategory("মতামত", 5, true),
+      fetchMostReadArticles(5),
+      ...categories.map((cat) =>
+        fetchArticlesByCategory(cat, cat === "চাকরি" ? 8 : 6, cat !== "চাকরি"),
+      ),
+    ]);
+
+    leadNewsFull = results[0] || [];
+    selectedNewsInitial = results[1] || [];
+    opinionNews = results[2] || [];
+    mostReadNews = results[3] || [];
+    categoryData = results.slice(4);
+  } catch (error) {
+    console.error("Homepage Data Fetch Error:", error);
+    // Continue with empty partials rather than crashing
+  }
 
   // Fallback to empty if DB is empty
   if (!leadNewsFull || leadNewsFull.length === 0) {
