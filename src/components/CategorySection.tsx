@@ -8,6 +8,7 @@ import {
   formatBanglaDateTime,
   formatBanglaTime,
 } from "@/lib/utils";
+import NewsActionButtons from "./NewsActionButtons";
 
 interface CategorySectionProps {
   title: string;
@@ -59,7 +60,7 @@ export default function CategorySection({
   if (news.length < minItemsNeeded && !dualMode && !thirdCategory) {
     // Fallback to simple grid if not enough items
     return (
-      <section className="bg-white py-12 border-b border-gray-200">
+      <section className="bg-white py-12 border-t border-gray-200">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-2">
@@ -106,11 +107,11 @@ export default function CategorySection({
   // Triple category mode - render three categories side by side
   if (thirdCategory && secondCategory) {
     return (
-      <section className="bg-white py-12 border-b border-gray-200">
+      <section className="bg-white py-12 border-t border-gray-200">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-gray-200">
             {/* First Category */}
-            <div>
+            <div className="lg:pr-6 mb-8 lg:mb-0">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-8 bg-brand-red rounded-full"></span>
@@ -131,7 +132,7 @@ export default function CategorySection({
             </div>
 
             {/* Second Category */}
-            <div className="lg:border-l border-gray-200 lg:pl-8">
+            <div className="lg:px-6 mb-8 lg:mb-0">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-8 bg-brand-red rounded-full"></span>
@@ -152,7 +153,7 @@ export default function CategorySection({
             </div>
 
             {/* Third Category (Jobs - List Style) */}
-            <div className="lg:border-l border-gray-200 lg:pl-8">
+            <div className="lg:pl-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-8 bg-brand-red rounded-full"></span>
@@ -185,11 +186,11 @@ export default function CategorySection({
   // Dual category mode - render two categories side by side
   if (dualMode && secondCategory) {
     return (
-      <section className="bg-white py-12 border-b border-gray-200">
+      <section className="bg-white py-12 border-t border-gray-200">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-200">
             {/* First Category */}
-            <div>
+            <div className="lg:pr-8 mb-8 lg:mb-0">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-8 bg-brand-red rounded-full"></span>
@@ -210,7 +211,7 @@ export default function CategorySection({
             </div>
 
             {/* Second Category */}
-            <div className="lg:border-l border-gray-200 lg:pl-8">
+            <div className="lg:pl-8">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-8 bg-brand-red rounded-full"></span>
@@ -237,7 +238,7 @@ export default function CategorySection({
 
   // Single category mode - render with variant
   return (
-    <section className="bg-white py-12 border-b border-gray-200">
+    <section className="bg-white py-12 border-t border-gray-200">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2">
@@ -284,9 +285,9 @@ function DualCategoryGrid({ news }: { news: NewsItem[] }) {
       {/* Lead Item (Card Style) */}
       <Link
         href={`/article/${lead.id}`}
-        className="group block border border-gray-100 rounded-lg overflow-hidden hover:shadow-md transition-all"
+        className="group block bg-white rounded-xl p-4 shadow-sm border border-white hover:border-red-50 hover:shadow-md transition-all duration-300"
       >
-        <div className="relative aspect-video w-full overflow-hidden">
+        <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-4 bg-gray-100">
           <Image
             src={lead.image}
             alt={lead.title}
@@ -294,27 +295,36 @@ function DualCategoryGrid({ news }: { news: NewsItem[] }) {
             className="object-cover group-hover:scale-105 transition-transform duration-700"
           />
         </div>
-        <div className="p-4">
+        <div className="">
           <h2 className="text-gray-900 text-xl md:text-2xl font-bold leading-tight mb-2 group-hover:text-brand-red transition-colors">
             {lead.title}
           </h2>
-          {lead.published_at && (
-            <p className="text-gray-500 text-xs">
-              {formatBanglaDateTime(lead.published_at)}
-            </p>
-          )}
+          <p className="text-gray-600 line-clamp-2 text-sm mb-3">
+            {lead.summary}
+          </p>
+          <div className="flex items-center justify-between mt-4">
+            {lead.published_at && (
+              <p className="text-gray-400 text-xs">
+                {formatBanglaDateTime(lead.published_at)}
+              </p>
+            )}
+            <NewsActionButtons
+              title={lead.title}
+              url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${lead.id}`}
+            />
+          </div>
         </div>
       </Link>
 
       {/* List Items */}
-      <div className="flex flex-col gap-4 border-t border-gray-100 pt-4">
+      <div className="flex flex-col">
         {list.map((item) => (
           <Link
             key={item.id}
             href={`/article/${item.id}`}
-            className="group flex gap-3 items-start p-2 rounded-lg hover:bg-red-50 transition-all border-b border-gray-100 last:border-0 last:pb-0"
+            className="group flex gap-3 items-start p-3 bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border-b border-gray-200 last:border-0 transition-all duration-300"
           >
-            <div className="relative w-24 aspect-video shrink-0 rounded overflow-hidden">
+            <div className="relative w-24 aspect-video shrink-0 rounded-lg overflow-hidden bg-gray-100">
               <Image
                 src={item.image}
                 alt={item.title}
@@ -346,26 +356,41 @@ function Variant1ClassicBento({ news }: { news: NewsItem[] }) {
   const subs = news.slice(1, 5);
 
   return (
-    <div className="grid grid-cols-4 grid-rows-2 gap-4 h-[400px] md:h-[500px]">
+    <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-6 h-auto">
       {/* Main Item */}
       <Link
         href={`/article/${main.id}`}
-        className="col-span-2 row-span-2 relative rounded-lg overflow-hidden group"
+        className="col-span-2 row-span-2 block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
       >
-        <Image
-          src={main.image}
-          alt={main.title}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-700"
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
-        <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-end">
-          <span className="bg-brand-red text-white text-xs px-2 py-1 rounded w-fit mb-2">
+        <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+          <Image
+            src={main.image}
+            alt={main.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-700"
+          />
+          <span className="absolute top-3 left-3 bg-brand-red text-white text-xs font-medium px-2.5 py-1 rounded-lg shadow-sm z-10">
             {main.category}
           </span>
-          <h2 className="text-white text-xl md:text-2xl font-bold leading-tight group-hover:text-brand-red transition-colors">
+        </div>
+        <div className="p-4 md:p-6">
+          <h2 className="text-gray-900 text-xl md:text-2xl font-bold leading-tight group-hover:text-brand-red transition-colors mb-2">
             {main.title}
           </h2>
+          <p className="text-gray-500 line-clamp-3 leading-relaxed text-sm md:text-base mb-3">
+            {main.summary || "বিস্তারিত পড়তে ক্লিক করুন..."}
+          </p>
+          <div className="flex items-center justify-between mt-4">
+            {main.published_at && (
+              <p className="text-gray-400 text-xs">
+                {formatBanglaDateTime(main.published_at)}
+              </p>
+            )}
+            <NewsActionButtons
+              title={main.title}
+              url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${main.id}`}
+            />
+          </div>
         </div>
       </Link>
 
@@ -374,16 +399,18 @@ function Variant1ClassicBento({ news }: { news: NewsItem[] }) {
         <Link
           key={item.id}
           href={`/article/${item.id}`}
-          className="relative rounded-lg overflow-hidden group"
+          className="col-span-1 row-span-1 block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
         >
-          <Image
-            src={item.image}
-            alt={item.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent p-2 md:p-3 flex flex-col justify-end">
-            <h3 className="text-white text-sm md:text-base font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
+          <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+            <Image
+              src={item.image}
+              alt={item.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+          <div className="p-3">
+            <h3 className="text-gray-900 text-sm font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
               {item.title}
             </h3>
           </div>
@@ -396,23 +423,37 @@ function Variant1ClassicBento({ news }: { news: NewsItem[] }) {
 // Variant 2: Horizontal Split (3+3)
 function Variant2HorizontalSplit({ news }: { news: NewsItem[] }) {
   return (
-    <div className="grid grid-cols-3 grid-rows-2 gap-4 h-[400px] md:h-[500px]">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-auto">
       {news.slice(0, 6).map((item) => (
         <Link
           key={item.id}
           href={`/article/${item.id}`}
-          className="relative rounded-lg overflow-hidden group"
+          className="block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
         >
-          <Image
-            src={item.image}
-            alt={item.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent p-4 flex flex-col justify-end">
-            <h3 className="text-white text-sm md:text-base font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
+          <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+            <Image
+              src={item.image}
+              alt={item.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+          <div className="p-4">
+            <h3 className="text-gray-900 text-base font-bold leading-snug line-clamp-2 group-hover:text-brand-red mb-2">
               {item.title}
             </h3>
+            <div className="flex items-center justify-between mt-3">
+              {item.published_at && (
+                <p className="text-gray-400 text-xs">
+                  {formatBanglaDateTime(item.published_at)}
+                </p>
+              )}
+              <NewsActionButtons
+                title={item.title}
+                url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${item.id}`}
+                className="scale-75 origin-right"
+              />
+            </div>
           </div>
         </Link>
       ))}
@@ -423,42 +464,69 @@ function Variant2HorizontalSplit({ news }: { news: NewsItem[] }) {
 // Variant 3: Dual Focus (2 big + 2 small)
 function Variant3DualFocus({ news }: { news: NewsItem[] }) {
   return (
-    <div className="grid grid-cols-3 grid-rows-2 gap-4 h-[400px] md:h-[500px]">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 h-auto">
+      {/* 2 Big Items */}
       {news.slice(0, 2).map((item) => (
         <Link
           key={item.id}
           href={`/article/${item.id}`}
-          className="row-span-2 relative rounded-lg overflow-hidden group"
+          className="md:col-span-2 block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
         >
-          <Image
-            src={item.image}
-            alt={item.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent p-4 md:p-6 flex flex-col justify-end">
-            <h3 className="text-white text-lg md:text-xl font-bold leading-tight group-hover:text-brand-red">
+          <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+            <Image
+              src={item.image}
+              alt={item.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+            <span className="absolute top-3 left-3 bg-brand-red text-white text-xs font-medium px-2.5 py-1 rounded-lg shadow-sm z-10">
+              {item.category}
+            </span>
+          </div>
+          <div className="p-4 md:p-5">
+            <h3 className="text-gray-900 text-xl font-bold leading-tight group-hover:text-brand-red mb-2">
               {item.title}
             </h3>
+            <p className="text-gray-500 line-clamp-2 text-sm mb-3">
+              {item.summary || item.title}
+            </p>
+            <div className="flex items-center justify-between mt-auto">
+              {item.published_at && (
+                <p className="text-gray-400 text-xs">
+                  {formatBanglaDateTime(item.published_at)}
+                </p>
+              )}
+              <NewsActionButtons
+                title={item.title}
+                url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${item.id}`}
+              />
+            </div>
           </div>
         </Link>
       ))}
+
+      {/* 2 Small Items */}
       {news.slice(2, 4).map((item) => (
         <Link
           key={item.id}
           href={`/article/${item.id}`}
-          className="relative rounded-lg overflow-hidden group"
+          className="md:col-span-2 block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300 md:flex md:items-center md:gap-4 md:p-4"
         >
-          <Image
-            src={item.image}
-            alt={item.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent p-3 flex flex-col justify-end">
-            <h3 className="text-white text-sm md:text-base font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
+          <div className="relative aspect-video w-full md:w-1/3 overflow-hidden rounded-lg bg-gray-100">
+            <Image
+              src={item.image}
+              alt={item.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+          <div className="p-3 md:p-0 md:flex-1">
+            <h3 className="text-gray-900 text-lg font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
               {item.title}
             </h3>
+            <p className="text-gray-400 text-xs mt-2">
+              {item.published_at ? formatBanglaDate(item.published_at) : ""}
+            </p>
           </div>
         </Link>
       ))}
@@ -473,34 +541,50 @@ function Variant4ListHeavy({ news }: { news: NewsItem[] }) {
   const list = news.slice(1, 6);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-auto lg:h-[500px]">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Big Item */}
       <Link
         href={`/article/${main.id}`}
-        className="relative rounded-lg overflow-hidden group h-[300px] lg:h-full"
+        className="block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300 h-full"
       >
-        <Image
-          src={main.image}
-          alt={main.title}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-700"
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
-          <h2 className="text-white text-xl md:text-2xl font-bold leading-tight group-hover:text-brand-red">
+        <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+          <Image
+            src={main.image}
+            alt={main.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-700"
+          />
+        </div>
+        <div className="p-5">
+          <h2 className="text-gray-900 text-2xl font-bold leading-tight group-hover:text-brand-red mb-3">
             {main.title}
           </h2>
+          <p className="text-gray-600 line-clamp-3 text-base mb-4">
+            {main.summary || "বিস্তারিত পড়ুন..."}
+          </p>
+          <div className="flex items-center justify-between mt-auto">
+            {main.published_at && (
+              <p className="text-gray-400 text-xs">
+                {formatBanglaDateTime(main.published_at)}
+              </p>
+            )}
+            <NewsActionButtons
+              title={main.title}
+              url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${main.id}`}
+            />
+          </div>
         </div>
       </Link>
 
       {/* List Items */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3">
         {list.map((item) => (
           <Link
             key={item.id}
             href={`/article/${item.id}`}
-            className="group flex gap-4 p-2 rounded-lg hover:bg-red-50 transition-all"
+            className="group flex gap-3 items-center p-3 bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
           >
-            <div className="relative w-24 h-16 shrink-0 rounded overflow-hidden">
+            <div className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-gray-100">
               <Image
                 src={item.image}
                 alt={item.title}
@@ -509,9 +593,12 @@ function Variant4ListHeavy({ news }: { news: NewsItem[] }) {
               />
             </div>
             <div>
-              <h3 className="text-sm md:text-base font-bold text-gray-800 leading-snug group-hover:text-brand-red line-clamp-2">
+              <h3 className="text-base font-bold text-gray-800 leading-snug group-hover:text-brand-red line-clamp-2">
                 {item.title}
               </h3>
+              <span className="text-xs text-gray-400 mt-1 block">
+                {item.time || item.date}
+              </span>
             </div>
           </Link>
         ))}
@@ -525,25 +612,41 @@ function Variant5Zigzag({ news }: { news: NewsItem[] }) {
   if (news.length < 6) return null;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto lg:h-[450px]">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto">
       {/* Left Column: Lead Item (Square-ish) */}
       <Link
         href={`/article/${news[0].id}`}
-        className="lg:col-span-5 relative rounded-lg overflow-hidden group h-[300px] lg:h-full"
+        className="lg:col-span-5 block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300 h-full"
       >
-        <Image
-          src={news[0].image}
-          alt={news[0].title}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-700"
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
-          <span className="bg-brand-red text-white text-xs px-2 py-1 rounded w-fit mb-2">
+        <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+          <Image
+            src={news[0].image}
+            alt={news[0].title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-700"
+          />
+          <span className="absolute top-3 left-3 bg-brand-red text-white text-xs font-medium px-2.5 py-1 rounded-lg shadow-sm z-10">
             {news[0].category}
           </span>
-          <h2 className="text-white text-xl md:text-2xl font-bold leading-tight group-hover:text-brand-red">
+        </div>
+        <div className="p-4 md:p-6">
+          <h2 className="text-gray-900 text-xl md:text-2xl font-bold leading-tight group-hover:text-brand-red mb-2">
             {news[0].title}
           </h2>
+          <p className="text-gray-500 line-clamp-3 leading-relaxed text-sm md:text-base mb-4">
+            {news[0].summary || "বিস্তারিত..."}
+          </p>
+          <div className="flex items-center justify-between mt-auto">
+            {news[0].published_at && (
+              <p className="text-gray-400 text-xs">
+                {formatBanglaDateTime(news[0].published_at)}
+              </p>
+            )}
+            <NewsActionButtons
+              title={news[0].title}
+              url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${news[0].id}`}
+            />
+          </div>
         </div>
       </Link>
 
@@ -553,16 +656,18 @@ function Variant5Zigzag({ news }: { news: NewsItem[] }) {
           <Link
             key={item.id}
             href={`/article/${item.id}`}
-            className="relative flex-1 rounded-lg overflow-hidden group min-h-[140px]"
+            className="block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300 flex-1"
           >
-            <Image
-              src={item.image}
-              alt={item.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent p-4 flex flex-col justify-end">
-              <h3 className="text-white text-base font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
+            <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+            <div className="p-4">
+              <h3 className="text-gray-900 text-base font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
                 {item.title}
               </h3>
             </div>
@@ -571,14 +676,14 @@ function Variant5Zigzag({ news }: { news: NewsItem[] }) {
       </div>
 
       {/* Right Column: 3 Items List */}
-      <div className="lg:col-span-4 flex flex-col justify-between h-full gap-4 lg:gap-0">
+      <div className="lg:col-span-4 flex flex-col gap-4 h-full">
         {news.slice(3, 6).map((item) => (
           <Link
             key={item.id}
             href={`/article/${item.id}`}
-            className="group flex gap-4 p-2 rounded-lg hover:bg-red-50 transition-all h-[30%] items-center"
+            className="group flex gap-3 items-center p-3 bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
           >
-            <div className="relative w-24 h-full shrink-0 rounded overflow-hidden">
+            <div className="relative w-24 aspect-video shrink-0 rounded-lg overflow-hidden bg-gray-100">
               <Image
                 src={item.image}
                 alt={item.title}
@@ -587,10 +692,10 @@ function Variant5Zigzag({ news }: { news: NewsItem[] }) {
               />
             </div>
             <div>
-              <h3 className="text-sm md:text-base font-bold text-gray-800 leading-snug group-hover:text-brand-red line-clamp-3">
+              <h3 className="text-sm md:text-base font-bold text-gray-800 leading-snug group-hover:text-brand-red line-clamp-2">
                 {item.title}
               </h3>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-400 mt-1">
                 {item.published_at ? formatBanglaTime(item.published_at) : ""}
               </p>
             </div>
@@ -606,39 +711,55 @@ function Variant6MosaicMix({ news }: { news: NewsItem[] }) {
   if (news.length < 4) return null;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto lg:h-[400px]">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto">
       {/* Left Column: Lead Item (66%) */}
-      <div className="lg:col-span-8 relative lg:border-r border-gray-200 lg:pr-6">
+      <div className="lg:col-span-8 lg:pr-6 lg:border-r border-gray-200">
         <Link
           href={`/article/${news[0].id}`}
-          className="relative block rounded-lg overflow-hidden group min-h-[300px] lg:h-full"
+          className="block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300 h-full"
         >
-          <Image
-            src={news[0].image}
-            alt={news[0].title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
-            <span className="bg-brand-red text-white text-xs px-2 py-1 rounded w-fit mb-2">
+          <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+            <Image
+              src={news[0].image}
+              alt={news[0].title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+            <span className="absolute top-3 left-3 bg-brand-red text-white text-xs font-medium px-2.5 py-1 rounded-lg shadow-sm z-10">
               {news[0].category}
             </span>
-            <h2 className="text-white text-xl md:text-3xl font-bold leading-tight group-hover:text-brand-red">
+          </div>
+          <div className="p-5 md:p-6">
+            <h2 className="text-gray-900 text-xl md:text-3xl font-bold leading-tight group-hover:text-brand-red mb-3">
               {news[0].title}
             </h2>
+            <p className="text-gray-600 line-clamp-3 text-base mb-4">
+              {news[0].summary || "বিস্তারিত..."}
+            </p>
+            <div className="flex items-center justify-between mt-auto">
+              {news[0].published_at && (
+                <p className="text-gray-400 text-xs">
+                  {formatBanglaDateTime(news[0].published_at)}
+                </p>
+              )}
+              <NewsActionButtons
+                title={news[0].title}
+                url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${news[0].id}`}
+              />
+            </div>
           </div>
         </Link>
       </div>
 
       {/* Right Column: List of 3 Items (33%) */}
-      <div className="lg:col-span-4 flex flex-col justify-between gap-4 h-full pl-0 lg:pl-2">
+      <div className="lg:col-span-4 flex flex-col gap-4 pl-0 lg:pl-2">
         {news.slice(1, 4).map((item) => (
           <Link
             key={item.id}
             href={`/article/${item.id}`}
-            className="group flex gap-3 p-2 rounded-lg hover:bg-red-50 transition-all items-center flex-1 border-b border-gray-100 last:border-0"
+            className="group flex gap-3 items-center p-3 bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
           >
-            <div className="relative w-24 h-full shrink-0 rounded overflow-hidden aspect-video">
+            <div className="relative w-24 h-20 shrink-0 rounded-lg overflow-hidden bg-gray-100">
               <Image
                 src={item.image}
                 alt={item.title}
@@ -665,22 +786,43 @@ function Variant7MagazineHero({ news }: { news: NewsItem[] }) {
   const subs = news.slice(1, 6);
 
   return (
-    <div className="grid grid-cols-5 grid-rows-2 gap-4 h-[400px] md:h-[500px]">
+    <div className="grid grid-cols-1 md:grid-cols-5 md:grid-rows-2 gap-6 h-auto">
       {/* Hero Item */}
       <Link
         href={`/article/${hero.id}`}
-        className="col-span-5 relative rounded-lg overflow-hidden group"
+        className="md:col-span-5 block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
       >
-        <Image
-          src={hero.image}
-          alt={hero.title}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-700"
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
-          <h2 className="text-white text-xl md:text-2xl font-bold leading-tight group-hover:text-brand-red">
+        <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+          <Image
+            src={hero.image}
+            alt={hero.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-700"
+          />
+          <div className="absolute top-4 left-4">
+            <span className="bg-brand-red text-white text-xs px-2.5 py-1 rounded-lg">
+              {hero.category}
+            </span>
+          </div>
+        </div>
+        <div className="p-5 md:p-6">
+          <h2 className="text-gray-900 text-xl md:text-3xl font-bold leading-tight group-hover:text-brand-red mb-3">
             {hero.title}
           </h2>
+          <p className="text-gray-600 line-clamp-2 text-base mb-4 hidden md:block">
+            {hero.summary}
+          </p>
+          <div className="flex items-center justify-between mt-auto">
+            {hero.published_at && (
+              <p className="text-gray-400 text-xs">
+                {formatBanglaDateTime(hero.published_at)}
+              </p>
+            )}
+            <NewsActionButtons
+              title={hero.title}
+              url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${hero.id}`}
+            />
+          </div>
         </div>
       </Link>
 
@@ -689,16 +831,18 @@ function Variant7MagazineHero({ news }: { news: NewsItem[] }) {
         <Link
           key={item.id}
           href={`/article/${item.id}`}
-          className="relative rounded-lg overflow-hidden group"
+          className="md:col-span-1 block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
         >
-          <Image
-            src={item.image}
-            alt={item.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent p-2 flex flex-col justify-end">
-            <h3 className="text-white text-sm md:text-base font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
+          <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+            <Image
+              src={item.image}
+              alt={item.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+          <div className="p-3">
+            <h3 className="text-gray-900 text-sm font-bold leading-snug line-clamp-3 group-hover:text-brand-red">
               {item.title}
             </h3>
           </div>
@@ -711,20 +855,22 @@ function Variant7MagazineHero({ news }: { news: NewsItem[] }) {
 // Variant 8: L-Shape
 function Variant8LShape({ news }: { news: NewsItem[] }) {
   return (
-    <div className="grid grid-cols-4 grid-rows-3 gap-4 h-[500px] md:h-[600px]">
-      {/* Big Item 1 - Top left L part */}
+    <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-6 h-auto">
+      {/* Big Item 1 - Top left L part (Span 2x1) */}
       <Link
         href={`/article/${news[0].id}`}
-        className="col-span-2 row-span-1 relative rounded-lg overflow-hidden group"
+        className="md:col-span-2 md:row-span-1 block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300 flex flex-col md:flex-row gap-4"
       >
-        <Image
-          src={news[0].image}
-          alt={news[0].title}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-700"
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent p-4 flex flex-col justify-end">
-          <h3 className="text-white text-lg md:text-xl font-bold leading-tight group-hover:text-brand-red">
+        <div className="relative aspect-video md:w-1/2 overflow-hidden rounded-l-xl md:rounded-l-xl bg-gray-100">
+          <Image
+            src={news[0].image}
+            alt={news[0].title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-700"
+          />
+        </div>
+        <div className="p-4 flex flex-col justify-center">
+          <h3 className="text-gray-900 text-lg md:text-xl font-bold leading-tight group-hover:text-brand-red">
             {news[0].title}
           </h3>
         </div>
@@ -733,52 +879,73 @@ function Variant8LShape({ news }: { news: NewsItem[] }) {
       {/* Item 3 - Top right */}
       <Link
         href={`/article/${news[2].id}`}
-        className="col-span-2 relative rounded-lg overflow-hidden group"
+        className="md:col-span-2 block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300 flex flex-col md:flex-row gap-4"
       >
-        <Image
-          src={news[2].image}
-          alt={news[2].title}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent p-3 flex flex-col justify-end">
-          <h3 className="text-white text-sm md:text-base font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
+        <div className="relative aspect-video md:w-1/2 overflow-hidden rounded-l-xl md:rounded-l-xl bg-gray-100">
+          <Image
+            src={news[2].image}
+            alt={news[2].title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+        <div className="p-4 flex flex-col justify-center">
+          <h3 className="text-gray-900 text-sm md:text-base font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
             {news[2].title}
           </h3>
         </div>
       </Link>
 
-      {/* Big Item 2 - Middle left L part */}
+      {/* Big Item 2 - Middle left L part (Span 2x2) */}
       <Link
         href={`/article/${news[1].id}`}
-        className="col-span-2 row-span-2 relative rounded-lg overflow-hidden group"
+        className="md:col-span-2 md:row-span-2 block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
       >
-        <Image
-          src={news[1].image}
-          alt={news[1].title}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-700"
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent p-4 md:p-6 flex flex-col justify-end">
-          <h3 className="text-white text-lg md:text-xl font-bold leading-tight group-hover:text-brand-red">
+        <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+          <Image
+            src={news[1].image}
+            alt={news[1].title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-700"
+          />
+        </div>
+        <div className="p-4 md:p-6">
+          <h3 className="text-gray-900 text-lg md:text-2xl font-bold leading-tight group-hover:text-brand-red">
             {news[1].title}
           </h3>
+          <p className="text-gray-500 text-sm mt-2 line-clamp-2 mb-3">
+            {news[1].summary}
+          </p>
+          <div className="flex items-center justify-between mt-auto">
+            {news[1].published_at && (
+              <p className="text-gray-400 text-xs">
+                {formatBanglaDateTime(news[1].published_at)}
+              </p>
+            )}
+            <NewsActionButtons
+              title={news[1].title}
+              url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${news[1].id}`}
+              className="scale-90 origin-right"
+            />
+          </div>
         </div>
       </Link>
 
       {/* Item 4 - Middle right */}
       <Link
         href={`/article/${news[3].id}`}
-        className="col-span-2 relative rounded-lg overflow-hidden group"
+        className="md:col-span-2 block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300 flex flex-col md:flex-row gap-4"
       >
-        <Image
-          src={news[3].image}
-          alt={news[3].title}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent p-3 flex flex-col justify-end">
-          <h3 className="text-white text-sm md:text-base font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
+        <div className="relative aspect-video md:w-1/2 overflow-hidden rounded-l-xl md:rounded-l-xl bg-gray-100">
+          <Image
+            src={news[3].image}
+            alt={news[3].title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+        <div className="p-4 flex flex-col justify-center">
+          <h3 className="text-gray-900 text-sm md:text-base font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
             {news[3].title}
           </h3>
         </div>
@@ -789,16 +956,18 @@ function Variant8LShape({ news }: { news: NewsItem[] }) {
         <Link
           key={item.id}
           href={`/article/${item.id}`}
-          className="col-span-2 relative rounded-lg overflow-hidden group"
+          className="md:col-span-1 block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
         >
-          <Image
-            src={item.image}
-            alt={item.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent p-3 flex flex-col justify-end">
-            <h3 className="text-white text-sm md:text-base font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
+          <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+            <Image
+              src={item.image}
+              alt={item.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          </div>
+          <div className="p-3">
+            <h3 className="text-gray-900 text-sm font-bold leading-snug line-clamp-2 group-hover:text-brand-red">
               {item.title}
             </h3>
           </div>
@@ -814,62 +983,94 @@ function Variant9FocusList({ news }: { news: NewsItem[] }) {
   if (news.length < 6) return null;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-auto lg:h-[450px]">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-auto">
       {/* Col 1: Large Vertical Item */}
-      <div className="relative lg:border-r border-gray-200 lg:pr-6">
+      <div className="relative">
         <Link
           href={`/article/${news[0].id}`}
-          className="block relative rounded-lg overflow-hidden group min-h-[300px] lg:h-full"
+          className="block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300 h-full"
         >
-          <Image
-            src={news[0].image}
-            alt={news[0].title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
-            <span className="bg-brand-red text-white text-xs px-2 py-1 rounded w-fit mb-2">
+          <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+            <Image
+              src={news[0].image}
+              alt={news[0].title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+            <span className="absolute top-3 left-3 bg-brand-red text-white text-xs font-medium px-2.5 py-1 rounded-lg shadow-sm z-10">
               {news[0].category}
             </span>
-            <h2 className="text-white text-xl md:text-2xl font-bold leading-tight group-hover:text-brand-red">
+          </div>
+          <div className="p-5 md:p-6">
+            <h2 className="text-gray-900 text-xl md:text-2xl font-bold leading-tight group-hover:text-brand-red mb-3">
               {news[0].title}
             </h2>
+            <p className="text-gray-600 line-clamp-3 text-base mb-4">
+              {news[0].summary || "বিস্তারিত..."}
+            </p>
+            <div className="flex items-center justify-between mt-auto">
+              {news[0].published_at && (
+                <p className="text-gray-400 text-xs">
+                  {formatBanglaDateTime(news[0].published_at)}
+                </p>
+              )}
+              <NewsActionButtons
+                title={news[0].title}
+                url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${news[0].id}`}
+              />
+            </div>
           </div>
         </Link>
       </div>
 
       {/* Col 2: Large Vertical Item */}
-      <div className="relative lg:border-r border-gray-200 lg:pr-6">
+      <div className="relative">
         <Link
           href={`/article/${news[1].id}`}
-          className="block relative rounded-lg overflow-hidden group min-h-[300px] lg:h-full"
+          className="block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300 h-full"
         >
-          <Image
-            src={news[1].image}
-            alt={news[1].title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
-            <span className="bg-brand-red text-white text-xs px-2 py-1 rounded w-fit mb-2">
+          <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+            <Image
+              src={news[1].image}
+              alt={news[1].title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+            <span className="absolute top-3 left-3 bg-brand-red text-white text-xs font-medium px-2.5 py-1 rounded-lg shadow-sm z-10">
               {news[1].category}
             </span>
-            <h2 className="text-white text-xl md:text-2xl font-bold leading-tight group-hover:text-brand-red">
+          </div>
+          <div className="p-5 md:p-6">
+            <h2 className="text-gray-900 text-xl md:text-2xl font-bold leading-tight group-hover:text-brand-red mb-3">
               {news[1].title}
             </h2>
+            <p className="text-gray-600 line-clamp-3 text-base mb-4">
+              {news[1].summary || "বিস্তারিত..."}
+            </p>
+            <div className="flex items-center justify-between mt-auto">
+              {news[1].published_at && (
+                <p className="text-gray-400 text-xs">
+                  {formatBanglaDateTime(news[1].published_at)}
+                </p>
+              )}
+              <NewsActionButtons
+                title={news[1].title}
+                url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${news[1].id}`}
+              />
+            </div>
           </div>
         </Link>
       </div>
 
       {/* Col 3: List of 4 items */}
-      <div className="flex flex-col gap-3 h-full overflow-y-auto pl-0 lg:pl-2">
+      <div className="flex flex-col h-full">
         {news.slice(2, 6).map((item) => (
           <Link
             key={item.id}
             href={`/article/${item.id}`}
-            className="group flex gap-3 p-2 rounded-lg hover:bg-red-50 transition-all items-center flex-1 border-b border-gray-100 last:border-0"
+            className="group flex gap-3 p-3 bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border-b border-gray-200 last:border-0 transition-all duration-300 items-center flex-1"
           >
-            <div className="relative w-24 h-full shrink-0 rounded overflow-hidden aspect-video">
+            <div className="relative w-24 h-20 shrink-0 rounded-lg overflow-hidden aspect-video bg-gray-100">
               <Image
                 src={item.image}
                 alt={item.title}
@@ -878,7 +1079,7 @@ function Variant9FocusList({ news }: { news: NewsItem[] }) {
               />
             </div>
             <div>
-              <h3 className="text-sm md:text-base font-bold text-gray-800 leading-snug group-hover:text-brand-red line-clamp-3">
+              <h3 className="text-sm md:text-base font-bold text-gray-800 leading-snug group-hover:text-brand-red line-clamp-2">
                 {item.title}
               </h3>
             </div>
@@ -902,58 +1103,76 @@ function Variant10StandardGrid({ news }: { news: NewsItem[] }) {
           <Link
             key={item.id}
             href={`/article/${item.id}`}
-            className="relative rounded-lg overflow-hidden group min-h-[250px] md:h-[350px]"
+            className="block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
           >
-            <Image
-              src={item.image}
-              alt={item.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent p-6 flex flex-col justify-end">
-              <span className="bg-brand-red text-white text-xs px-2 py-1 rounded w-fit mb-2">
+            <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <span className="absolute top-3 left-3 bg-brand-red text-white text-xs font-medium px-2.5 py-1 rounded-lg shadow-sm z-10">
                 {item.category}
               </span>
-              <h2 className="text-white text-xl md:text-2xl font-bold leading-tight group-hover:text-brand-red">
+            </div>
+            <div className="p-5 md:p-6">
+              <h2 className="text-gray-900 text-xl md:text-2xl font-bold leading-tight group-hover:text-brand-red mb-2">
                 {item.title}
               </h2>
+              <p className="text-gray-500 line-clamp-3 leading-relaxed text-sm md:text-base mb-4">
+                {item.summary || "বিস্তারিত..."}
+              </p>
+              <div className="flex items-center justify-between mt-auto">
+                {item.published_at && (
+                  <p className="text-gray-400 text-xs">
+                    {formatBanglaDateTime(item.published_at)}
+                  </p>
+                )}
+                <NewsActionButtons
+                  title={item.title}
+                  url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${item.id}`}
+                />
+              </div>
             </div>
           </Link>
         ))}
       </div>
 
-      {/* Bottom Row: 4 Items (25-25-25-25) with Vertical Borders */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 border-t border-gray-200 pt-6">
+      {/* Bottom Row: 4 Items (25-25-25-25) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 pt-2">
         {news.slice(2, 6).map((item, index) => (
-          <div
+          <Link
             key={item.id}
-            className={`relative ${index < 3 ? "md:border-r border-gray-200 md:pr-4" : ""}`}
+            href={`/article/${item.id}`}
+            className="block bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border-b border-gray-200 last:border-0 transition-all duration-300"
           >
-            <Link
-              href={`/article/${item.id}`}
-              className="group block p-2 rounded-lg hover:bg-red-50 transition-all h-full"
-            >
-              <div className="relative aspect-video rounded-lg overflow-hidden mb-3">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
+            <div className="relative aspect-video w-full rounded-t-xl overflow-hidden mb-3 bg-gray-100">
+              <Image
+                src={item.image}
+                alt={item.title}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+            <div className="p-4 pt-0">
               <h3 className="text-gray-900 text-sm md:text-base font-bold leading-snug group-hover:text-brand-red line-clamp-2">
                 {item.title}
               </h3>
-            </Link>
-          </div>
+              {item.published_at && (
+                <p className="text-gray-400 text-xs mt-2">
+                  {formatBanglaDate(item.published_at)}
+                </p>
+              )}
+            </div>
+          </Link>
         ))}
       </div>
     </div>
   );
 }
 
-// Variant 11: Bordered Grid (Daily Star Style)
-// Features: Vertical Dividers, Strict Alignment, 3-Column Layout
+// Variant 11: Bordered Grid (Daily Star Style) -> Converted to Card Grid
 function Variant11BorderedGrid({ news }: { news: NewsItem[] }) {
   if (news.length < 5) return null;
   const lead = news[0];
@@ -961,11 +1180,14 @@ function Variant11BorderedGrid({ news }: { news: NewsItem[] }) {
   const list = news.slice(2, 6);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-auto border-t border-gray-100 pt-6">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
       {/* Col 1: Main Lead (Span 2) - 50% Width */}
-      <div className="lg:col-span-2 relative pr-0 lg:pr-6 lg:border-r border-gray-200 group">
-        <Link href={`/article/${lead.id}`} className="h-full flex flex-col">
-          <div className="relative aspect-video w-full rounded-lg overflow-hidden mb-4">
+      <div className="lg:col-span-2">
+        <Link
+          href={`/article/${lead.id}`}
+          className="block h-full bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
+        >
+          <div className="relative aspect-video w-full rounded-t-xl overflow-hidden mb-4 bg-gray-100">
             <Image
               src={lead.image}
               alt={lead.title}
@@ -973,24 +1195,38 @@ function Variant11BorderedGrid({ news }: { news: NewsItem[] }) {
               className="object-cover group-hover:scale-105 transition-transform duration-700"
             />
           </div>
-          <div className="flex flex-col grow">
+          <div className="p-4 md:p-6 pt-0">
             <span className="text-brand-red text-sm font-bold mb-2 block">
               {lead.category}
             </span>
             <h2 className="text-gray-900 text-xl md:text-2xl font-bold leading-tight mb-3 group-hover:text-brand-red transition-colors">
               {lead.title}
             </h2>
-            <p className="text-gray-600 text-base line-clamp-3 leading-relaxed hidden md:block">
+            <p className="text-gray-600 text-base line-clamp-3 leading-relaxed hidden md:block mb-4">
               {lead.summary || lead.title}
             </p>
+            <div className="flex items-center justify-between mt-auto">
+              {lead.published_at && (
+                <p className="text-gray-400 text-xs">
+                  {formatBanglaDateTime(lead.published_at)}
+                </p>
+              )}
+              <NewsActionButtons
+                title={lead.title}
+                url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${lead.id}`}
+              />
+            </div>
           </div>
         </Link>
       </div>
 
       {/* Col 2: Secondary Item (Span 1) - 25% Width */}
-      <div className="lg:col-span-1 relative pr-0 lg:pr-6 lg:border-r border-gray-200 group">
-        <Link href={`/article/${second.id}`} className="h-full flex flex-col">
-          <div className="relative aspect-video w-full rounded-lg overflow-hidden mb-4">
+      <div className="lg:col-span-1">
+        <Link
+          href={`/article/${second.id}`}
+          className="block h-full bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border border-transparent hover:border-red-50 transition-all duration-300"
+        >
+          <div className="relative aspect-video w-full rounded-t-xl overflow-hidden mb-4 bg-gray-100">
             <Image
               src={second.image}
               alt={second.title}
@@ -998,19 +1234,21 @@ function Variant11BorderedGrid({ news }: { news: NewsItem[] }) {
               className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
           </div>
-          <h3 className="text-gray-900 text-lg md:text-xl font-bold leading-tight group-hover:text-brand-red transition-colors">
-            {second.title}
-          </h3>
+          <div className="p-4 pt-0">
+            <h3 className="text-gray-900 text-lg md:text-xl font-bold leading-tight group-hover:text-brand-red transition-colors">
+              {second.title}
+            </h3>
+          </div>
         </Link>
       </div>
 
       {/* Col 3: List (Span 1) - 25% Width */}
-      <div className="lg:col-span-1 flex flex-col gap-4 pl-0 lg:pl-2">
+      <div className="lg:col-span-1 flex flex-col">
         {list.map((item) => (
           <Link
             key={item.id}
             href={`/article/${item.id}`}
-            className="group flex flex-col p-2 rounded-lg hover:bg-red-50 transition-all border-b border-gray-100 last:border-0"
+            className="group flex flex-col p-3 bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border-b border-gray-200 last:border-0 transition-all duration-300"
           >
             <h3 className="text-gray-900 text-sm md:text-base font-medium leading-snug group-hover:text-brand-red transition-colors line-clamp-3">
               {item.title}
@@ -1032,14 +1270,14 @@ function SimpleList({ news }: { news: NewsItem[] }) {
   if (news.length === 0) return null;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col">
       {news.map((item) => (
         <Link
           key={item.id}
           href={`/article/${item.id}`}
-          className="group flex gap-2 items-center p-2 rounded-lg hover:bg-gray-50 transition-all border-b border-gray-100 last:border-0"
+          className="group flex gap-3 items-center p-3 bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border-b border-gray-200 last:border-0 transition-all duration-300"
         >
-          <div className="relative w-20 h-16 shrink-0 rounded overflow-hidden">
+          <div className="relative w-20 h-16 shrink-0 rounded-lg overflow-hidden bg-gray-100">
             <Image
               src={item.image}
               alt={item.title}

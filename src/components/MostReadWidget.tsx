@@ -4,15 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { NewsItem } from "@/types/news";
+import { formatBanglaDateTime } from "@/lib/utils";
+import { toBanglaDigits } from "@/utils/bn";
 
 interface MostReadWidgetProps {
   opinionNews: NewsItem[];
   mostReadNews: NewsItem[];
-  hideOpinion?: boolean; // New prop
+  hideOpinion?: boolean;
 }
-
-// Bangla number converter
-import { toBanglaDigits } from "@/utils/bn";
 
 // Get consistent profileauthor image IDs from Unsplash
 const getAuthorImageId = (index: number): string => {
@@ -41,14 +40,14 @@ export default function MostReadWidget({
   return (
     <div className="bg-transparent mb-8">
       {/* Tabs */}
-      <div className="flex border-b-2 border-brand-red mb-2">
+      <div className="flex bg-gray-100 dark:bg-gray-800 rounded-full p-1 mb-4 relative">
         {!hideOpinion && (
           <button
             onClick={() => setActiveTab("opinion")}
-            className={`flex-1 px-4 py-2 font-bold text-sm transition ${
+            className={`flex-1 px-4 py-2 font-bold text-sm rounded-full transition-all duration-300 relative z-10 ${
               activeTab === "opinion"
-                ? "text-brand-red"
-                : "text-gray-500 hover:text-gray-800"
+                ? "bg-white dark:bg-gray-700 text-brand-red shadow-sm"
+                : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
             }`}
           >
             মতামত
@@ -56,10 +55,10 @@ export default function MostReadWidget({
         )}
         <button
           onClick={() => setActiveTab("mostRead")}
-          className={`flex-1 px-4 py-2 font-bold text-sm transition ${
+          className={`flex-1 px-4 py-2 font-bold text-sm rounded-full transition-all duration-300 relative z-10 ${
             activeTab === "mostRead"
-              ? "text-brand-red"
-              : "text-gray-500 hover:text-gray-800"
+              ? "bg-white dark:bg-gray-700 text-brand-red shadow-sm"
+              : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
           }`}
         >
           সর্বাধিক পঠিত
@@ -92,14 +91,21 @@ export default function MostReadWidget({
             )}
 
             <div className="flex-1">
-              <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 group-hover:text-brand-red line-clamp-2">
+              <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 group-hover:text-brand-red line-clamp-2 mb-1">
                 {news.title}
               </h4>
-              {activeTab === "opinion" && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  {news.author}
-                </p>
-              )}
+              <div className="flex flex-col gap-0.5">
+                <span className="text-xs font-semibold text-brand-red">
+                  {activeTab === "opinion"
+                    ? news.author
+                    : news.author || "ডেস্ক রিপোর্ট"}
+                </span>
+                <span className="text-[10px] text-gray-400">
+                  {news.published_at
+                    ? formatBanglaDateTime(news.published_at)
+                    : news.time || news.date}
+                </span>
+              </div>
             </div>
           </Link>
         ))}

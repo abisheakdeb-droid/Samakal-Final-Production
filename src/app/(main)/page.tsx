@@ -1,11 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import LatestSidebarWidget from "@/components/LatestSidebarWidget";
 // import HeroCard from "@/components/HeroCard"; // Keep Hero static for LCP
 import Sidebar from "@/components/Sidebar";
 import ScrollReveal from "@/components/ScrollReveal";
-import { StaggerWrapper, StaggerItem } from "@/components/StaggerWrapper";
 
 import {
   fetchLatestArticles,
@@ -13,6 +11,7 @@ import {
   fetchMostReadArticles,
   fetchFeaturedArticles,
 } from "@/lib/actions-article";
+import { formatBanglaDateTime } from "@/lib/utils";
 import SelectedNews from "@/components/SelectedNews";
 import CategorySection from "@/components/CategorySection";
 
@@ -96,9 +95,9 @@ export default async function Home() {
     );
   }
 
-  const heroNews = leadNewsFull[0]; // Big Item
-  const subHeroNews = leadNewsFull.slice(1, 3); // 2 Medium Items
-  const gridNews = leadNewsFull.slice(3, 12); // 9 Small Items (3x3)
+  const heroNews = leadNewsFull[0]; // Big Item (1)
+  const subHeroNews = leadNewsFull.slice(1, 3); // 2 Medium Items (2-3) for Right Stack
+  const gridNews = leadNewsFull.slice(3, 11); // 8 Small Items (4-11) for Grid Below
 
   // Sidebar List - Try to get unique items (12+), but fallback to latest if not enough data
   let listNews = leadNewsFull.slice(12, 20);
@@ -129,7 +128,7 @@ export default async function Home() {
     const existingIds = new Set(currentItems.map((n) => n.id));
 
     // 1. Fill from Bangladesh Category
-    const fromBangladesh = categoryData[0].filter(
+    const fromBangladesh = (categoryData[0] || []).filter(
       (n: { id: string }) => !existingIds.has(n.id),
     );
     let combined = [...currentItems, ...fromBangladesh];
@@ -158,83 +157,237 @@ export default async function Home() {
 
       {/* --- TOP SECTION (Lead News & Sidebar) --- */}
       <div className="container mx-auto px-4 py-8 mb-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 divide-x-0 lg:divide-x divide-gray-200 mb-8">
-          {/* Column 1: Latest News List (Width 3) */}
-          <div className="lg:col-span-3 lg:pr-6 order-2 lg:order-1">
-            <ScrollReveal direction="right" delay={2}>
-              <LatestSidebarWidget news={listNews} />
-            </ScrollReveal>
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-gray-200 mb-8">
+          {/* MAIN LEAD NEWS (Width 9) - Expanded */}
+          <div className="lg:col-span-9 lg:pr-8">
+            {/* TOP ROW: Hero (Left) + Sub-leads (Right) */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
+              {/* 1. HERO NEWS (Span 8) */}
+              <div className="md:col-span-8">
+                <ScrollReveal direction="up" delay={1}>
+                  {heroNews ? <HeroCard news={heroNews} /> : null}
+                </ScrollReveal>
+              </div>
 
-          {/* Column 2: MAIN LEAD NEWS (Width 6) - 12 Items Total */}
-          <div className="lg:col-span-6 lg:px-6 order-1 lg:order-2">
-            {/* A. Hero */}
-            {/* A. Hero */}
-            <ScrollReveal direction="up" delay={1}>
-              {heroNews ? <HeroCard news={heroNews} /> : null}
-            </ScrollReveal>
+              {/* 2. SUB-LEADS (Span 4 - Stacked Vertical: 3 Items) */}
+              <div className="md:col-span-4 flex flex-col relative">
+                {/* Explicit Vertical Divider - Absolute Positioned to left of this column (inside the gap) */}
+                <div className="hidden md:block absolute -left-3 top-0 bottom-0 w-[1px] bg-gray-300 dark:bg-gray-700"></div>
 
-            {/* B. Sub-Hero (Staggered Grid) */}
-            <StaggerWrapper className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 pb-8 border-b border-gray-200">
-              {subHeroNews.map((news) => (
-                <StaggerItem key={news.id}>
+                <div className="flex flex-col h-full gap-4">
+                  {/* First Item: Large Vertical Card */}
+                  {subHeroNews[0] && (
+                    <div className="relative group flex-1">
+                      <Link
+                        href={`/article/${subHeroNews[0].id}`}
+                        className="flex flex-col h-full group bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-800 transition-all duration-300"
+                      >
+                        {/* Image Top */}
+                        <div className="aspect-video w-full relative bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                          <Image
+                            src={subHeroNews[0].image}
+                            alt={subHeroNews[0].title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                          <div className="absolute top-3 left-3">
+                            <span className="bg-brand-red text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
+                              {subHeroNews[0].category}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Content Bottom */}
+                        <div className="p-5 flex flex-col flex-1">
+                          <h3 className="text-xl font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-brand-red transition-colors mb-2">
+                            {subHeroNews[0].title}
+                          </h3>
+                          <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 mb-3 flex-1">
+                            {subHeroNews[0].summary}
+                          </p>
+                          <div className="text-xs text-gray-400 font-medium mt-auto">
+                            {subHeroNews[0].published_at
+                              ? formatBanglaDateTime(
+                                  subHeroNews[0].published_at,
+                                )
+                              : subHeroNews[0].time}
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  )}
+
+                  {/* Second Item: Standard Horizontal Card */}
+                  {subHeroNews[1] && (
+                    <div className="relative group">
+                      <Link
+                        href={`/article/${subHeroNews[1].id}`}
+                        className="flex gap-4 items-center group bg-white dark:bg-gray-900 p-3 rounded-xl shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-800 transition-all duration-300"
+                      >
+                        <div className="w-24 h-20 relative bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shrink-0">
+                          <Image
+                            src={subHeroNews[1].image}
+                            alt={subHeroNews[1].title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-base font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-brand-red transition-colors line-clamp-2">
+                            {subHeroNews[1].title}
+                          </h3>
+                          <div className="mt-2 text-xs text-gray-400 font-medium">
+                            {subHeroNews[1].published_at
+                              ? formatBanglaDateTime(
+                                  subHeroNews[1].published_at,
+                                )
+                              : subHeroNews[1].time}
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* 3. GRID SECTION (Below Hero) - Refactored to Vertical Cards row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-8 border-t border-gray-200 dark:border-gray-800 relative">
+              {/* Vertical Dividers for 4-col grid */}
+              <div className="hidden lg:block absolute left-[calc(25%-0.375rem)] -translate-x-1/2 top-8 bottom-0 w-px bg-gray-200 dark:bg-gray-800"></div>
+              <div className="hidden lg:block absolute left-1/2 -translate-x-1/2 top-8 bottom-0 w-px bg-gray-200 dark:bg-gray-800"></div>
+              <div className="hidden lg:block absolute left-[calc(75%+0.375rem)] -translate-x-1/2 top-8 bottom-0 w-px bg-gray-200 dark:bg-gray-800"></div>
+
+              {gridNews.slice(0, 4).map((news) => (
+                <div key={news.id} className="group relative">
                   <Link
                     href={`/article/${news.id}`}
-                    className="group block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-all"
+                    className="flex flex-col h-full bg-white dark:bg-gray-900 rounded-xl overflow-hidden hover:shadow-lg border border-transparent hover:border-gray-200 dark:hover:border-gray-700 transition-all duration-300"
                   >
-                    <div className="aspect-video relative bg-gray-100 rounded-lg mb-3 overflow-hidden">
+                    {/* Image Top */}
+                    <div className="aspect-video w-full relative bg-gray-100 dark:bg-gray-800 overflow-hidden">
                       <Image
                         src={news.image}
                         alt={news.title}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
+                      {news.category && (
+                        <div className="absolute top-2 left-2">
+                          <span className="bg-brand-red text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm">
+                            {news.category}
+                          </span>
+                        </div>
+                      )}
                     </div>
-                    <h3 className="text-xl font-bold leading-snug group-hover:text-brand-red transition-colors">
-                      {news.title}
-                    </h3>
-                  </Link>
-                </StaggerItem>
-              ))}
-            </StaggerWrapper>
 
-            {/* C. 3x3 Grid (Staggered) */}
-            <StaggerWrapper className="grid grid-cols-3 gap-x-4 gap-y-6 mt-8">
-              {/* Native Ad after 4th article */}
-              <StaggerItem className="col-span-3">
-                <NativeAd
-                  title="প্রিমিয়াম স্মার্টফোন অফার - এখনই কিনুন"
-                  description="সর্বশেষ টেকনোলজি সহ স্মার্টফোন এখন আপনার হাতের মুঠোয়। বিশেষ ছাড় পান।"
-                  image="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400"
-                  url="#"
-                  sponsor="TechMart BD"
-                />
-              </StaggerItem>
-              {gridNews.map((news) => (
-                <StaggerItem key={news.id}>
-                  <Link
-                    href={`/article/${news.id}`}
-                    className="group block p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-all"
-                  >
-                    <div className="aspect-video relative bg-gray-100 rounded-lg mb-2 overflow-hidden">
-                      <Image
-                        src={news.image}
-                        alt={news.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform"
-                      />
+                    {/* Content Bottom */}
+                    <div className="p-4 flex flex-col flex-1">
+                      <h3 className="text-lg font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-brand-red transition-colors mb-2 line-clamp-3">
+                        {news.title}
+                      </h3>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-auto">
+                        {news.published_at
+                          ? formatBanglaDateTime(news.published_at)
+                          : news.time}
+                      </div>
                     </div>
-                    <h4 className="text-sm font-bold leading-tight group-hover:text-brand-red line-clamp-3">
-                      {news.title}
-                    </h4>
                   </Link>
-                </StaggerItem>
+                </div>
               ))}
-            </StaggerWrapper>
+            </div>
+
+            {/* Spacer to prevent dividers from merging */}
+            <div className="w-full h-12"></div>
+
+            {/* 4. LIST VIEW SECTION (3 + 3) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-gray-200 dark:border-gray-800 relative">
+              {/* Vertical Divider Center */}
+              <div className="hidden md:block absolute left-1/2 top-8 bottom-0 w-px bg-gray-200 dark:bg-gray-800 -translate-x-1/2"></div>
+
+              {/* Left Column (3 items) */}
+              <div className="flex flex-col">
+                {gridNews.slice(4, 7).map((news, index) => (
+                  <div key={news.id} className="relative">
+                    {index > 0 && (
+                      <div className="mx-4 h-px bg-gray-200 dark:bg-gray-700 my-1"></div>
+                    )}
+                    <Link
+                      href={`/article/${news.id}`}
+                      className="flex gap-4 items-center group p-4 rounded-xl hover:bg-white dark:hover:bg-gray-900 transition-colors border border-transparent hover:border-gray-100 dark:hover:border-gray-800 hover:shadow-sm"
+                    >
+                      <div className="w-24 h-16 relative bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shrink-0">
+                        <Image
+                          src={news.image}
+                          alt={news.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-base font-medium leading-snug text-gray-900 dark:text-gray-100 group-hover:text-brand-red transition-colors line-clamp-2">
+                          {news.title}
+                        </h4>
+                        <div className="mt-1 text-xs text-gray-400">
+                          {news.published_at
+                            ? formatBanglaDateTime(news.published_at)
+                            : news.time}
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+
+              {/* Right Column (3 items) */}
+              <div className="flex flex-col">
+                {gridNews.slice(7, 10).map((news, index) => (
+                  <div key={news.id} className="relative">
+                    {index > 0 && (
+                      <div className="mx-4 h-px bg-gray-200 dark:bg-gray-700 my-1"></div>
+                    )}
+                    <Link
+                      href={`/article/${news.id}`}
+                      className="flex gap-4 items-center group p-4 rounded-xl hover:bg-white dark:hover:bg-gray-900 transition-colors border border-transparent hover:border-gray-100 dark:hover:border-gray-800 hover:shadow-sm"
+                    >
+                      <div className="w-24 h-16 relative bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shrink-0">
+                        <Image
+                          src={news.image}
+                          alt={news.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-base font-medium leading-snug text-gray-900 dark:text-gray-100 group-hover:text-brand-red transition-colors line-clamp-2">
+                          {news.title}
+                        </h4>
+                        <div className="mt-1 text-xs text-gray-400">
+                          {news.published_at
+                            ? formatBanglaDateTime(news.published_at)
+                            : news.time}
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Native Ad */}
+            <div className="mt-8">
+              <NativeAd
+                title="প্রিমিয়াম স্মার্টফোন অফার - এখনই কিনুন"
+                description="সর্বশেষ টেকনোলজি সহ স্মার্টফোন এখন আপনার হাতের মুঠোয়। বিশেষ ছাড় পান।"
+                image="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400"
+                url="#"
+                sponsor="TechMart BD"
+              />
+            </div>
           </div>
 
-          {/* Column 3: Sidebar / Opinion (Width 3) */}
-          <div className="lg:col-span-3 lg:pl-6 order-3">
+          {/* Column 2: Sidebar / Opinion (Width 3) */}
+          <div className="lg:col-span-3 lg:pl-8">
             <ScrollReveal direction="left" delay={2}>
               <Sidebar opinionNews={opinionNews} mostReadNews={mostReadNews} />
             </ScrollReveal>
@@ -246,10 +399,9 @@ export default async function Home() {
       <EventSection />
 
       {/* --- SELECTED NEWS SECTION (Nirbachito - Redesigned) --- */}
-      <SelectedNews news={selectedNewsFull} />
+      <SelectedNews news={selectedNewsFull} latestNews={listNews} />
 
       {/* --- ALL CATEGORY SECTIONS (Varied Layouts) --- */}
-      {/* বাংলাদেশ + রাজধানী - DUAL MODE Side by Side */}
       <CategorySection
         title={categories[0]}
         categorySlug={categorySlugMap[categories[0]]}
@@ -263,6 +415,7 @@ export default async function Home() {
       />
 
       {/* সারাদেশ - Variant 2: Horizontal Split */}
+
       <CategorySection
         title={categories[1]}
         categorySlug={categorySlugMap[categories[1]]}
@@ -271,6 +424,7 @@ export default async function Home() {
       />
 
       {/* রাজনীতি + বিশ্ব + অর্থনীতি - TRIPLE MODE Side by Side */}
+
       <CategorySection
         title={categories[3]}
         categorySlug={categorySlugMap[categories[3]]}
@@ -289,6 +443,7 @@ export default async function Home() {
       />
 
       {/* খেলা + বিনোদন + চাকরি - TRIPLE MODE Side by Side */}
+
       <CategorySection
         title={categories[6]}
         categorySlug={categorySlugMap[categories[6]]}
@@ -307,6 +462,7 @@ export default async function Home() {
       />
 
       {/* অপরাধ - Variant 8: L-Shape */}
+
       <CategorySection
         title={categories[7]}
         categorySlug={categorySlugMap[categories[7]]}

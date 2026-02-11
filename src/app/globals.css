@@ -619,7 +619,4 @@ div.ProseMirror table .selectedCell:after {
   }
 }
 
-/* Global Container Restriction (User Request: Print from both sides) */
-.container {
-  max-width: 80rem !important; /* 1280px */
-}
+

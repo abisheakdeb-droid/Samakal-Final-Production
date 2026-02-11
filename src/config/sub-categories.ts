@@ -92,10 +92,14 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
   world: [
     'asia',
     'europe',
-    'america',
+    'africa',
+    'usa-canada',
+    'others',
+    'australia',
+    'india',
+    'pakistan',
+    'china',
     'middle-east',
-    'south-asia',
-    'war',
   ],
   technology: [
     'gadgets',
@@ -125,12 +129,7 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
     'trafficking',
     'court',
   ],
-  capital: [
-    'north-city',
-    'south-city',
-    'traffic',
-    'services',
-  ],
+
   other: [
     'literature',
   ],

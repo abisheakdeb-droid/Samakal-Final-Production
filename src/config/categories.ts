@@ -164,9 +164,14 @@ export const CATEGORY_MAP: Record<string, string> = {
   // World
   "asia": "এশিয়া",
   "europe": "ইউরোপ",
-  "america": "আমেরিকা",
+  "africa": "আফ্রিকা",
+  "usa-canada": "যুক্তরাষ্ট্র-কানাডা",
+  "others": "অন্যান্য",
+  "australia": "অস্ট্রেলিয়া",
+  "india": "ভারত",
+  "pakistan": "পাকিস্তান",
+  "china": "চীন",
   "middle-east": "মধ্যপ্রাচ্য",
-  "south-asia": "দক্ষিণ এশিয়া",
   "war": "যুদ্ধ-সংঘাত",
 
   // Technology

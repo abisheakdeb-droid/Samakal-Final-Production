@@ -56,7 +56,7 @@ export default function AdSlot({
   return (
     <div
       ref={adRef}
-      className={`ad-slot ${getDimensions()} bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg flex items-center justify-center ${className}`}
+      className={`ad-slot ${getDimensions()} w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg flex flex-col items-center justify-center overflow-hidden mx-auto ${className}`}
       data-ad-slot={slotId}
       data-ad-format={format}
     >

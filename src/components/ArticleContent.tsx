@@ -12,8 +12,10 @@ import {
   ImageIcon,
   Printer,
   Link as LinkIcon,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { formatBanglaTime } from "@/lib/utils";
 import { generateBlurPlaceholder } from "@/utils/image";
 import HistoryTracker from "@/components/HistoryTracker";
@@ -39,6 +41,15 @@ export default function ArticleContent({
   const [sanitizedContent, setSanitizedContent] = useState("");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const { current } = scrollRef;
+      const scrollAmount = direction === "left" ? -300 : 300;
+      current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
 
   // Collect all images for lightbox (featured + gallery)
   const allImages = [
@@ -168,7 +179,7 @@ export default function ArticleContent({
       {/* Featured Image */}
       {article.image && (
         <div
-          className="relative w-full md:w-[85%] aspect-video mb-8 rounded-lg overflow-hidden cursor-pointer group hover:shadow-xl transition-shadow duration-300"
+          className="relative w-full aspect-video mb-8 rounded-lg overflow-hidden cursor-pointer group hover:shadow-xl transition-shadow duration-300"
           onClick={() => {
             setLightboxIndex(0);
             setLightboxOpen(true);
@@ -196,12 +207,12 @@ export default function ArticleContent({
 
       {/* Article Body */}
       <article
-        className="article-content prose prose-lg max-w-none w-full md:w-[85%] mb-6 text-justify prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-brand-red prose-a:no-underline hover:prose-a:underline"
+        className="article-content prose prose-lg max-w-none w-full mb-6 text-justify prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-brand-red prose-a:no-underline hover:prose-a:underline"
         dangerouslySetInnerHTML={{ __html: sanitizedContent }}
       />
 
       {/* Bottom Share Section */}
-      <div className="w-full md:w-[85%] border-t border-gray-100 dark:border-gray-800 mt-4 pt-6">
+      <div className="w-full border-t border-gray-100 dark:border-gray-800 mt-4 pt-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-gray-50 dark:bg-gray-800/50 px-6 py-5 rounded-xl">
           <span className="font-bold text-gray-700 dark:text-gray-300 text-sm">
             শেয়ার / সংরক্ষণ:
@@ -241,7 +252,7 @@ export default function ArticleContent({
       {/* ... Rest of interactions */}
 
       {/* Comment Section */}
-      <div className="w-full md:w-[85%]">
+      <div className="w-full">
         <CommentSection
           articleId={article.id}
           initialComments={comments || []}
@@ -260,7 +271,7 @@ export default function ArticleContent({
 
       {/* --- GALLERY SECTION (NEW) --- */}
       {article.images && article.images.length > 0 && (
-        <div className="w-full md:w-[85%] my-12">
+        <div className="w-full my-12">
           <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
             <ImageIcon className="text-brand-red" size={24} />
             ফটো গ্যালারি
@@ -303,48 +314,77 @@ export default function ArticleContent({
 
       {/* --- AUTHOR'S POPULAR NEWS SUB-SECTION --- */}
       {authorNews.length > 0 && (
-        <div className="mt-16 mb-12 w-full md:w-[85%]">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 relative">
-              <Image
-                src={`https://randomuser.me/api/portraits/men/${(article.title.length % 50) + 1}.jpg`}
-                alt="Author"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 leading-tight">
-                এই প্রতিবেদকের আরও খবর
-              </h3>
-              <div className="h-0.5 w-full bg-gray-200 mt-1 relative">
-                <div className="absolute left-0 top-0 h-full w-1/3 bg-brand-red"></div>
+        <div className="mt-16 mb-12 w-full">
+          <div className="flex items-end justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 relative">
+                <Image
+                  src={`https://randomuser.me/api/portraits/men/${(article.title.length % 50) + 1}.jpg`}
+                  alt="Author"
+                  fill
+                  className="object-cover"
+                />
               </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 leading-tight">
+                  এই প্রতিবেদকের আরও খবর
+                </h3>
+                <div className="h-0.5 w-full bg-gray-200 mt-1 relative">
+                  <div className="absolute left-0 top-0 h-full w-1/3 bg-brand-red"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Scroll Buttons */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => scroll("left")}
+                className="p-1.5 rounded-full border border-gray-200 text-gray-600 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all duration-300"
+                aria-label="Scroll left"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                onClick={() => scroll("right")}
+                className="p-1.5 rounded-full border border-gray-200 text-gray-600 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all duration-300"
+                aria-label="Scroll right"
+              >
+                <ChevronRight size={18} />
+              </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {authorNews.map((news) => (
-              <Link
-                key={news.id}
-                href={`/article/${news.id}`}
-                className="group block"
-              >
-                <div className="aspect-4/3 relative overflow-hidden rounded-lg mb-2">
-                  <Image
-                    src={news.image}
-                    alt={news.title}
-                    fill
-                    placeholder="blur"
-                    blurDataURL={generateBlurPlaceholder(4, 3)}
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <h4 className="text-sm font-bold text-gray-900 leading-tight group-hover:text-brand-red line-clamp-3">
-                  {news.title}
-                </h4>
-              </Link>
-            ))}
+          <div className="relative group/slider">
+            <div
+              ref={scrollRef}
+              className="flex overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0 no-scrollbar scroll-smooth snap-x"
+            >
+              {authorNews.slice(0, 10).map((news) => (
+                <Link
+                  key={news.id}
+                  href={`/article/${news.id}`}
+                  className="shrink-0 w-[85vw] sm:w-[320px] md:w-[280px] lg:w-[300px] snap-start flex items-start gap-4 p-3 rounded-lg border-r border-gray-100 last:border-0 hover:bg-white hover:shadow-lg transition-all duration-300 group"
+                >
+                  <div className="w-20 h-20 relative overflow-hidden rounded-md shrink-0 bg-gray-100 mt-1">
+                    <Image
+                      src={news.image}
+                      alt={news.title}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <h4 className="text-base font-bold text-gray-900 group-hover:text-brand-red line-clamp-2 leading-snug transition-colors mb-1">
+                      {news.title}
+                    </h4>
+                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                      <Clock size={12} />
+                      {formatBanglaTime(news.published_at || news.date)}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       )}

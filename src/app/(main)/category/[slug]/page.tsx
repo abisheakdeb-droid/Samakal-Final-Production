@@ -2,7 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import LatestSidebarWidget from "@/components/LatestSidebarWidget";
 import MostReadWidget from "@/components/MostReadWidget";
-import { localizeTime } from "@/utils/bn";
+import { formatBanglaDateTime } from "@/lib/utils";
+import NewsActionButtons from "@/components/NewsActionButtons";
 import { clsx } from "clsx";
 import {
   fetchArticlesByCategory,
@@ -148,8 +149,8 @@ export default async function CategoryPage({ params }: PageProps) {
             </h1>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-9">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-0">
+            <div className="lg:col-span-9 lg:pr-8">
               {/* Level 1 & 2 */}
               <section className="grid grid-cols-1 lg:grid-cols-12 mb-12 border-b border-gray-100 pb-12">
                 <Link
@@ -170,8 +171,15 @@ export default async function CategoryPage({ params }: PageProps) {
                   <p className="text-gray-600 text-lg line-clamp-2 mb-3">
                     {primeBig.summary}
                   </p>
-                  <div className="text-sm text-gray-500">
-                    {primeBig.author} • {localizeTime(primeBig.time)}
+                  <div className="flex items-center justify-between mt-4">
+                    <span className="text-sm text-gray-500">
+                      {primeBig.author} •{" "}
+                      {formatBanglaDateTime(primeBig.published_at)}
+                    </span>
+                    <NewsActionButtons
+                      title={primeBig.title}
+                      url={`/article/${primeBig.id}`}
+                    />
                   </div>
                 </Link>
                 <div className="lg:col-span-4 flex flex-col pl-0 lg:pl-8 mt-6 lg:mt-0">
@@ -197,7 +205,7 @@ export default async function CategoryPage({ params }: PageProps) {
                           {news.title}
                         </h2>
                         <div className="text-xs text-gray-400">
-                          {localizeTime(news.time)}
+                          {formatBanglaDateTime(news.published_at)}
                         </div>
                       </div>
                     </Link>
@@ -231,7 +239,7 @@ export default async function CategoryPage({ params }: PageProps) {
                         {news.title}
                       </h3>
                       <div className="mt-2 text-xs text-gray-400">
-                        {localizeTime(news.time)}
+                        {formatBanglaDateTime(news.published_at)}
                       </div>
                     </Link>
                   ))}
@@ -266,7 +274,7 @@ export default async function CategoryPage({ params }: PageProps) {
                             {news.summary}
                           </p>
                           <span className="text-xs text-gray-400">
-                            {localizeTime(news.time)}
+                            {formatBanglaDateTime(news.published_at)}
                           </span>
                         </div>
                       </Link>
@@ -284,7 +292,7 @@ export default async function CategoryPage({ params }: PageProps) {
 
             {/* Sidebar */}
             {/* Sidebar - Latest News Widget + Ads */}
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-3 lg:border-l lg:border-gray-200 lg:pl-8">
               <aside className="sticky bottom-4">
                 {slug === "latest" ? (
                   <MostReadWidget
