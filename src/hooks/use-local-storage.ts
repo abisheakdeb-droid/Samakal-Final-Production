@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 /**
  * Hook to manage state with local storage persistence
@@ -29,7 +29,7 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T)
     try {
       // Allow value to be a function so we have same API as useState
       const valueToStore =
-        value instanceof Function ? (value as any)(storedValue) : value;
+        value instanceof Function ? (value as (prev: T) => T)(storedValue) : value;
       
       setStoredValue(valueToStore);
       

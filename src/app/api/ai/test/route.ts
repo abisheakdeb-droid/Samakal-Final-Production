@@ -5,7 +5,7 @@ import { testGeminiConnection, getAICompletion } from '@/lib/ai/client';
  * Test Gemini API connection
  * GET /api/ai/test
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Check if API key is configured
     if (!process.env.GEMINI_API_KEY) {
@@ -56,11 +56,12 @@ export async function GET(request: NextRequest) {
       }
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
       { 
         success: false, 
-        error: error.message,
+        error: errorMsg,
         message: 'An error occurred while testing the connection'
       },
       { status: 500 }
@@ -116,11 +117,12 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
       { 
         success: false, 
-        error: error.message 
+        error: errorMsg 
       },
       { status: 500 }
     );

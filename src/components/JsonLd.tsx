@@ -1,5 +1,3 @@
-import { ArticleRow } from "@/types/database";
-
 interface JsonLdProps {
   article: {
     title: string;
@@ -12,7 +10,7 @@ interface JsonLdProps {
     updated_at?: string;
     category?: string;
     sub_headline?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 

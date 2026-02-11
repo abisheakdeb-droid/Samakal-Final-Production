@@ -11,9 +11,11 @@ import {
   fetchMostReadArticles,
   fetchFeaturedArticles,
 } from "@/lib/actions-article";
+import { fetchVideoArticles, fetchPhotoAlbums } from "@/lib/actions-media";
 import { formatBanglaDateTime } from "@/lib/utils";
 import SelectedNews from "@/components/SelectedNews";
 import CategorySection from "@/components/CategorySection";
+import HomeMediaSection from "@/components/HomeMediaSection";
 import { NewsItem } from "@/types/news";
 
 // Dynamically Import Heavy / Below-Fold Components
@@ -37,6 +39,12 @@ export const revalidate = 60;
 export default async function Home() {
   // Fetch all core data in parallel to reduce waterfall latency
   // Category names in navigation order
+  // Fetch Media Data
+  const [videoArticles, photoAlbums] = await Promise.all([
+    fetchVideoArticles(4),
+    fetchPhotoAlbums(3),
+  ]);
+
   const categories = [
     "বাংলাদেশ",
     "সারাদেশ",
@@ -184,7 +192,7 @@ export default async function Home() {
               {/* 2. SUB-LEADS (Span 4 - Stacked Vertical: 3 Items) */}
               <div className="md:col-span-4 flex flex-col relative">
                 {/* Explicit Vertical Divider - Absolute Positioned to left of this column (inside the gap) */}
-                <div className="hidden md:block absolute -left-3 top-0 bottom-0 w-[1px] bg-gray-300 dark:bg-gray-700"></div>
+                <div className="hidden md:block absolute -left-3 top-0 bottom-0 w-px bg-gray-300 dark:bg-gray-700"></div>
 
                 <div className="flex flex-col h-full gap-4">
                   {/* First Item: Large Vertical Card */}
@@ -412,6 +420,9 @@ export default async function Home() {
 
       {/* --- SELECTED NEWS SECTION (Nirbachito - Redesigned) --- */}
       <SelectedNews news={selectedNewsFull} latestNews={listNews} />
+
+      {/* --- MULTIMEDIA SECTION --- */}
+      <HomeMediaSection videos={videoArticles} photos={photoAlbums} />
 
       {/* --- ALL CATEGORY SECTIONS (Varied Layouts) --- */}
       <CategorySection

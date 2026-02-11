@@ -2,7 +2,7 @@ export interface DashboardStat {
   label: string;
   value: string;
   change: string;
-  icon: any;
+  icon: React.ElementType;
   color: string;
   bg: string;
 }

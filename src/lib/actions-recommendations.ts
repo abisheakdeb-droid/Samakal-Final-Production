@@ -121,7 +121,7 @@ export async function fetchRecommendedArticles(limit: number = 6) {
       `;
     }
 
-    return articlesData.rows.map((row: any) => mapArticleToNewsItem(row as ArticleRow));
+    return articlesData.rows.map((row) => mapArticleToNewsItem(row as ArticleRow));
 
   } catch (error) {
     console.error("Recommendation Error:", error);

@@ -1,4 +1,5 @@
 import LatestSidebarWidget from "@/components/LatestSidebarWidget";
+import ScrollReveal from "@/components/ScrollReveal";
 import AdSlot from "@/components/AdSlot";
 import { redirect } from "next/navigation";
 import ArticleContent from "@/components/ArticleContent";
@@ -37,6 +38,9 @@ export async function generateMetadata(
   const articleImage = article.image ? [article.image] : [];
 
   return {
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_BASE_URL || "https://samakal.com",
+    ),
     title: `${article.title} | সমকাল`,
     description:
       article.sub_headline ||
@@ -110,26 +114,35 @@ export default async function ArticlePage({ params }: PageProps) {
               article={article}
               relatedNews={relatedNews}
               authorNews={authorNews}
-              comments={comments}
+              comments={comments.map((c) => ({
+                id: c.id,
+                content: c.content,
+                author: c.author,
+                avatar: c.avatar || undefined,
+                created_at: c.created_at,
+                timeAgo: c.timeAgo,
+              }))}
               currentUser={session?.user}
             />
           </div>
 
           {/* Sidebar Column - Only Latest News + Ads */}
           <div className="lg:col-span-4 border-l border-gray-200 dark:border-gray-800 lg:pl-8">
-            <aside className="sticky bottom-4">
-              <LatestSidebarWidget news={sidebarNews} />
+            <ScrollReveal direction="left">
+              <aside className="sticky bottom-4">
+                <LatestSidebarWidget news={sidebarNews} />
 
-              {/* Advertisement 1 */}
-              <div className="mb-6 mt-8 w-full flex justify-center">
-                <AdSlot slotId="article-sidebar-1" format="rectangle" />
-              </div>
+                {/* Advertisement 1 */}
+                <div className="mb-6 mt-8 w-full flex justify-center">
+                  <AdSlot slotId="article-sidebar-1" format="rectangle" />
+                </div>
 
-              {/* Advertisement 2 */}
-              <div className="flex justify-center w-full">
-                <AdSlot slotId="article-sidebar-2" format="rectangle" />
-              </div>
-            </aside>
+                {/* Advertisement 2 */}
+                <div className="flex justify-center w-full">
+                  <AdSlot slotId="article-sidebar-2" format="rectangle" />
+                </div>
+              </aside>
+            </ScrollReveal>
           </div>
         </div>
       </main>

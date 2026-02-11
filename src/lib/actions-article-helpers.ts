@@ -1,6 +1,40 @@
 import type { ArticleRow, ExtraArticleData } from "@/types/database";
 import { getBengaliCategory } from "@/utils/category";
 import { formatBanglaDate } from "@/lib/utils";
+import { z } from "zod";
+
+export const ArticleSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1, "Title is required"),
+  slug: z.string().min(1, "Slug is required"),
+  content: z.string().optional(),
+  status: z.enum(["draft", "published", "archived", "scheduled"]),
+  category: z.string().optional(),
+  image: z.string().optional(),
+  author_id: z.string().optional(),
+  views: z.number().optional(),
+  date: z.string().optional(), // For UI display purposes
+  published_at: z.string().optional(),
+  scheduled_at: z.string().optional(),
+  // Phase 1: Core Metadata
+  sub_headline: z.string().optional(),
+  news_type: z.enum(["breaking", "regular", "feature", "opinion", "photo_story"]).optional(),
+  location: z.string().optional(),
+  keywords: z.array(z.string()).optional(),
+  tags: z.array(z.string()).optional(),
+  event_id: z.string().optional(),
+  // Phase 2: Media Enhancement
+  video_url: z.string().optional(),
+  video_thumbnail: z.string().optional(),
+  // Phase 3: Attribution & SEO
+  source: z.string().optional(),
+  source_url: z.string().optional(),
+  seo_title: z.string().optional(),
+  seo_description: z.string().optional(),
+  canonical_url: z.string().optional(),
+});
+
+export const CreateArticle = ArticleSchema.omit({ id: true, date: true, views: true, author_id: true });
 
 // Helper to map DB result to UI NewsItem shape
 import { formatRelativeTime } from "@/utils/bn";

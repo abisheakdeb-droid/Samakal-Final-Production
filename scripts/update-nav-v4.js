@@ -1,5 +1,5 @@
-const { sql } = require('@vercel/postgres');
-require('dotenv').config({ path: '.env.local' });
+import { sql } from '@vercel/postgres';
+import 'dotenv/config';
 
 const newNav = [
     { label: "সর্বশেষ", href: "/category/latest" },
@@ -37,7 +37,7 @@ const newNav = [
 async function updateNav() {
   console.log('Updating navigation menu to V4 (Bangladesh > Saradesh > Capital)...');
   try {
-    const result = await sql`
+    await sql`
       UPDATE site_settings
       SET navigation_menu = ${JSON.stringify(newNav)},
           updated_at = NOW()

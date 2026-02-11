@@ -48,9 +48,9 @@ export function mapArticleToNewsItem(
         summary: stripHtml(article.content || '').substring(0, 150) + '...', // Simple extract
         content: article.content || '',
 
-        status: article.status || 'published',
+        status: (article.status as 'draft' | 'published' | 'archived' | 'scheduled') || 'published',
         // New Fields
-        news_type: article.news_type,
+        news_type: article.news_type as 'breaking' | 'regular' | 'feature' | 'opinion' | 'photo_story',
         location: article.location,
         source: article.source,
         sourceUrl: article.source_url,

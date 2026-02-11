@@ -7,7 +7,6 @@ import { MessageSquare, Send, User as UserIcon } from "lucide-react";
 import { postComment } from "@/lib/actions-comment"; // Action we just made
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
-import { clsx } from "clsx";
 
 interface Comment {
   id: string;
@@ -20,7 +19,12 @@ interface Comment {
 interface CommentSectionProps {
   articleId: string;
   initialComments: Comment[];
-  currentUser?: any; // Simple user object if logged in
+  currentUser?: {
+    id: string;
+    name?: string | null;
+    image?: string | null;
+    email?: string | null;
+  };
 }
 
 export default function CommentSection({
@@ -41,7 +45,7 @@ export default function CommentSection({
       id: tempId,
       content: content,
       author: currentUser?.name || "আপনি",
-      avatar: currentUser?.image,
+      avatar: currentUser?.image || undefined,
       timeAgo: "এইমাত্র",
     };
 
@@ -83,8 +87,8 @@ export default function CommentSection({
             <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 overflow-hidden relative border border-gray-300 dark:border-gray-700 shrink-0">
               {currentUser.image ? (
                 <Image
-                  src={currentUser.image}
-                  alt={currentUser.name}
+                  src={currentUser.image || ""}
+                  alt={currentUser.name || "User"}
                   fill
                   className="object-cover"
                 />

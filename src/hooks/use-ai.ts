@@ -29,9 +29,10 @@ export function useAI() {
       }
       
       return result;
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
       console.error(`AI Operation failed: ${operationName}`, error);
-      toast.error(error.message || 'AI request failed');
+      toast.error(errorMsg || 'AI request failed');
       return null;
     } finally {
       setIsGenerating(false);

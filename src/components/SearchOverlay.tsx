@@ -96,7 +96,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   return (
     <div
       className={clsx(
-        "fixed inset-0 z-[100] transition-all duration-300 ease-in-out",
+        "fixed inset-0 z-100 transition-all duration-300 ease-in-out",
         isOpen
           ? "opacity-100 visible"
           : "opacity-0 invisible pointer-events-none",

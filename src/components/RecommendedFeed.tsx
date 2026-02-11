@@ -1,4 +1,5 @@
 import { fetchRecommendedArticles } from "@/lib/actions-recommendations";
+import { NewsItem } from "@/types/news";
 import Link from "next/link";
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
@@ -19,7 +20,7 @@ export default async function RecommendedFeed() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {articles.map((article: any) => (
+          {articles.map((article: NewsItem) => (
             <Link
               key={article.id}
               href={`/article/${article.slug}`}

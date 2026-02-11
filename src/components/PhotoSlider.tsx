@@ -5,50 +5,52 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, Camera } from "lucide-react";
 import { clsx } from "clsx";
 
-const PHOTOS = [
-  {
-    id: 1,
-    url: "https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=1000&auto=format&fit=crop",
-    title: "ঋতু পরিবর্তনের পালা: শীতের আগমন",
-    photographer: "আহমেদ রিয়াজ",
-    location: "বান্দরবান, বাংলাদেশ",
-  },
-  {
-    id: 2,
-    url: "https://images.unsplash.com/photo-1596464716127-f9a826e0be5a?q=80&w=1000&auto=format&fit=crop",
-    title: "শহরের জ্যাম: নিত্যদিনের সঙ্গী",
-    photographer: "হাসান মাহমুদ",
-    location: "গুলিস্তান, ঢাকা",
-  },
-  {
-    id: 3,
-    url: "https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?q=80&w=1000&auto=format&fit=crop",
-    title: "পদ্মা সেতু: স্বপ্নের সেতু",
-    photographer: "কামরুল হাসান",
-    location: "মাওয়া, মুন্সিগঞ্জ",
-  },
-];
+interface PhotoSlide {
+  id: string | number;
+  url: string;
+  title: string;
+  photographer?: string;
+  location?: string;
+}
 
-export default function PhotoSlider() {
+interface PhotoSliderProps {
+  photos?: PhotoSlide[];
+}
+
+export default function PhotoSlider({ photos = [] }: PhotoSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextSlide = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % PHOTOS.length);
-  }, []);
+    if (photos.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % photos.length);
+  }, [photos.length]);
 
   const prevSlide = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + PHOTOS.length) % PHOTOS.length);
-  }, []);
+    if (photos.length === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + photos.length) % photos.length);
+  }, [photos.length]);
 
   // Auto-play
   useEffect(() => {
+    if (photos.length <= 1) return;
     const timer = setInterval(() => {
       nextSlide();
     }, 5000);
     return () => clearInterval(timer);
-  }, [currentIndex, nextSlide]);
+  }, [currentIndex, nextSlide, photos.length]);
 
-  const currentPhoto = PHOTOS[currentIndex];
+  if (photos.length === 0) {
+    return (
+      <div className="w-full h-[60vh] md:h-[80vh] bg-black flex items-center justify-center">
+        <div className="text-gray-500 flex flex-col items-center gap-4">
+          <Camera size={48} />
+          <p className="text-xl font-bold">কোন অ্যালবাম পাওয়া যায়নি</p>
+        </div>
+      </div>
+    );
+  }
+
+  const currentPhoto = photos[currentIndex];
 
   return (
     <div className="relative w-full h-[60vh] md:h-[80vh] bg-black overflow-hidden group">
@@ -109,7 +111,7 @@ export default function PhotoSlider() {
 
       {/* Dots */}
       <div className="absolute top-4 right-4 flex gap-2">
-        {PHOTOS.map((_, idx) => (
+        {photos.map((_, idx) => (
           <button
             key={idx}
             onClick={() => setCurrentIndex(idx)}
