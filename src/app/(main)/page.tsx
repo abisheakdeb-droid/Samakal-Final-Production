@@ -14,6 +14,7 @@ import {
 import { formatBanglaDateTime } from "@/lib/utils";
 import SelectedNews from "@/components/SelectedNews";
 import CategorySection from "@/components/CategorySection";
+import { NewsItem } from "@/types/news";
 
 // Dynamically Import Heavy / Below-Fold Components
 const HeroCard = dynamic(() => import("@/components/HeroCard")); // Actually, keep Hero dynamic if data fetch allows, but usually static is better for LCP. Let's keep Hero static? User requested Optimization. Let's keep Hero static for LCP, but others dynamic.
@@ -49,11 +50,11 @@ export default async function Home() {
     "চাকরি",
   ];
 
-  let leadNewsFull = [];
-  let selectedNewsInitial = [];
-  let opinionNews = [];
-  let mostReadNews = [];
-  let categoryData = [];
+  let leadNewsFull: NewsItem[] = [];
+  let selectedNewsInitial: NewsItem[] = [];
+  let opinionNews: NewsItem[] = [];
+  let mostReadNews: NewsItem[] = [];
+  let categoryData: NewsItem[][] = [];
 
   try {
     const results = await Promise.all([
