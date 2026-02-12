@@ -8,7 +8,7 @@ import NewsActionButtons from "../../NewsActionButtons";
 import ScrollReveal from "../../ScrollReveal";
 
 export function DualCategoryGrid({ news }: { news: NewsItem[] }) {
-  if (news.length < 5) return null;
+  if (news.length < 1) return null;
   const lead = news[0];
   const list = news.slice(1, 5);
 

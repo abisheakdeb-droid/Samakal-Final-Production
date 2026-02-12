@@ -154,7 +154,7 @@ export const fetchLatestArticles = cache(
 
 export const fetchArticlesByCategory = cache(
   unstable_cache(
-    async (category: string, limit: number = 10, isParentCategory: boolean = false) => {
+    async (category: string, limit: number = 10, isParentCategory: boolean = false, parentCategory?: string) => {
       try {
         const normalizedCategory = normalizeCategory(category);
         let data;
@@ -176,6 +176,24 @@ export const fetchArticlesByCategory = cache(
             LIMIT ${limit}
           `;
         } else {
+        if (parentCategory) {
+          data = await sql`
+            SELECT 
+              articles.id, articles.title, articles.slug, articles.status,
+              articles.category, articles.parent_category, articles.views,
+              articles.image, articles.created_at, articles.content,
+              articles.sub_headline, articles.news_type, articles.location,
+              articles.video_url, users.name as author
+            FROM articles
+            LEFT JOIN users ON articles.author_id = users.id
+            WHERE 
+              articles.status = 'published' AND articles.published_at <= NOW() AND
+              articles.category ILIKE ${normalizedCategory} AND
+              articles.parent_category = ${parentCategory}
+            ORDER BY articles.published_at DESC
+            LIMIT ${limit}
+          `;
+        } else {
           data = await sql`
             SELECT 
               articles.id, articles.title, articles.slug, articles.status,
@@ -191,6 +209,7 @@ export const fetchArticlesByCategory = cache(
             ORDER BY articles.published_at DESC
             LIMIT ${limit}
           `;
+        }
         }
     
         return data.rows.map(row => mapArticleToNewsItem(row as ArticleRow));

@@ -4,7 +4,6 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
   bangladesh: [
     'education',
     'law-courts',
-    'health',
     'agriculture',
     'parliament',
     'environment',
@@ -109,12 +108,11 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
     'apps-games',
   ],
   lifestyle: [
-    'fashion',
     'food',
-    'travel',
-    'health-tips',
+    'fashion',
     'relationship',
-    'religion',
+    'beauty-care',
+    'lifestyle-health',
   ],
   /* education: [
     'campus',

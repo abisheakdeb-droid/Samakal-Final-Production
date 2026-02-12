@@ -14,7 +14,7 @@ export const CATEGORY_MAP: Record<string, string> = {
   entertainment: "বিনোদন",
   technology: "প্রযুক্তি",
   education: "শিক্ষা",
-  lifestyle: "জীবনযাপন",
+  lifestyle: "লাইফস্টাইল",
   jobs: "চাকরি",
   other: "অন্যান্য",
   archive: "আর্কাইভ",
@@ -108,9 +108,7 @@ export const CATEGORY_MAP: Record<string, string> = {
   netrokona: "নেত্রকোনা",
   sherpur: "শেরপুর",
   
-  // Sub-categories
   "law-courts": "আইন ও বিচার",
-  health: "স্বাস্থ্য",
   agriculture: "কৃষি",
   parliament: "সংসদ",
   environment: "পরিবেশ",
@@ -182,12 +180,15 @@ export const CATEGORY_MAP: Record<string, string> = {
   "apps-games": "অ্যাপ ও গেম",
 
   // Lifestyle
-  "fashion": "ফ্যাশন",
-  "food": "খাবার",
-  "travel": "ভ্রমণ",
+  "beauty-care": "রূপচর্চা",
+  food: "খাবার",
+  fashion: "ফ্যাশন",
+  relationship: "সম্পর্ক",
+  health: "স্বাস্থ্য",
+  "lifestyle-health": "স্বাস্থ্য",
+  travel: "ভ্রমণ",
   "health-tips": "স্বাস্থ্য টিপস",
-  "relationship": "সম্পর্ক",
-  "religion": "ধর্ম ও জীবন",
+  religion: "ধর্ম ও জীবন",
 
   // Education
   "campus": "ক্যাম্পাস",
@@ -207,7 +208,7 @@ export const CATEGORY_MAP: Record<string, string> = {
   "north-city": "উত্তর সিটি",
   "south-city": "দক্ষিণ সিটি",
   "traffic": "যানজট",
-  "services": "নাগরিক সেবা"
+  "services": "নাগরিক সেবা",
 };
 
 // List of parent categories only (for homepage)

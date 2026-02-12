@@ -54,6 +54,8 @@ export default async function Home() {
     "অর্থনীতি",
     "খেলা",
     "অপরাধ",
+    "লাইফস্টাইল",
+    "প্রযুক্তি",
     "বিনোদন",
     "চাকরি",
   ];
@@ -135,6 +137,8 @@ export default async function Home() {
     অর্থনীতি: "economics",
     খেলা: "sports",
     অপরাধ: "crime",
+    লাইফস্টাইল: "lifestyle",
+    প্রযুক্তি: "technology",
     বিনোদন: "entertainment",
     চাকরি: "jobs",
   };
@@ -431,19 +435,15 @@ export default async function Home() {
         news={categoryData[0]}
         dualMode
         secondCategory={{
+          title: categories[1],
+          categorySlug: categorySlugMap[categories[1]],
+          news: categoryData[1],
+        }}
+        thirdCategory={{
           title: categories[2],
           categorySlug: categorySlugMap[categories[2]],
           news: categoryData[2],
         }}
-      />
-
-      {/* সারাদেশ - Variant 2: Horizontal Split */}
-
-      <CategorySection
-        title={categories[1]}
-        categorySlug={categorySlugMap[categories[1]]}
-        news={categoryData[1]}
-        variant={2}
       />
 
       {/* রাজনীতি + বিশ্ব + অর্থনীতি - TRIPLE MODE Side by Side */}
@@ -473,6 +473,25 @@ export default async function Home() {
         news={categoryData[6]}
         dualMode
         secondCategory={{
+          title: categories[10],
+          categorySlug: categorySlugMap[categories[10]],
+          news: categoryData[10],
+        }}
+        thirdCategory={{
+          title: categories[11],
+          categorySlug: categorySlugMap[categories[11]],
+          news: categoryData[11],
+        }}
+      />
+
+      {/* অপরাধ + লাইফস্টাইল + প্রযুক্তি - TRIPLE MODE Side by Side */}
+
+      <CategorySection
+        title={categories[7]}
+        categorySlug={categorySlugMap[categories[7]]}
+        news={categoryData[7]}
+        dualMode
+        secondCategory={{
           title: categories[8],
           categorySlug: categorySlugMap[categories[8]],
           news: categoryData[8],
@@ -482,15 +501,6 @@ export default async function Home() {
           categorySlug: categorySlugMap[categories[9]],
           news: categoryData[9],
         }}
-      />
-
-      {/* অপরাধ - Variant 8: L-Shape */}
-
-      <CategorySection
-        title={categories[7]}
-        categorySlug={categorySlugMap[categories[7]]}
-        news={categoryData[7]}
-        variant={8}
       />
     </main>
   );

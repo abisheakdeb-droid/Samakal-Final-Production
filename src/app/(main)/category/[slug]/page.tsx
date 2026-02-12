@@ -56,10 +56,14 @@ export default async function CategoryPage({ params }: PageProps) {
     // If it is a subcat but has NO children (like Gazipur), we fetch specific
     const shouldFetchAggregated = hasChildren;
 
+    const parentSlug = getParentCategory(slug);
+    const parentBengali = parentSlug ? CATEGORY_MAP[parentSlug] : undefined;
+
     newsItems = await fetchArticlesByCategory(
       categoryForQuery,
       20,
       shouldFetchAggregated, // true if it has children (Parent logic), false otherwise
+      parentBengali,
     );
   }
 
