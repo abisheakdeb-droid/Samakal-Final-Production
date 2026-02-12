@@ -45,6 +45,15 @@ export default function VideoBentoGrid({ videos = [] }: VideoBentoGridProps) {
             src={video.image || video.thumb || "/placeholder.svg"}
             alt={video.title}
             fill
+            sizes={
+              video.size === "large"
+                ? "(max-width: 1024px) 100vw, 800px"
+                : "(max-width: 768px) 100vw, 400px"
+            }
+            unoptimized={
+              video.image?.includes("samakal.com") ||
+              video.thumb?.includes("samakal.com")
+            }
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
 

@@ -135,6 +135,7 @@ export default function ArticleContent({
               src={`https://randomuser.me/api/portraits/men/${(article.title.length % 50) + 1}.jpg`}
               alt={article.author || "Reporter"}
               fill
+              sizes="(max-width: 768px) 48px, 48px"
               className="object-cover"
             />
           </div>
@@ -204,6 +205,8 @@ export default function ArticleContent({
               fill
               placeholder="blur"
               blurDataURL={generateBlurPlaceholder(16, 9)}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 1024px"
+              unoptimized={article.image?.includes("samakal.com")}
               className="object-cover group-hover:scale-105 transition-transform duration-700"
               priority
             />
@@ -309,6 +312,8 @@ export default function ArticleContent({
                     fill
                     placeholder="blur"
                     blurDataURL={generateBlurPlaceholder(4, 3)}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    unoptimized={img.url?.includes("samakal.com")}
                     className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   {img.caption && (
@@ -389,6 +394,8 @@ export default function ArticleContent({
                         src={news.image}
                         alt={news.title}
                         fill
+                        sizes="(max-width: 768px) 80px, 80px"
+                        unoptimized={news.image?.includes("samakal.com")}
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     </div>
@@ -449,6 +456,8 @@ export default function ArticleContent({
                       fill
                       placeholder="blur"
                       blurDataURL={generateBlurPlaceholder(16, 9)}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 250px"
+                      unoptimized={news.image?.includes("samakal.com")}
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-2 right-2 bg-brand-red text-white px-2 py-0.5 rounded text-[10px] font-bold">

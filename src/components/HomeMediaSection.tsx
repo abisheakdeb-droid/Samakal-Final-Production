@@ -60,6 +60,8 @@ export default function HomeMediaSection({
                     src={videos[0].image || "/placeholder.svg"}
                     alt={videos[0].title}
                     fill
+                    sizes="(max-width: 1024px) 100vw, 800px"
+                    unoptimized={videos[0].image?.includes("samakal.com")}
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent opacity-80" />
@@ -96,6 +98,8 @@ export default function HomeMediaSection({
                         src={video.image || "/placeholder.svg"}
                         alt={video.title}
                         fill
+                        sizes="(max-width: 768px) 100vw, 300px"
+                        unoptimized={video.image?.includes("samakal.com")}
                         className="object-cover group-hover:scale-110 transition-transform"
                       />
                       <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
@@ -133,6 +137,8 @@ export default function HomeMediaSection({
                         src={album.cover_image || "/placeholder.svg"}
                         alt={album.title}
                         fill
+                        sizes="(max-width: 1024px) 100vw, 400px"
+                        unoptimized={album.cover_image?.includes("samakal.com")}
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />

@@ -28,6 +28,8 @@ export default function HeroCard({ news }: HeroCardProps) {
             priority
             placeholder="blur"
             blurDataURL={generateBlurPlaceholder(16, 9)}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            unoptimized={news.image?.includes("samakal.com")}
             className="object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
           />
           {/* Category Badge */}

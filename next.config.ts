@@ -22,16 +22,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "**.samakal.com",
-        pathname: '/**',
-      },
-      {
-        protocol: "http",
-        hostname: "**.samakal.com",
-        pathname: '/**',
-      },
-      {
-        protocol: "https",
         hostname: "samakal.com",
         pathname: '/**',
       },
@@ -42,7 +32,27 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "**.vercel.app",
+        hostname: "www.samakal.com",
+        pathname: '/**',
+      },
+      {
+        protocol: "http",
+        hostname: "www.samakal.com",
+        pathname: '/**',
+      },
+      {
+        protocol: "https",
+        hostname: "*.samakal.com",
+        pathname: '/**',
+      },
+      {
+        protocol: "https",
+        hostname: "samakal-redesign.vercel.app",
+        pathname: '/**',
+      },
+      {
+        protocol: "https",
+        hostname: "*.vercel.app",
         pathname: '/**',
       },
       {
