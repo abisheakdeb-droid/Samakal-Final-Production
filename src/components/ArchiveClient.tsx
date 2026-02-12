@@ -70,7 +70,7 @@ export default function ArchiveClient({
     entertainment: "বিনোদন",
     technology: "প্রযুক্তি",
     education: "শিক্ষা",
-    lifestyle: "জীবনযাপন",
+    lifestyle: "লাইফস্টাইল",
     jobs: "চাকরি",
     probash: "প্রবাস",
   };
@@ -96,9 +96,6 @@ export default function ArchiveClient({
     return num.toString().replace(/[0-9]/g, (d) => "০১২৩৪৫৬৭৮৯"[parseInt(d)]);
   };
 
-  if (startDate === endDate) {
-    return formatBanglaDate(startDate);
-  }
   const displayDateRange = () => {
     if (startDate === endDate) {
       return formatBanglaDate(startDate);
