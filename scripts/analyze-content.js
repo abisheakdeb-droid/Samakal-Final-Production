@@ -1,20 +1,10 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { db } = require('@vercel/postgres');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { db } from '@vercel/postgres';
 
 loadEnvConfig(cwd());
 
 async function analyzeContent() {
-  const targets = {
-    'অর্থনীতি': 'Economics',
-    'মতামত': 'Opinion',
-    'Feature': 'Feature', // English key
-    'ফিচার': 'Feature',   // Bangla key
-    'Opinion': 'Opinion', // English key
-    'Literature': 'Literature', // Old
-    'সাহিত্য': 'Literature',    // Old key
-    'সাহিত্য ও সংস্কৃতি': 'Lit & Culture' // New Target
-  };
   const client = await db.connect();
   try {
     const res = await client.sql`

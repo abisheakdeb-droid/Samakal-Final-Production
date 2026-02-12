@@ -65,7 +65,6 @@ async function main() {
   try {
     // 1. Convert all English category slugs to Bengali
     console.log('Step 1: Normalizing individual categories...');
-    let normalizedCount = 0;
     for (const [slug, bangla] of Object.entries(CATEGORY_MAP)) {
       const res = await client.sql`
         UPDATE articles 
