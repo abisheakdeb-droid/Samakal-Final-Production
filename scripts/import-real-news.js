@@ -1,9 +1,10 @@
-const Parser = require('rss-parser');
-const cheerio = require('cheerio');
-const slugify = require('slugify');
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { db } = require('@vercel/postgres');
+import Parser from 'rss-parser';
+import * as cheerio from 'cheerio';
+import slugify from 'slugify';
+import pkg from '@next/env';
+const { loadEnvConfig } = pkg;
+import { cwd } from 'process';
+import { db } from '@vercel/postgres';
 
 // Load environment variables
 loadEnvConfig(cwd());
@@ -62,7 +63,7 @@ function mapCategory(rawCategories) {
 
 // Generate Slug
 function generateSlug(title) {
-  return slugify(title, {
+  return 'article-' + slugify(title, {
     lower: true,
     strict: true,
     locale: 'bn', // Bengali locale support might vary, but strict removes special chars

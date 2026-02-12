@@ -20,6 +20,7 @@ type NavItem = {
   label: string;
   href: string;
   subItems?: NavItem[];
+  items?: NavItem[]; // Robustness for potential data format variations
   megaMenu?: boolean;
 };
 
@@ -63,19 +64,11 @@ export default function Header({ settings }: HeaderProps) {
     },
   ];
 
-  // Hard override: Ensure Saradesh has NO subItems (per user request)
-  const processedNavItems = navItems.map((item) => {
-    if (item.href === "/category/saradesh" || item.label === "সারাদেশ") {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { subItems, megaMenu, ...rest } = item;
-      return rest;
-    }
-    return item;
-  });
-
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const processedNavItems = navItems;
 
   const date = formatBanglaDate(new Date());
 
@@ -171,7 +164,9 @@ export default function Header({ settings }: HeaderProps) {
                           )}
                         >
                           {item.subItems?.map((sub: NavItem) => {
-                            const hasNested = !!sub.subItems;
+                            const nestedItems = sub.subItems || sub.items;
+                            const hasNested =
+                              !!nestedItems && nestedItems.length > 0;
 
                             if (hasNested) {
                               return (
@@ -192,7 +187,7 @@ export default function Header({ settings }: HeaderProps) {
 
                                   {/* Nested Flyout Menu */}
                                   <div className="absolute left-full top-0 hidden group-hover/nested:block w-48 bg-white dark:bg-gray-800 shadow-xl border-l border-gray-100 dark:border-gray-700 p-2 rounded-r-lg -ml-1 z-60 h-[300px] overflow-y-auto">
-                                    {sub.subItems?.map((nested) => (
+                                    {nestedItems.map((nested: NavItem) => (
                                       <Link
                                         key={nested.label}
                                         href={nested.href}

@@ -27,7 +27,7 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 
 function generateSlug(title, url = '') {
   const hash = crypto.createHash('md5').update(title + url).digest('hex').substring(0, 12);
-  return `-${hash}`;
+  return `article-${hash}`;
 }
 
 async function downloadImage(imageUrl, articleSlug) {

@@ -33,7 +33,7 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 function generateSlug(title) {
   // For Bengali text, use a hash-based approach
   const hash = crypto.createHash('md5').update(title).digest('hex').substring(0, 8);
-  return `-${hash}`;
+  return `article-${hash}`;
 }
 
 // Download and save image

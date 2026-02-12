@@ -98,9 +98,10 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
               <span>সারা দেশ</span>
             </div>
 
-            <AnimatePresence>
-              {selectedDivision && (
+            <AnimatePresence mode="popLayout">
+              {selectedDivision ? (
                 <motion.div
+                  key={`division-${selectedDivision}`}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
@@ -118,10 +119,11 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
                     />
                   </button>
                 </motion.div>
-              )}
+              ) : null}
 
-              {selectedDistrict && (
+              {selectedDistrict ? (
                 <motion.div
+                  key={`district-${selectedDistrict}`}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
@@ -139,7 +141,7 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
                     />
                   </button>
                 </motion.div>
-              )}
+              ) : null}
             </AnimatePresence>
           </div>
 

@@ -160,21 +160,45 @@ export const fetchArticlesByCategory = cache(
         let data;
         
         if (isParentCategory) {
-          data = await sql`
-            SELECT 
-              articles.id, articles.title, articles.slug, articles.status,
-              articles.category, articles.parent_category, articles.views,
-              articles.image, articles.created_at, articles.content,
-              articles.sub_headline, articles.news_type, articles.location,
-              articles.video_url, users.name as author
-            FROM articles
-            LEFT JOIN users ON articles.author_id = users.id
-            WHERE 
-              articles.status = 'published' AND articles.published_at <= NOW() AND
-              (articles.parent_category = ${normalizedCategory} OR articles.category = ${normalizedCategory})
-            ORDER BY articles.published_at DESC
-            LIMIT ${limit}
-          `;
+          const isSaradesh = normalizedCategory === 'সারাদেশ';
+          
+          if (isSaradesh) {
+            data = await sql`
+              SELECT 
+                articles.id, articles.title, articles.slug, articles.status,
+                articles.category, articles.parent_category, articles.views,
+                articles.image, articles.created_at, articles.content,
+                articles.sub_headline, articles.news_type, articles.location,
+                articles.video_url, users.name as author
+              FROM articles
+              LEFT JOIN users ON articles.author_id = users.id
+              WHERE 
+                articles.status = 'published' AND articles.published_at <= NOW() AND
+                (
+                  articles.parent_category = 'সারাদেশ' OR 
+                  articles.category = 'সারাদেশ' OR
+                  articles.parent_category IN ('ঢাকা', 'চট্টগ্রাম', 'রাজশাহী', 'খুলনা', 'বরিশাল', 'সিলেট', 'রংপুর', 'ময়মনসিংহ')
+                )
+              ORDER BY articles.published_at DESC
+              LIMIT ${limit}
+            `;
+          } else {
+            data = await sql`
+              SELECT 
+                articles.id, articles.title, articles.slug, articles.status,
+                articles.category, articles.parent_category, articles.views,
+                articles.image, articles.created_at, articles.content,
+                articles.sub_headline, articles.news_type, articles.location,
+                articles.video_url, users.name as author
+              FROM articles
+              LEFT JOIN users ON articles.author_id = users.id
+              WHERE 
+                articles.status = 'published' AND articles.published_at <= NOW() AND
+                (articles.parent_category = ${normalizedCategory} OR articles.category = ${normalizedCategory})
+              ORDER BY articles.published_at DESC
+              LIMIT ${limit}
+            `;
+          }
         } else {
         if (parentCategory) {
           data = await sql`

@@ -8,38 +8,47 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+        pathname: '/**',
       },
       {
         protocol: "https",
         hostname: "randomuser.me",
+        pathname: '/**',
       },
       {
         protocol: "https",
         hostname: "img.youtube.com",
+        pathname: '/**',
       },
       {
         protocol: "https",
         hostname: "**.samakal.com",
+        pathname: '/**',
       },
       {
         protocol: "http",
         hostname: "**.samakal.com",
+        pathname: '/**',
       },
       {
         protocol: "https",
         hostname: "samakal.com",
+        pathname: '/**',
       },
       {
         protocol: "http",
         hostname: "samakal.com",
+        pathname: '/**',
       },
       {
         protocol: "https",
         hostname: "**.vercel.app",
+        pathname: '/**',
       },
       {
         protocol: "https",
         hostname: "assets.vercel.com",
+        pathname: '/**',
       }
     ],
   },

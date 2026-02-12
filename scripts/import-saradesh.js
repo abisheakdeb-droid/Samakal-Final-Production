@@ -69,6 +69,86 @@ const DISTRICT_MAP = {
   'মুরাদনগর': 'comilla'
 };
 
+const CATEGORY_MAP = {
+  saradesh: "সারাদেশ",
+  dhaka: "ঢাকা",
+  chattogram: "চট্টগ্রাম",
+  rajshahi: "রাজশাহী",
+  khulna: "খুলনা",
+  barishal: "বরিশাল",
+  sylhet: "সিলেট",
+  rangpur: "রংপুর",
+  mymensingh: "ময়মনসিংহ",
+  faridpur: "ফরিদপুর",
+  gazipur: "গাজীপুর",
+  gopalganj: "গোপালগঞ্জ",
+  kishoreganj: "কিশোরগঞ্জ",
+  madaripur: "মাদারীপুর",
+  manikganj: "মানিকগঞ্জ",
+  munshiganj: "মুন্সিগঞ্জ",
+  narayanganj: "নারায়ণগঞ্জ",
+  narsingdi: "নরসিংদী",
+  rajbari: "রাজবাড়ী",
+  shariatpur: "শরীয়তপুর",
+  tangail: "টাঙ্গাইল",
+  bandarban: "বান্দরবান",
+  brahmanbaria: "ব্রাহ্মণবাড়িয়া",
+  chandpur: "চাঁদপুর",
+  comilla: "কুমিল্লা",
+  "coxs-bazar": "কক্সবাজার",
+  feni: "ফেনী",
+  khagrachari: "খাগড়াছড়ি",
+  lakshmipur: "লক্ষ্মীপুর",
+  noakhali: "নোয়াখালী",
+  rangamati: "রাঙামাটি",
+  bogra: "বগুড়া",
+  joypurhat: "জয়পুরহাট",
+  naogaon: "নওগাঁ",
+  natore: "নাটোর",
+  pabna: "পাবনা",
+  sirajganj: "সিরাজগঞ্জ",
+  chapainawabganj: "চাপাইনবাবগঞ্জ",
+  bagerhat: "বাগেরহাট",
+  chuadanga: "চুয়াডাঙ্গা",
+  jessore: "যশোর",
+  jhenaidah: "ঝিনাইদহ",
+  kushtia: "কুষ্টিয়া",
+  magura: "মাগুরা",
+  meherpur: "মেহেরপুর",
+  narail: "নড়াইল",
+  satkhira: "সাতক্ষীরা",
+  barguna: "বরগুনা",
+  bhola: "ভোলা",
+  jhalokati: "ঝালকাঠি",
+  patuakhali: "পটুয়াখালী",
+  pirojpur: "পিরোজপুর",
+  habiganj: "হবিগঞ্জ",
+  moulvibazar: "মৌলভীবাজার",
+  sunamganj: "সুনামগঞ্জ",
+  dinajpur: "দিনাজপুর",
+  gaibandha: "গাইবান্ধা",
+  kurigram: "কুড়িগ্রাম",
+  lalmonirhat: "লালমনিরহাট",
+  nilphamari: "নীলফামারী",
+  panchagarh: "পঞ্চগড়",
+  thakurgaon: "ঠাকুরগাঁও",
+  jamalpur: "জামালপুর",
+  netrokona: "নেত্রকোনা",
+  sherpur: "শেরপুর"
+};
+
+const SUB_CATEGORIES = {
+  saradesh: ['dhaka', 'chattogram', 'rajshahi', 'khulna', 'barishal', 'sylhet', 'rangpur', 'mymensingh'],
+  dhaka: ['faridpur', 'gazipur', 'gopalganj', 'kishoreganj', 'madaripur', 'manikganj', 'munshiganj', 'narayanganj', 'narsingdi', 'rajbari', 'shariatpur', 'tangail'],
+  chattogram: ['bandarban', 'brahmanbaria', 'chandpur', 'comilla', 'coxs-bazar', 'feni', 'khagrachari', 'lakshmipur', 'noakhali', 'rangamati'],
+  rajshahi: ['bogra', 'joypurhat', 'naogaon', 'natore', 'pabna', 'sirajganj', 'chapainawabganj'],
+  khulna: ['bagerhat', 'chuadanga', 'jessore', 'jhenaidah', 'kushtia', 'magura', 'meherpur', 'narail', 'satkhira'],
+  barishal: ['barguna', 'bhola', 'jhalokati', 'patuakhali', 'pirojpur'],
+  sylhet: ['habiganj', 'moulvibazar', 'sunamganj'],
+  rangpur: ['dinajpur', 'gaibandha', 'kurigram', 'lalmonirhat', 'nilphamari', 'panchagarh', 'thakurgaon'],
+  mymensingh: ['jamalpur', 'netrokona', 'sherpur']
+};
+
 function generateSlug(title) {
   const hash = crypto.createHash('md5').update(title).digest('hex').substring(0, 8);
   return `saradesh-${hash}`;
@@ -156,11 +236,25 @@ async function main() {
 
       // Auto-categorize based on title/category
       let category = 'saradesh';
+      let parentCategory = 'সারাদেশ';
+
       for (const [district, slug] of Object.entries(DISTRICT_MAP)) {
         if (data.title.includes(district)) {
           category = slug;
+          // Find Division for this district
+          for (const [divSlug, districts] of Object.entries(SUB_CATEGORIES)) {
+            if (districts.includes(slug)) {
+              parentCategory = CATEGORY_MAP[divSlug] || 'সারাদেশ';
+              break;
+            }
+          }
           break;
         }
+      }
+
+      // Special case: If the category itself is a division, set parent to Saradesh
+      if (SUB_CATEGORIES['saradesh'].includes(category)) {
+        parentCategory = 'সারাদেশ';
       }
 
       await client.sql`
@@ -173,8 +267,8 @@ async function main() {
           ${slug},
           ${data.content},
           ${localImage || data.image},
-          ${category},
-          'saradesh',
+          ${CATEGORY_MAP[category] || category},
+          ${parentCategory},
           'published',
           'Samakal',
           ${url},

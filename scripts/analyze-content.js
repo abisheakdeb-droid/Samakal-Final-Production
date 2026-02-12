@@ -1,4 +1,5 @@
-import { loadEnvConfig } from '@next/env';
+import pkg from '@next/env';
+const { loadEnvConfig } = pkg;
 import { cwd } from 'process';
 import { db } from '@vercel/postgres';
 
@@ -8,15 +9,15 @@ async function analyzeContent() {
   const client = await db.connect();
   try {
     const res = await client.sql`
-      SELECT category, COUNT(*) as count 
+      SELECT category, parent_category, COUNT(*) as count 
       FROM articles 
-      GROUP BY category 
+      GROUP BY category, parent_category 
       ORDER BY count DESC
     `;
     
     console.log('--- DB Content Distribution ---');
     res.rows.forEach(r => {
-      console.log(`${r.category}: ${r.count}`);
+      console.log(`${r.category} (Parent: ${r.parent_category}): ${r.count}`);
     });
     
     // Check total

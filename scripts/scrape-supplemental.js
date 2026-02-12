@@ -24,7 +24,7 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 // Generate slug from Bengali title
 function generateSlug(title) {
   const hash = crypto.createHash('md5').update(title).digest('hex').substring(0, 8);
-  return `-${hash}`;
+  return `article-${hash}`;
 }
 
 // Download and save image
