@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, MapPin, X, Search, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,17 +15,8 @@ interface SaradeshFilterProps {
 export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
   const router = useRouter();
 
-  const [selectedDivision, setSelectedDivision] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [isDivOpen, setIsDivOpen] = useState(false);
-  const [isDistOpen, setIsDistOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const divRef = useRef<HTMLDivElement>(null);
-  const distRef = useRef<HTMLDivElement>(null);
-
   // Derived state from currentSlug
-  const selection = useMemo(() => {
+  const selection = (() => {
     if (SUB_CATEGORIES["saradesh"].includes(currentSlug)) {
       return { division: currentSlug, district: "" };
     } else {
@@ -41,15 +32,24 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
       }
       return { division: "", district: "" };
     }
-  }, [currentSlug]);
+  })();
 
-  // Sync state with props during render
-  const [prevSlug, setPrevSlug] = useState(currentSlug);
-  if (currentSlug !== prevSlug) {
-    setPrevSlug(currentSlug);
+  // State initialized directly from derived selection
+  const [selectedDivision, setSelectedDivision] = useState(selection.division);
+  const [selectedDistrict, setSelectedDistrict] = useState(selection.district);
+  const [isDivOpen, setIsDivOpen] = useState(false);
+  const [isDistOpen, setIsDistOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const divRef = useRef<HTMLDivElement>(null);
+  const distRef = useRef<HTMLDivElement>(null);
+
+  // Sync state with props when currentSlug changes
+  useEffect(() => {
+    console.log("SaradeshFilter Sync:", { currentSlug, selection });
     setSelectedDivision(selection.division);
     setSelectedDistrict(selection.district);
-  }
+  }, [selection.division, selection.district, currentSlug]);
 
   // Close dropdowns on click outside
   useEffect(() => {

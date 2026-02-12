@@ -29,7 +29,7 @@ export function normalizeCategory(input: string): string {
     const ENGLISH_TO_BENGALI: Record<string, string> = {
         'politics': 'রাজনীতি',
         'bangladesh': 'বাংলাদেশ',
-        'saradesh': 'বাংলাদেশ', // Map /category/saradesh to Bangladesh articles for now
+        'saradesh': 'সারাদেশ',
         'sports': 'খেলা',
         'entertainment': 'বিনোদন',
         'international': 'আন্তর্জাতিক',

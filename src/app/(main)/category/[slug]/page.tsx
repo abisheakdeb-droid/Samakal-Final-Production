@@ -168,6 +168,8 @@ export default async function CategoryPage({ params }: PageProps) {
                         src={primeBig.image}
                         alt={primeBig.title}
                         fill
+                        sizes="(max-width: 1024px) 100vw, 800px"
+                        unoptimized={true}
                         className="object-cover group-hover:scale-105 transition-transform duration-700"
                       />
                     </div>
@@ -203,6 +205,8 @@ export default async function CategoryPage({ params }: PageProps) {
                             src={news.image}
                             alt={news.title}
                             fill
+                            sizes="(max-width: 768px) 100vw, 400px"
+                            unoptimized={true}
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                           />
                         </div>
@@ -240,6 +244,8 @@ export default async function CategoryPage({ params }: PageProps) {
                             src={news.image}
                             alt={news.title}
                             fill
+                            sizes="(max-width: 768px) 100vw, 300px"
+                            unoptimized={true}
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                           />
                         </div>
@@ -272,6 +278,8 @@ export default async function CategoryPage({ params }: PageProps) {
                             src={news.image}
                             alt={news.title}
                             fill
+                            sizes="(max-width: 768px) 100vw, 400px"
+                            unoptimized={true}
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                           />
                         </div>

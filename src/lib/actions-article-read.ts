@@ -157,6 +157,7 @@ export const fetchArticlesByCategory = cache(
     async (category: string, limit: number = 10, isParentCategory: boolean = false, parentCategory?: string) => {
       try {
         const normalizedCategory = normalizeCategory(category);
+        console.log('fetchArticlesByCategory:', { category, normalizedCategory, isParentCategory, parentCategory });
         let data;
         
         if (isParentCategory) {
