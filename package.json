@@ -52,7 +52,8 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
     "web-push": "^3.6.7",
-    "zod": "^4.3.5"
+    "zod": "^4.3.5",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -66,7 +67,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.4",
     "puppeteer": "^24.36.1",
-    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

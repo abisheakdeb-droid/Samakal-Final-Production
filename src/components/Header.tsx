@@ -9,7 +9,6 @@ import { generateBlurPlaceholder } from "@/utils/image";
 import NotificationManager from "@/components/NotificationManager";
 
 import { useState } from "react";
-import SearchOverlay from "@/components/SearchOverlay";
 import MobileMenu from "@/components/MobileMenu";
 // import ThemeToggle from '@/components/ThemeToggle';
 import { SiteSettings } from "@/lib/actions-settings";
@@ -40,9 +39,7 @@ export default function Header({ settings }: HeaderProps) {
     { label: "খেলা", href: "/category/sports" },
     { label: "অপরাধ", href: "/category/crime" },
     { label: "বিনোদন", href: "/category/entertainment" },
-    { label: "মতামত", href: "/category/opinion" },
     { label: "চাকরি", href: "/category/jobs" },
-    { label: "আর্কাইভ", href: "/archive" },
     {
       label: "সব",
       href: "#",
@@ -60,12 +57,13 @@ export default function Header({ settings }: HeaderProps) {
         { label: "অফবিট", href: "/category/offbeat" },
         { label: "শিল্পমঞ্চ", href: "/category/shilpomancha" },
         { label: "বিশেষ আয়োজন", href: "/category/special-arrangement" },
+        { label: "মতামত", href: "/category/opinion" },
+        { label: "আর্কাইভ", href: "/archive" },
       ],
     },
   ];
 
   const pathname = usePathname();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const processedNavItems = navItems;
@@ -231,14 +229,14 @@ export default function Header({ settings }: HeaderProps) {
 
             {/* Right Actions (Search, Theme, User, Notifications) */}
             <div className="flex items-center gap-2">
-              {/* Search Button */}
-              <button
-                onClick={() => setIsSearchOpen(true)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-600 dark:text-gray-300 transition"
+              {/* Search Button - Direct Link */}
+              <Link
+                href="/search"
+                className="p-2 hover:text-brand-red text-gray-600 dark:text-gray-300 transition"
                 aria-label="Search"
               >
-                <Search size={20} />
-              </button>
+                <Search size={22} />
+              </Link>
 
               {/* Theme Toggle */}
               {/* Theme Toggle Removed */}
@@ -248,21 +246,17 @@ export default function Header({ settings }: HeaderProps) {
               <NotificationManager />
               <Link
                 href="/user/bookmarks"
-                className="hover:text-brand-red"
+                className="p-2 hover:text-brand-red text-gray-600 dark:text-gray-300"
                 aria-label="Saved Articles"
               >
-                <User size={20} />
+                <User size={22} />
               </Link>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Full Screen Search Overlay */}
-      <SearchOverlay
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-      />
+      {/* Mobile Menu Drawer */}
 
       {/* Mobile Menu Drawer */}
       <MobileMenu

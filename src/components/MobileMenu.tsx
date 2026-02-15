@@ -21,14 +21,14 @@ const NAV_ITEMS: NavItem[] = [
   { label: "সর্বশেষ", href: "/category/latest" },
   { label: "রাজনীতি", href: "/category/politics" },
   { label: "রাজধানী", href: "/category/capital" },
-  { 
-    label: "সারাদেশ", 
+  {
+    label: "সারাদেশ",
     href: "/category/bangladesh",
     subItems: [
-       { label: "ঢাকা", href: "/category/dhaka" },
-       { label: "চট্টগ্রাম", href: "/category/chattogram" },
-       { label: "রাজশাহী", href: "/category/rajshahi" },
-       { label: "খুলনা", href: "/category/khulna" },
+      { label: "ঢাকা", href: "/category/dhaka" },
+      { label: "চট্টগ্রাম", href: "/category/chattogram" },
+      { label: "রাজশাহী", href: "/category/rajshahi" },
+      { label: "খুলনা", href: "/category/khulna" },
     ]
   },
   { label: "অপরাধ", href: "/category/crime" },
@@ -38,17 +38,17 @@ const NAV_ITEMS: NavItem[] = [
   { label: "বিনোদন", href: "/category/entertainment" },
   { label: "ভিডিও", href: "/video" },
   { label: "ছবি", href: "/photo" },
-  { 
-      label: "অন্যান্য", 
-      href: "#",
-      subItems: [
-        { label: "চতুরঙ্গ", href: "/category/chaturanga" },
-        { label: "নারী দিবস", href: "/category/nari-dibos" },
-        { label: "সাহিত্য ও সংস্কৃতি", href: "/category/literature" },
-        { label: "আর্কাইভ", href: "/archive" },
-        { label: "মতামত", href: "/category/opinion" },
-        { label: "চাকরি", href: "/category/jobs" },
-      ]
+  {
+    label: "অন্যান্য",
+    href: "#",
+    subItems: [
+      { label: "চতুরঙ্গ", href: "/category/chaturanga" },
+      { label: "নারী দিবস", href: "/category/nari-dibos" },
+      { label: "সাহিত্য ও সংস্কৃতি", href: "/category/literature" },
+      { label: "আর্কাইভ", href: "/archive" },
+      { label: "মতামত", href: "/category/opinion" },
+      { label: "চাকরি", href: "/category/jobs" },
+    ]
   },
 ];
 
@@ -57,11 +57,12 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
 
   // Close menu on route change
+  // Close menu on route change
   useEffect(() => {
     if (isOpen) {
       onClose();
     }
-  }, [pathname]);
+  }, [pathname, isOpen, onClose]);
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -111,10 +112,10 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
         {/* Login Link (Mobile) */}
         <div className="px-4 py-2 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
-            <span className="text-sm text-gray-500">অ্যাকাউন্ট</span>
-            <Link href="/admin/login" className="text-sm font-bold text-brand-red hover:underline flex items-center gap-1">
-                লগইন
-            </Link>
+          <span className="text-sm text-gray-500">অ্যাকাউন্ট</span>
+          <Link href="/admin/login" className="text-sm font-bold text-brand-red hover:underline flex items-center gap-1">
+            লগইন
+          </Link>
         </div>
 
         {/* Navigation Links */}
@@ -139,7 +140,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     >
                       {item.label}
                     </Link>
-                    
+
                     {hasSub && (
                       <button
                         onClick={() => setExpandedItem(isExpanded ? null : item.label)}

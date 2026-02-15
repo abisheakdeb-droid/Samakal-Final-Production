@@ -5,33 +5,35 @@ import MostReadWidget from '@/components/MostReadWidget';
 import SocialVideoWidget from '@/components/SocialVideoWidget';
 import AdSlot from '@/components/AdSlot';
 import { NativeAdCompact } from '@/components/NativeAd';
+import SocialLinksBar from '@/components/SocialLinksBar';
 
 interface SidebarProps {
   opinionNews: NewsItem[];
   mostReadNews: NewsItem[];
-  hideLatestTab?: boolean;
   hideOpinion?: boolean;
 }
 
-export default function Sidebar({ opinionNews, mostReadNews, hideLatestTab = false, hideOpinion = false }: SidebarProps) {
+export default function Sidebar({ opinionNews, mostReadNews, hideOpinion = false }: SidebarProps) {
   return (
     <aside className="space-y-8">
-      
-      {/* 1. Sticky Rectangle Ad - High value position */}
+
+      {/* 0. SOCIAL LINKS - Prominent access */}
+      <SocialLinksBar />
+
       {/* 1. Rectangle Ad - High value position */}
       <div className="mb-8">
         <AdSlot slotId="sidebar-rectangle-sticky" format="rectangle" />
       </div>
 
       {/* 2. MOST READ WIDGET */}
-      <MostReadWidget 
-        opinionNews={opinionNews} 
+      <MostReadWidget
+        opinionNews={opinionNews}
         mostReadNews={mostReadNews}
         hideOpinion={hideOpinion}
       />
 
       {/* 3. Native Ad Compact - Blends with content */}
-      <NativeAdCompact 
+      <NativeAdCompact
         title="সেরা ডিল এখন চলছে - দ্রুত কিনুন"
         image="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200"
         url="#"

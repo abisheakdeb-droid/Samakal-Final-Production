@@ -5,17 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Calendar,
-  Mail,
   MapPin,
-  User,
   Clock,
-  Facebook,
-  Twitter,
-  Linkedin,
   Copy,
 } from "lucide-react";
 import { notFound } from "next/navigation";
-import ShareButtons from "@/components/ShareButtons";
 
 export const metadata = {
   title: "Author Profile | Samakal",

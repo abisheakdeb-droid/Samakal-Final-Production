@@ -26,6 +26,8 @@ export interface ArticleRow {
   is_prime?: boolean;
   published_at?: string;
   scheduled_at?: string;
+  home_position?: number;
+  is_pinned_home?: boolean;
   [key: string]: unknown; // Allow additional properties from SQL queries
 }
 

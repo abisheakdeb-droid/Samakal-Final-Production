@@ -1,7 +1,7 @@
 export const CATEGORY_MAP: Record<string, string> = {
   latest: "সর্বশেষ",
   politics: "রাজনীতি",
-  bangladesh: "বাংলাদেশ", 
+  bangladesh: "বাংলাদেশ",
   saradesh: "সারাদেশ",
   capital: "রাজধানী",
   crime: "অপরাধ",
@@ -25,6 +25,8 @@ export const CATEGORY_MAP: Record<string, string> = {
   investigation: "সমকাল অনুসন্ধান",
   offbeat: "অফবিট",
   shilpomancha: "শিল্পমঞ্চ",
+  samagra: "সমগ্র",
+  "samagra-features": "সমগ্র ফিচার",
   "special-arrangement": "বিশেষ আয়োজন",
   // Divisions
   dhaka: "ঢাকা",
@@ -107,13 +109,13 @@ export const CATEGORY_MAP: Record<string, string> = {
   jamalpur: "জামালপুর",
   netrokona: "নেত্রকোনা",
   sherpur: "শেরপুর",
-  
+
   "law-courts": "আইন ও বিচার",
   agriculture: "কৃষি",
   parliament: "সংসদ",
   environment: "পরিবেশ",
   struggle: "লড়াইয়ের মঞ্চ",
-  
+
   // Economics Sub-categories
   "industry-trade": "শিল্প-বাণিজ্য",
   "share-market": "শেয়ারবাজার",
@@ -214,7 +216,7 @@ export const CATEGORY_MAP: Record<string, string> = {
 // List of parent categories only (for homepage)
 export const PARENT_CATEGORIES = [
   'sports',
-  'entertainment', 
+  'entertainment',
   'politics',
   'economics',
   'world',
@@ -225,5 +227,16 @@ export const PARENT_CATEGORIES = [
   'capital',
   'bangladesh',
   'opinion',
-  'other'
+  'other',
+  // Burger Menu Items
+  'probash',
+  'jibon-songram',
+  'travel',
+  'feature',
+  'special-samakal',
+  'investigation',
+  'offbeat',
+  'shilpomancha',
+  'special-arrangement',
+  'archive'
 ];

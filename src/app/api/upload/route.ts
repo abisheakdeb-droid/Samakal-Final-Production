@@ -1,6 +1,6 @@
-
 import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
+import { optimizeImage } from '@/lib/image-optimizer';
 
 export async function POST(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -12,13 +12,30 @@ export async function POST(request: Request) {
   }
 
   try {
-    const blob = await put(filename, request.body, {
+    const arrayBuffer = await request.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Optimize image
+    const optimized = await optimizeImage(buffer);
+    
+    // Change extension to .webp if it's not already
+    const baseName = filename.substring(0, filename.lastIndexOf('.')) || filename;
+    const optimizedFilename = `${baseName}.webp`;
+
+    const blob = await put(optimizedFilename, optimized.buffer, {
       access: 'public',
+      contentType: 'image/webp',
     });
 
-    return NextResponse.json(blob);
+    return NextResponse.json({
+        ...blob,
+        width: optimized.width,
+        height: optimized.height,
+        originalSize: buffer.length,
+        optimizedSize: optimized.buffer.length
+    });
   } catch (error) {
-    console.error("Blob upload error:", error);
-    return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+    console.error("Upload/Optimization error:", error);
+    return NextResponse.json({ error: 'Upload or optimization failed' }, { status: 500 });
   }
 }

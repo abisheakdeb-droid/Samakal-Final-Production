@@ -10,6 +10,7 @@ import {
   fetchArticlesByCategory,
   fetchMostReadArticles,
   fetchFeaturedArticles,
+  fetchHomepageHeroArticles,
 } from "@/lib/actions-article";
 import { fetchVideoArticles, fetchPhotoAlbums } from "@/lib/actions-media";
 import { formatBanglaDateTime } from "@/lib/utils";
@@ -19,10 +20,10 @@ import HomeMediaSection from "@/components/HomeMediaSection";
 import { NewsItem } from "@/types/news";
 
 // Dynamically Import Heavy / Below-Fold Components
-const HeroCard = dynamic(() => import("@/components/HeroCard")); // Actually, keep Hero dynamic if data fetch allows, but usually static is better for LCP. Let's keep Hero static? User requested Optimization. Let's keep Hero static for LCP, but others dynamic.
-// Wait, `HeroCard` is above fold. Keep static.
-// `Sidebar` is partly above fold. Keep static.
-// `LatestSidebarWidget` is above fold. Keep static.
+const HeroCard = dynamic(() => import("@/components/HeroCard"));
+// Suggest keeping Hero static for LCP, but user requested optimization previously.
+// Given strict LCP requirements, static import is better, but dynamic with 'loading' is okay.
+// Let's stick to dynamic for now as per previous code, or revert if needed.
 
 const EventSection = dynamic(() => import("@/components/EventSection"), {
   loading: () => (
@@ -33,17 +34,21 @@ const EventSection = dynamic(() => import("@/components/EventSection"), {
 const AdSlot = dynamic(() => import("@/components/AdSlot"));
 const NativeAd = dynamic(() => import("@/components/NativeAd"));
 
-export const dynamicParams = true; // Use valid Next.js segment config
+export const dynamicParams = true;
 export const revalidate = 60;
 
 export default async function Home() {
-  // Fetch all core data in parallel to reduce waterfall latency
-  // Category names in navigation order
-  // Fetch Media Data
-  const [videoArticles, photoAlbums] = await Promise.all([
-    fetchVideoArticles(4),
-    fetchPhotoAlbums(3),
-  ]);
+  // --- WATERFALL FETCHING STRATEGY ---
+
+  // 1. Fetch Homepage Hero (Pinned + Backfill)
+  const startHero = Date.now();
+  const heroData = await fetchHomepageHeroArticles();
+  console.log(`[Perf] Hero Fetch: ${Date.now() - startHero}ms`);
+  const leadNewsFull = heroData.articles;
+  const excludeIds = new Set(heroData.excludeIds); // Use Set for efficient lookup/adding
+
+  // 2. Fetch Core Data (Categories, Media) - Parallel
+  // Note: We pass excludeIds to categories to avoid duplicates from Hero
 
   const categories = [
     "বাংলাদেশ",
@@ -60,35 +65,56 @@ export default async function Home() {
     "চাকরি",
   ];
 
-  let leadNewsFull: NewsItem[] = [];
-  let selectedNewsInitial: NewsItem[] = [];
-  let opinionNews: NewsItem[] = [];
-  let mostReadNews: NewsItem[] = [];
-  let categoryData: NewsItem[][] = [];
+  // Prepare Category Promises
+  const categoryPromises = categories.map((cat) =>
+    fetchArticlesByCategory(
+      cat,
+      cat === "চাকরি" ? 8 : 6,
+      cat !== "চাকরি", // isParentCategory
+      undefined, // parentCategory (optional)
+      Array.from(excludeIds) // Pass current excluded IDs
+    )
+  );
 
-  try {
-    const results = await Promise.all([
-      fetchLatestArticles(20),
-      fetchFeaturedArticles(10),
-      fetchArticlesByCategory("মতামত", 5, true),
-      fetchMostReadArticles(5),
-      ...categories.map((cat) =>
-        fetchArticlesByCategory(cat, cat === "চাকরি" ? 8 : 6, cat !== "চাকরি"),
-      ),
-    ]);
+  const startCategories = Date.now();
+  const [videoArticles, photoAlbums, mostReadNews, ...categoryResults] = await Promise.all([
+    fetchVideoArticles(4),
+    fetchPhotoAlbums(3),
+    fetchMostReadArticles(5),
+    ...categoryPromises
+  ]);
+  console.log(`[Perf] Categories/Media Parallel Fetch: ${Date.now() - startCategories}ms`);
 
-    leadNewsFull = results[0] || [];
-    selectedNewsInitial = results[1] || [];
-    opinionNews = results[2] || [];
-    mostReadNews = results[3] || [];
-    categoryData = results.slice(4);
-  } catch (error) {
-    console.error("Homepage Data Fetch Error:", error);
-    // Continue with empty partials rather than crashing
-  }
+  // Update excludeIds with all items found in categories
+  categoryResults.forEach(catArticles => {
+    if (Array.isArray(catArticles)) {
+      catArticles.forEach(a => excludeIds.add(a.id));
+    }
+  });
 
-  // Fallback to empty if DB is empty
+  // 3. Fetch Sidebar & Selected News (Backfill / Remaining) - Parallel
+  // Now we have a full set of excluded IDs from Hero + Categories
+  const finalExcludeList = Array.from(excludeIds);
+
+  const startSidebar = Date.now();
+  const [latestSidebar, featuredArticles, opinionNews] = await Promise.all([
+    fetchLatestArticles(20, finalExcludeList), // Sidebar List
+    fetchFeaturedArticles(10), // Selected News (might overlap, but usually curated differently. Can exclude if needed)
+    fetchArticlesByCategory("মতামত", 5, true, undefined, finalExcludeList),
+  ]);
+  console.log(`[Perf] Sidebar/Featured Fetch: ${Date.now() - startSidebar}ms`);
+
+  // Assign Data
+  const categoryData = categoryResults as NewsItem[][];
+  const selectedNewsInitial = featuredArticles || [];
+
+  // Sidebar List Processing (from latestSidebar)
+  // Ensure we have enough items
+  const listNews = latestSidebar.slice(0, 8); // Sidebar usually needs 5-10 items
+
+  // Fallback Handling
   if (!leadNewsFull || leadNewsFull.length === 0) {
+    // ... (Existing Empty State Logic)
     return (
       <main className="min-h-screen bg-background text-foreground font-serif">
         <div className="container mx-auto px-4 py-32 text-center text-gray-500">
@@ -117,20 +143,16 @@ export default async function Home() {
     );
   }
 
+  // Slice Hero Data
   const heroNews = leadNewsFull[0]; // Big Item (1)
-  const subHeroNews = leadNewsFull.slice(1, 3); // 2 Medium Items (2-3) for Right Stack
-  const gridNews = leadNewsFull.slice(3, 11); // 8 Small Items (4-11) for Grid Below
-
-  // Sidebar List - Try to get unique items (12+), but fallback to latest if not enough data
-  let listNews = leadNewsFull.slice(12, 20);
-  if (listNews.length < 5) {
-    listNews = leadNewsFull.slice(0, 10);
-  }
+  const subHeroNews = leadNewsFull.slice(1, 3); // 2 Medium Items (2-3)
+  const gridNews = leadNewsFull.slice(3, 11); // 8 Small Items (4-11)
+  // Sidebar list comes from separate fetch now
 
   // Category slug mapping
   const categorySlugMap: Record<string, string> = {
     বাংলাদেশ: "bangladesh",
-    সারাদেশ: "saradesh",
+    সারadesh: "saradesh",
     রাজধানী: "capital",
     রাজনীতি: "politics",
     বিশ্ব: "world",
@@ -143,32 +165,15 @@ export default async function Home() {
     চাকরি: "jobs",
   };
 
-  // 2. SELECTED NEWS (Featured/Prime) logic
+  // 2. SELECTED NEWS (Featured/Prime) logic - Backfill if needed
   let selectedNewsFull = selectedNewsInitial;
-
-  // Backfill Logic: Ensure we have 10 items for the Bento+List layout
   if (!selectedNewsFull || selectedNewsFull.length < 10) {
-    const currentItems = selectedNewsFull || [];
-    const existingIds = new Set(currentItems.map((n) => n.id));
-
-    // 1. Fill from Bangladesh Category
-    const fromBangladesh = (categoryData[0] || []).filter(
-      (n: { id: string }) => !existingIds.has(n.id),
-    );
-    let combined = [...currentItems, ...fromBangladesh];
-
-    // 2. If still not enough, fill from Latest
-    if (combined.length < 10) {
-      const existingIds2 = new Set(combined.map((n) => n.id));
-      const fromLatest = leadNewsFull.filter((n) => !existingIds2.has(n.id));
-      combined = [...combined, ...fromLatest];
-    }
-
-    selectedNewsFull = combined.slice(0, 10);
+    // Logic to backfill selected news using "latest" or others, skipping duplicates
+    // simplified for now as per request
+    const existingIds = new Set(selectedNewsFull.map(n => n.id));
+    const potentialBackfill = latestSidebar.filter(n => !existingIds.has(n.id));
+    selectedNewsFull = [...selectedNewsFull, ...potentialBackfill].slice(0, 10);
   }
-
-  // const selectedMain = selectedNewsFull[0]; // Not needed, component handles splitting
-  // const selectedSide = selectedNewsFull.slice(1, 5);
 
   return (
     <main className="min-h-screen pb-20 bg-white text-foreground font-serif">
@@ -195,7 +200,7 @@ export default async function Home() {
 
               {/* 2. SUB-LEADS (Span 4 - Stacked Vertical: 3 Items) */}
               <div className="md:col-span-4 flex flex-col relative">
-                {/* Explicit Vertical Divider - Absolute Positioned to left of this column (inside the gap) */}
+                {/* Explicit Vertical Divider - Absolute Positioned */}
                 <div className="hidden md:block absolute -left-3 top-0 bottom-0 w-px bg-gray-300 dark:bg-gray-700"></div>
 
                 <div className="flex flex-col h-full gap-4">
@@ -232,8 +237,8 @@ export default async function Home() {
                           <div className="text-xs text-gray-400 font-medium mt-auto">
                             {subHeroNews[0].published_at
                               ? formatBanglaDateTime(
-                                  subHeroNews[0].published_at,
-                                )
+                                subHeroNews[0].published_at,
+                              )
                               : subHeroNews[0].time}
                           </div>
                         </div>
@@ -263,8 +268,8 @@ export default async function Home() {
                           <div className="mt-2 text-xs text-gray-400 font-medium">
                             {subHeroNews[1].published_at
                               ? formatBanglaDateTime(
-                                  subHeroNews[1].published_at,
-                                )
+                                subHeroNews[1].published_at,
+                              )
                               : subHeroNews[1].time}
                           </div>
                         </div>
@@ -275,7 +280,7 @@ export default async function Home() {
               </div>
             </div>
 
-            {/* 3. GRID SECTION (Below Hero) - Refactored to Vertical Cards row */}
+            {/* 3. GRID SECTION (Below Hero) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-8 border-t border-gray-200 dark:border-gray-800 relative">
               {/* Vertical Dividers for 4-col grid */}
               <div className="hidden lg:block absolute left-[calc(25%-0.375rem)] -translate-x-1/2 top-8 bottom-0 w-px bg-gray-200 dark:bg-gray-800"></div>
@@ -321,7 +326,7 @@ export default async function Home() {
               ))}
             </div>
 
-            {/* Spacer to prevent dividers from merging */}
+            {/* Spacer */}
             <div className="w-full h-12"></div>
 
             {/* 4. LIST VIEW SECTION (3 + 3) */}

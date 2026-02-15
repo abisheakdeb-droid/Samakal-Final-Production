@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, MapPin, X, Search, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,7 +16,7 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
   const router = useRouter();
 
   // Derived state from currentSlug
-  const selection = (() => {
+  const selection = useMemo(() => {
     if (SUB_CATEGORIES["saradesh"].includes(currentSlug)) {
       return { division: currentSlug, district: "" };
     } else {
@@ -32,7 +32,7 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
       }
       return { division: "", district: "" };
     }
-  })();
+  }, [currentSlug]);
 
   // State initialized directly from derived selection
   const [selectedDivision, setSelectedDivision] = useState(selection.division);
@@ -46,10 +46,14 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
 
   // Sync state with props when currentSlug changes
   useEffect(() => {
-    console.log("SaradeshFilter Sync:", { currentSlug, selection });
-    setSelectedDivision(selection.division);
-    setSelectedDistrict(selection.district);
-  }, [selection.division, selection.district, currentSlug]);
+    // Only update if changed to avoid loops/unnecessary renders
+    if (selectedDivision !== selection.division) {
+      setSelectedDivision(selection.division);
+    }
+    if (selectedDistrict !== selection.district) {
+      setSelectedDistrict(selection.district);
+    }
+  }, [selection, selectedDivision, selectedDistrict]);
 
   // Close dropdowns on click outside
   useEffect(() => {

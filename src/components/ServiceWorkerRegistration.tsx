@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 export default function ServiceWorkerRegistration() {
   useEffect(() => {
-    if ('serviceWorker' in navigator) { // Removed process.env.NODE_ENV === 'production' for testing
+    if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
       navigator.serviceWorker
         .register('/sw.js')
         .then((registration) => {

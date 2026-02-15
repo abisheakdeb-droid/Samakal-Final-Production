@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 require('dotenv').config({ path: '.env.local' });
 const { sql } = require('@vercel/postgres');
 
@@ -39,7 +40,7 @@ async function updateNavigation() {
     ];
 
     console.log('Updating navigation menu...');
-    
+
     await sql`
       UPDATE site_settings
       SET navigation_menu = ${JSON.stringify(newNav)},
@@ -52,7 +53,7 @@ async function updateNavigation() {
     console.log(JSON.stringify(newNav, null, 2));
     console.log('\n⚠️  Please run: curl http://localhost:3000/api/revalidate to clear cache');
     console.log('Or manually restart the dev server.\n');
-    
+
     process.exit(0);
   } catch (error) {
     console.error('❌ Error updating navigation:', error);

@@ -1,5 +1,5 @@
 // Image upload utility using Vercel Blob
-import { put } from '@vercel/blob';
+// import { put } from '@vercel/blob';
 
 export interface UploadResult {
   url: string;
@@ -17,27 +17,34 @@ export async function uploadImage(file: File): Promise<UploadResult> {
       };
     }
 
-    // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSize) {
+    // Note: We don't strictly enforce 1MB here because the server will optimize it.
+    // But we still keep a sane limit for upload stability.
+    const maxUploadSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxUploadSize) {
       return {
         url: '',
-        error: 'File too large. Maximum size is 5MB.'
+        error: 'File too large. Maximum upload size is 10MB.'
       };
     }
 
-    // Upload to Vercel Blob
-    const blob = await put(file.name, file, {
-      access: 'public',
-      addRandomSuffix: true,
+    // Upload via our API route which handles optimization
+    const response = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
+      method: 'POST',
+      body: file,
     });
 
-    return { url: blob.url };
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Upload failed');
+    }
+
+    const result = await response.json();
+    return { url: result.url };
   } catch (error) {
     console.error('Upload error:', error);
     return {
       url: '',
-      error: 'Upload failed. Please try again.'
+      error: error instanceof Error ? error.message : 'Upload failed. Please try again.'
     };
   }
 }

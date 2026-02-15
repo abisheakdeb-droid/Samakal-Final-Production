@@ -47,7 +47,7 @@ export default function NotificationManager() {
     try {
       const publicKey = await getVapidPublicKey();
       if (!publicKey) {
-          throw new Error("VAPID public key not found");
+        throw new Error("VAPID public key not found");
       }
 
       const registration = await navigator.serviceWorker.ready;
@@ -58,13 +58,13 @@ export default function NotificationManager() {
 
       // Send to backend
       const result = await subscribeUser(JSON.parse(JSON.stringify(sub)));
-      
+
       if (result.success) {
-          setSubscription(sub);
-          toast.success("Notifications enabled!");
+        setSubscription(sub);
+        toast.success("Notifications enabled!");
       } else {
-          toast.error("Failed to save subscription.");
-          sub.unsubscribe(); // Rollback
+        toast.error("Failed to save subscription.");
+        sub.unsubscribe(); // Rollback
       }
 
     } catch (error) {
@@ -76,49 +76,49 @@ export default function NotificationManager() {
   };
 
   const handleUnsubscribe = async () => {
-     if (!subscription) return;
-     setLoading(true);
-     try {
-         await subscription.unsubscribe();
-         await unsubscribeUser(subscription.endpoint);
-         setSubscription(null);
-         toast.success("Notifications disabled.");
-     } catch (error) {
-         console.error("Unsubscribe failed", error);
-     } finally {
-         setLoading(false);
-     }
+    if (!subscription) return;
+    setLoading(true);
+    try {
+      await subscription.unsubscribe();
+      await unsubscribeUser(subscription.endpoint);
+      setSubscription(null);
+      toast.success("Notifications disabled.");
+    } catch (error) {
+      console.error("Unsubscribe failed", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!isSupported) return null;
 
   if (loading) {
-      return (
-          <button className="p-2 text-gray-500 rounded-full hover:bg-gray-100" disabled>
-              <Loader2 size={20} className="animate-spin" />
-          </button>
-      );
+    return (
+      <button className="p-2 text-gray-500 rounded-full hover:bg-gray-100" disabled>
+        <Loader2 size={20} className="animate-spin" />
+      </button>
+    );
   }
 
   return (
     <div className="relative group">
-       {subscription ? (
-           <button 
-                onClick={handleUnsubscribe} 
-                className="p-2 text-brand-red bg-red-50 rounded-full hover:bg-red-100 transition"
-                title="Disable Notifications"
-            >
-               <BellOff size={20} />
-           </button>
-       ) : (
-           <button 
-                onClick={handleSubscribe} 
-                className="p-2 text-gray-600 rounded-full hover:bg-gray-100 transition hover:text-brand-red"
-                title="Enable Notifications"
-            >
-               <Bell size={20} />
-           </button>
-       )}
+      {subscription ? (
+        <button
+          onClick={handleUnsubscribe}
+          className="p-2 text-brand-red bg-red-50 rounded-full hover:bg-red-100 transition"
+          title="Disable Notifications"
+        >
+          <BellOff size={20} />
+        </button>
+      ) : (
+        <button
+          onClick={handleSubscribe}
+          className="p-2 text-gray-600 rounded-full transition hover:text-brand-red"
+          title="Enable Notifications"
+        >
+          <Bell size={22} />
+        </button>
+      )}
     </div>
   );
 }

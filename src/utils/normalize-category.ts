@@ -46,6 +46,8 @@ export function normalizeCategory(input: string): string {
         'national': 'বাংলাদেশ',
         'literature': 'সাহিত্য ও সংস্কৃতি',
         'lit': 'সাহিত্য ও সংস্কৃতি',
+        'chittagong': 'চট্টগ্রাম',
+        'barisal': 'বরিশাল',
     };
 
     if (ENGLISH_TO_BENGALI[lowerInput]) {
