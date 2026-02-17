@@ -17,4 +17,11 @@ export const authConfig = {
       allowDangerousEmailAccountLinking: true,
     }),
   ],
+  debug: process.env.NODE_ENV === 'development',
 } satisfies NextAuthConfig;
+
+// Safe runtime check (logs to Vercel dashboard)
+if (typeof window === 'undefined') {
+  console.log("[AUTH_INIT] GOOGLE_CLIENT_ID present:", !!process.env.GOOGLE_CLIENT_ID);
+  console.log("[AUTH_INIT] GOOGLE_CLIENT_SECRET present:", !!process.env.GOOGLE_CLIENT_SECRET);
+}
