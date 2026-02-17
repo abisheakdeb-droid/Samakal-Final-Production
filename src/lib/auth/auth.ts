@@ -1,6 +1,5 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import Google from 'next-auth/providers/google';
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
@@ -8,10 +7,11 @@ import { authConfig } from './auth.config';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  adapter: PrismaAdapter(prisma) as any, // Cast to any due to subtle version mismatches in @auth/core types
+  adapter: PrismaAdapter(prisma) as any,
   trustHost: true,
   session: { strategy: "jwt" },
   providers: [
+    ...authConfig.providers,
     Credentials({
       async authorize(credentials) {
         const parsedCredentials = z
@@ -25,27 +25,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               where: { email }
             });
 
-            console.log("[AUTH_DEBUG] User find result:", user ? "Found" : "Not Found", email);
-
             if (!user) return null;
-
             return user as any;
           } catch (error) {
             console.error("[AUTH_ERROR] prisma.user.findUnique failed:", error);
             return null;
           }
         }
-
         return null;
       },
     }),
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true,
-    }),
   ],
   callbacks: {
+    ...authConfig.callbacks,
     async session({ session, token }) {
       if (token?.sub && session.user) {
         session.user.id = token.sub;
@@ -60,7 +52,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.picture = (user as any).image;
       }
 
-      // Handle manual updates to session
       if (trigger === "update" && session?.avatar) {
         token.picture = session.avatar;
       }

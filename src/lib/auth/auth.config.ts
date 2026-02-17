@@ -1,13 +1,20 @@
 import type { NextAuthConfig } from 'next-auth';
+import Google from 'next-auth/providers/google';
 
 export const authConfig = {
   pages: {
-    signIn: '/', // Use a modal instead of a dedicated page, or create a /login page later
+    signIn: '/',
   },
   callbacks: {
     authorized() {
-      return true; // Allow all pages for now, individual components will handle gating
+      return true;
     },
   },
-  providers: [], // Providers added in auth.ts
+  providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
+    }),
+  ],
 } satisfies NextAuthConfig;

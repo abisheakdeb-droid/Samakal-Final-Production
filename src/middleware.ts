@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth/auth";
+import { auth } from "@/lib/auth/auth.middleware";
 import { NextResponse } from 'next/server';
 import { getLegacyRedirect } from '@/lib/redirect-utils';
 
