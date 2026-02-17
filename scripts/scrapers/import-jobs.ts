@@ -1,5 +1,5 @@
 
-import { sql } from '../src/lib/db';
+import { sql } from '../../src/lib/db';
 import { randomUUID } from 'crypto';
 
 const JOBS_DATA = [
@@ -125,10 +125,10 @@ async function main() {
     // Create a unique slug by appending a random string or timestamp to ensure uniqueness
     // Since Bangla slugification is tricky without a library, we'll use a simple timestamp suffix
     const slug = `job-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-    
+
     // Use the scraped date, defaulting to now if parsing fails (though format looks uniform)
     // The format is roughly "YYYY-MM-DD HH:mm:ss" which Postgres should handle or we pass as string
-    
+
     try {
       await sql`
         INSERT INTO articles (

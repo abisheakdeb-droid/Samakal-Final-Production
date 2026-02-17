@@ -1,4 +1,4 @@
-import { getLegacyRedirect } from '../src/lib/redirect-utils';
+import { getLegacyRedirect } from '../../src/lib/redirect-utils';
 
 const testCases = [
     {

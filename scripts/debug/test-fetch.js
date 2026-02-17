@@ -11,12 +11,12 @@ loadEnvConfig(cwd());
 async function main() {
   try {
     // Dynamic import to allow env loading first
-    const { fetchArticleById } = require('../src/lib/actions-article');
-    
+    const { fetchArticleById } = require('../../src/lib/actions-article');
+
     console.log('🧪 Testing fetchArticleById("1")...');
     const article = await fetchArticleById("1");
     console.log('Result:', article ? article.title : 'null');
-    
+
   } catch (error) {
     console.error('❌ Error testing fetch:', error);
   }
