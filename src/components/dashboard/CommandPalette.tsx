@@ -60,8 +60,13 @@ export function CommandPalette() {
         open={open}
         onOpenChange={setOpen}
         label="Global Command Menu"
-        className="fixed inset-0 z-50"
+        className="fixed inset-0 z-50 flex items-center justify-center"
       >
+        <div className="sr-only">
+          <h2>Command Palette</h2>
+          <p>Search for commands and navigate the dashboard</p>
+        </div>
+
         {/* Backdrop */}
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm"

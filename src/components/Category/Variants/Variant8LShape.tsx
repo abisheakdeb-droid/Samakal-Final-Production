@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { NewsItem } from "@/types/news";
 import { formatBanglaDateTime } from "@/lib/utils";
+import { getProxiedImageUrl } from "@/utils/image";
 import NewsActionButtons from "../../NewsActionButtons";
 import ScrollReveal from "../../ScrollReveal";
 
@@ -18,7 +19,7 @@ export function Variant8LShape({ news }: { news: NewsItem[] }) {
         >
           <div className="relative aspect-video md:w-1/2 overflow-hidden rounded-l-xl md:rounded-l-xl bg-gray-100">
             <Image
-              src={news[0].image}
+              src={getProxiedImageUrl(news[0].image, 600)}
               alt={news[0].title}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -38,7 +39,7 @@ export function Variant8LShape({ news }: { news: NewsItem[] }) {
         >
           <div className="relative aspect-video md:w-1/2 overflow-hidden rounded-l-xl md:rounded-l-xl bg-gray-100">
             <Image
-              src={news[2].image}
+              src={getProxiedImageUrl(news[2].image, 400)}
               alt={news[2].title}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -58,7 +59,7 @@ export function Variant8LShape({ news }: { news: NewsItem[] }) {
         >
           <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
             <Image
-              src={news[1].image}
+              src={getProxiedImageUrl(news[1].image, 800)}
               alt={news[1].title}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -93,7 +94,7 @@ export function Variant8LShape({ news }: { news: NewsItem[] }) {
         >
           <div className="relative aspect-video md:w-1/2 overflow-hidden rounded-l-xl md:rounded-l-xl bg-gray-100">
             <Image
-              src={news[3].image}
+              src={getProxiedImageUrl(news[3].image, 400)}
               alt={news[3].title}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -115,7 +116,7 @@ export function Variant8LShape({ news }: { news: NewsItem[] }) {
           >
             <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
               <Image
-                src={item.image}
+                src={getProxiedImageUrl(item.image, 400)}
                 alt={item.title}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"

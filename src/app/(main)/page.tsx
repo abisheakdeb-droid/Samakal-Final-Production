@@ -6,11 +6,10 @@ import Sidebar from "@/components/Sidebar";
 import ScrollReveal from "@/components/ScrollReveal";
 
 import {
-  fetchLatestArticles,
   fetchArticlesByCategory,
   fetchMostReadArticles,
   fetchFeaturedArticles,
-  fetchHomepageHeroArticles,
+  getHomepageData,
 } from "@/lib/actions-article";
 import { fetchVideoArticles, fetchPhotoAlbums } from "@/lib/actions-media";
 import { formatBanglaDateTime } from "@/lib/utils";
@@ -38,105 +37,60 @@ export const dynamicParams = true;
 export const revalidate = 60;
 
 export default async function Home() {
-  // --- WATERFALL FETCHING STRATEGY ---
+  // --- UNIFIED PARALLEL FETCHING STRATEGY ---
 
-  // 1. Fetch Homepage Hero (Pinned + Backfill)
-  const startHero = Date.now();
-  const heroData = await fetchHomepageHeroArticles();
-  console.log(`[Perf] Hero Fetch: ${Date.now() - startHero}ms`);
-  const leadNewsFull = heroData.articles;
-  const excludeIds = new Set(heroData.excludeIds); // Use Set for efficient lookup/adding
+  // 1. Fetch Homepage Data (Hero, Sidebar, Feed) - NOW PARALLEL
+  const homepagePromise = getHomepageData();
 
-  // 2. Fetch Core Data (Categories, Media) - Parallel
-  // Note: We pass excludeIds to categories to avoid duplicates from Hero
-
+  // 2. Fetch Other Sections in Parallel
   const categories = [
-    "বাংলাদেশ",
-    "সারাদেশ",
-    "রাজধানী",
-    "রাজনীতি",
-    "বিশ্ব",
-    "অর্থনীতি",
-    "খেলা",
-    "অপরাধ",
-    "লাইফস্টাইল",
-    "প্রযুক্তি",
-    "বিনোদন",
-    "চাকরি",
+    "বাংলাদেশ", "সারাদেশ", "রাজধানী", "রাজনীতি", "বিশ্ব", "অর্থনীতি",
+    "খেলা", "অপরাধ", "লাইফস্টাইল", "প্রযুক্তি", "বিনোদন", "চাকরি"
   ];
 
-  // Prepare Category Promises
   const categoryPromises = categories.map((cat) =>
-    fetchArticlesByCategory(
-      cat,
-      cat === "চাকরি" ? 8 : 6,
-      cat !== "চাকরি", // isParentCategory
-      undefined, // parentCategory (optional)
-      Array.from(excludeIds) // Pass current excluded IDs
-    )
+    fetchArticlesByCategory(cat, cat === "চাকরি" ? 8 : 6, cat !== "চাকরি", undefined)
   );
 
-  const startCategories = Date.now();
-  const [videoArticles, photoAlbums, mostReadNews, ...categoryResults] = await Promise.all([
+  const [
+    homepageData,
+    videoArticles,
+    photoAlbums,
+    mostReadNews,
+    opinionNews,
+    featuredArticles,
+    ...categoryResults
+  ] = await Promise.all([
+    homepagePromise,
     fetchVideoArticles(4),
     fetchPhotoAlbums(3),
     fetchMostReadArticles(5),
+    fetchArticlesByCategory("মতামত", 5, true),
+    fetchFeaturedArticles(10),
     ...categoryPromises
   ]);
-  console.log(`[Perf] Categories/Media Parallel Fetch: ${Date.now() - startCategories}ms`);
 
-  // Update excludeIds with all items found in categories
-  categoryResults.forEach(catArticles => {
-    if (Array.isArray(catArticles)) {
-      catArticles.forEach(a => excludeIds.add(a.id));
-    }
-  });
-
-  // 3. Fetch Sidebar & Selected News (Backfill / Remaining) - Parallel
-  // Now we have a full set of excluded IDs from Hero + Categories
-  const finalExcludeList = Array.from(excludeIds);
-
-  const startSidebar = Date.now();
-  const [latestSidebar, featuredArticles, opinionNews] = await Promise.all([
-    fetchLatestArticles(20, finalExcludeList), // Sidebar List
-    fetchFeaturedArticles(10), // Selected News (might overlap, but usually curated differently. Can exclude if needed)
-    fetchArticlesByCategory("মতামত", 5, true, undefined, finalExcludeList),
-  ]);
-  console.log(`[Perf] Sidebar/Featured Fetch: ${Date.now() - startSidebar}ms`);
-
-  // Assign Data
+  // 3. Destructure & Assign Data
+  const { heroArticles, sidebarArticles, latestFeed: _latestFeed } = homepageData;
+  const leadNewsFull = heroArticles;
   const categoryData = categoryResults as NewsItem[][];
-  const selectedNewsInitial = featuredArticles || [];
 
-  // Sidebar List Processing (from latestSidebar)
-  // Ensure we have enough items
-  const listNews = latestSidebar.slice(0, 8); // Sidebar usually needs 5-10 items
+  // Backfill Logic for Selected News
+  let selectedNewsFull = featuredArticles || [];
+  if (!selectedNewsFull || selectedNewsFull.length < 10) {
+    const existingIds = new Set(selectedNewsFull.map(n => n.id));
+    const potentialBackfill = sidebarArticles.filter(n => !existingIds.has(n.id));
+    selectedNewsFull = [...selectedNewsFull, ...potentialBackfill].slice(0, 10);
+  }
+
+  // Sidebar List Processing
+  const listNews = sidebarArticles.slice(0, 8);
 
   // Fallback Handling
   if (!leadNewsFull || leadNewsFull.length === 0) {
-    // ... (Existing Empty State Logic)
     return (
       <main className="min-h-screen bg-background text-foreground font-serif">
         <div className="container mx-auto px-4 py-32 text-center text-gray-500">
-          <div className="flex justify-center mb-6">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="64"
-              height="64"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-newspaper"
-            >
-              <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2" />
-              <path d="M18 14h-8" />
-              <path d="M15 18h-5" />
-              <path d="M10 6h8v4h-8V6Z" />
-            </svg>
-          </div>
           <h1 className="text-2xl font-bold">কোন নিউজ খুঁজে পাওয়া যাচ্ছে না</h1>
         </div>
       </main>
@@ -144,36 +98,19 @@ export default async function Home() {
   }
 
   // Slice Hero Data
-  const heroNews = leadNewsFull[0]; // Big Item (1)
-  const subHeroNews = leadNewsFull.slice(1, 3); // 2 Medium Items (2-3)
-  const gridNews = leadNewsFull.slice(3, 11); // 8 Small Items (4-11)
-  // Sidebar list comes from separate fetch now
+  const heroNews = leadNewsFull[0];
+  const subHeroNews = leadNewsFull.slice(1, 3);
+  const gridNews = leadNewsFull.slice(3, 11);
 
   // Category slug mapping
   const categorySlugMap: Record<string, string> = {
-    বাংলাদেশ: "bangladesh",
-    সারadesh: "saradesh",
-    রাজধানী: "capital",
-    রাজনীতি: "politics",
-    বিশ্ব: "world",
-    অর্থনীতি: "economics",
-    খেলা: "sports",
-    অপরাধ: "crime",
-    লাইফস্টাইল: "lifestyle",
-    প্রযুক্তি: "technology",
-    বিনোদন: "entertainment",
-    চাকরি: "jobs",
+    বাংলাদেশ: "bangladesh", সারাদেশ: "saradesh", রাজধানী: "capital", রাজনীতি: "politics",
+    বিশ্ব: "world", অর্থনীতি: "economics", খেলা: "sports", অপরাধ: "crime",
+    লাইফস্টাইল: "lifestyle", প্রযুক্তি: "technology", বিনোদন: "entertainment",
+    চাকরি: "jobs", মতামত: "opinion",
   };
 
-  // 2. SELECTED NEWS (Featured/Prime) logic - Backfill if needed
-  let selectedNewsFull = selectedNewsInitial;
-  if (!selectedNewsFull || selectedNewsFull.length < 10) {
-    // Logic to backfill selected news using "latest" or others, skipping duplicates
-    // simplified for now as per request
-    const existingIds = new Set(selectedNewsFull.map(n => n.id));
-    const potentialBackfill = latestSidebar.filter(n => !existingIds.has(n.id));
-    selectedNewsFull = [...selectedNewsFull, ...potentialBackfill].slice(0, 10);
-  }
+
 
   return (
     <main className="min-h-screen pb-20 bg-white text-foreground font-serif">

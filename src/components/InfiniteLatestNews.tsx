@@ -36,7 +36,11 @@ export default function InfiniteLatestNews({
     if (newArticles.length === 0) {
       setHasMore(false);
     } else {
-      setNews((prev) => [...prev, ...newArticles]);
+      setNews((prev) => {
+        const existingIds = new Set(prev.map((n) => n.id));
+        const filtered = newArticles.filter((n) => !existingIds.has(n.id));
+        return [...prev, ...filtered];
+      });
       setOffset((prev) => prev + 20);
     }
 

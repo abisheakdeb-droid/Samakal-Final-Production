@@ -5,6 +5,7 @@ import BookmarkButton from "@/components/BookmarkButton";
 import CommentSection from "@/components/CommentSection";
 import Image from "next/image";
 import Link from "next/link";
+import { getProxiedImageUrl } from "@/utils/image";
 import {
   MapPin,
   Calendar,
@@ -63,8 +64,8 @@ export default function ArticleContent({
 
   // Collect all images for lightbox (featured + gallery)
   const allImages = [
-    ...(article.image ? [article.image] : []),
-    ...(article.images?.map((img) => img.url) || []),
+    ...(article.image ? [getProxiedImageUrl(article.image, 1200)] : []),
+    ...(article.images?.map((img) => getProxiedImageUrl(img.url, 1200)) || []),
   ];
 
   useEffect(() => {
@@ -200,13 +201,12 @@ export default function ArticleContent({
             }}
           >
             <Image
-              src={article.image}
+              src={getProxiedImageUrl(article.image, 1024)}
               alt={article.title}
               fill
               placeholder="blur"
               blurDataURL={generateBlurPlaceholder(16, 9)}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 1024px"
-              unoptimized={article.image?.includes("samakal.com")}
               className="object-cover group-hover:scale-105 transition-transform duration-700"
               priority
             />
@@ -307,13 +307,12 @@ export default function ArticleContent({
                   }}
                 >
                   <Image
-                    src={img.url}
+                    src={getProxiedImageUrl(img.url, 800)}
                     alt={img.caption || "Gallery Image"}
                     fill
                     placeholder="blur"
                     blurDataURL={generateBlurPlaceholder(4, 3)}
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    unoptimized={img.url?.includes("samakal.com")}
                     className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   {img.caption && (
@@ -391,11 +390,10 @@ export default function ArticleContent({
                   >
                     <div className="w-20 h-20 relative overflow-hidden rounded-md shrink-0 bg-gray-100 mt-1">
                       <Image
-                        src={news.image}
+                        src={getProxiedImageUrl(news.image, 200)}
                         alt={news.title}
                         fill
                         sizes="(max-width: 768px) 80px, 80px"
-                        unoptimized={news.image?.includes("samakal.com")}
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     </div>
@@ -451,13 +449,12 @@ export default function ArticleContent({
                 >
                   <div className="aspect-video relative overflow-hidden">
                     <Image
-                      src={news.image}
+                      src={getProxiedImageUrl(news.image, 400)}
                       alt={news.title}
                       fill
                       placeholder="blur"
                       blurDataURL={generateBlurPlaceholder(16, 9)}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 250px"
-                      unoptimized={news.image?.includes("samakal.com")}
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-2 right-2 bg-brand-red text-white px-2 py-0.5 rounded text-[10px] font-bold">

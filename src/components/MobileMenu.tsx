@@ -20,34 +20,37 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { label: "সর্বশেষ", href: "/category/latest" },
   { label: "রাজনীতি", href: "/category/politics" },
+  { label: "বাংলাদেশ", href: "/category/bangladesh" },
+  { label: "সারাদেশ", href: "/category/saradesh" },
   { label: "রাজধানী", href: "/category/capital" },
-  {
-    label: "সারাদেশ",
-    href: "/category/bangladesh",
-    subItems: [
-      { label: "ঢাকা", href: "/category/dhaka" },
-      { label: "চট্টগ্রাম", href: "/category/chattogram" },
-      { label: "রাজশাহী", href: "/category/rajshahi" },
-      { label: "খুলনা", href: "/category/khulna" },
-    ]
-  },
-  { label: "অপরাধ", href: "/category/crime" },
   { label: "বিশ্ব", href: "/category/world" },
-  { label: "বাণিজ্য", href: "/category/business" },
+  { label: "অর্থনীতি", href: "/category/economics" },
   { label: "খেলা", href: "/category/sports" },
+
+  // সেকশন: বিশেষ সেকশন (Treat as main in mobile drawer)
+  { label: "অপরাধ", href: "/category/crime" },
   { label: "বিনোদন", href: "/category/entertainment" },
+  { label: "মতামত", href: "/category/opinion" },
+  { label: "প্রযুক্তি", href: "/category/technology" },
+  { label: "ফিচার", href: "/category/feature" },
+  { label: "প্রবাস", href: "/category/probash" },
+  { label: "চাকরি", href: "/category/jobs" },
   { label: "ভিডিও", href: "/video" },
   { label: "ছবি", href: "/photo" },
+
   {
     label: "অন্যান্য",
     href: "#",
     subItems: [
-      { label: "চতুরঙ্গ", href: "/category/chaturanga" },
-      { label: "নারী দিবস", href: "/category/nari-dibos" },
-      { label: "সাহিত্য ও সংস্কৃতি", href: "/category/literature" },
+      { label: "জীবন সংগ্রাম", href: "/category/jibon-songram" },
+      { label: "ভ্রমণ", href: "/category/travel" },
+      { label: "সমকাল অনুসন্ধান", href: "/category/investigation" },
+      { label: "শিল্পমঞ্চ", href: "/category/shilpomancha" },
+      { label: "সাক্ষাৎকার", href: "/category/interview" },
+      { label: "অফবিট", href: "/category/offbeat" },
+      { label: "বিশেষ আয়োজন", href: "/category/special-arrangement" },
+      { label: "বিশেষ সমকাল", href: "/category/special-samakal" },
       { label: "আর্কাইভ", href: "/archive" },
-      { label: "মতামত", href: "/category/opinion" },
-      { label: "চাকরি", href: "/category/jobs" },
     ]
   },
 ];

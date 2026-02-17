@@ -1,12 +1,74 @@
 "use server";
 
 import { sql } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import type { ArticleRow, ArticleImageRow, ArticleContributorRow } from "@/types/database";
+import { News } from "@prisma/client";
 import { getBengaliCategory } from "@/utils/category";
 import { normalizeCategory } from "@/utils/normalize-category";
 import { mapArticleToNewsItem } from "@/lib/actions-article-helpers";
+
+// --- NEW OPTIMIZED HOMEPAGE FETCH ---
+// --- NEW OPTIMIZED HOMEPAGE FETCH (Prisma Parallel) ---
+export const getHomepageData = cache(
+  unstable_cache(
+    async () => {
+      // Fetch everything in PARALLEL to reduce load time
+      const [heroArticlesRaw, sidebarArticlesRaw, latestFeedRaw] = await Promise.all([
+        // 1. Hero Data (Latest News - Relaxed filter to ensure data shows)
+        prisma.news.findMany({
+          where: { status: 'published' },
+          take: 13,
+          orderBy: { publishedAt: 'desc' },
+        }),
+        // 2. Sidebar Data (Popular/Trending)
+        prisma.news.findMany({
+          where: { status: 'published' },
+          take: 10,
+          orderBy: { views: 'desc' },
+        }),
+        // 3. Main Feed (Latest)
+        prisma.news.findMany({
+          where: { status: 'published' },
+          take: 50,
+          orderBy: { publishedAt: 'desc' },
+        })
+      ]);
+
+      // Helper to map Prisma result to our internal NewsItem/ArticleRow format
+      const mapPrismaToNewsItem = (item: News) => {
+        // Adapt Prisma CoModel (camelCase timestamps) to ArticleRow (snake_case/db columns)
+        const row = {
+          ...item,
+          created_at: item.createdAt, // Prisma maps to createdAt
+          published_at: item.publishedAt, // Prisma maps to publishedAt
+          author_id: item.authorId, // Prisma maps to authorId
+          // image, video_url, etc are same if they match schema
+        } as unknown as ArticleRow;
+
+        return mapArticleToNewsItem(row);
+      };
+
+      const heroArticles = heroArticlesRaw.map(mapPrismaToNewsItem);
+      const sidebarArticles = sidebarArticlesRaw.map(mapPrismaToNewsItem);
+      const latestFeed = latestFeedRaw.map(mapPrismaToNewsItem);
+
+      // Client-side deduplication: Remove Hero articles from Latest Feed
+      const heroIds = new Set(heroArticles.map((a) => a.id));
+      const filteredFeed = latestFeed.filter((a) => !heroIds.has(a.id));
+
+      return {
+        heroArticles,
+        sidebarArticles,
+        latestFeed: filteredFeed
+      };
+    },
+    ['homepage-data-unified'],
+    { revalidate: 60, tags: ['articles', 'homepage'] }
+  )
+);
 
 export const fetchArticles = cache(
   unstable_cache(

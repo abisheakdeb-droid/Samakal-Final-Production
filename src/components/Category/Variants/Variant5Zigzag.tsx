@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { NewsItem } from "@/types/news";
 import { formatBanglaDateTime, formatBanglaTime } from "@/lib/utils";
+import { getProxiedImageUrl } from "@/utils/image";
 import NewsActionButtons from "../../NewsActionButtons";
 import ScrollReveal from "../../ScrollReveal";
 
@@ -20,7 +21,7 @@ export function Variant5Zigzag({ news }: { news: NewsItem[] }) {
         >
           <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
             <Image
-              src={news[0].image}
+              src={getProxiedImageUrl(news[0].image, 800)}
               alt={news[0].title}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -60,7 +61,7 @@ export function Variant5Zigzag({ news }: { news: NewsItem[] }) {
             >
               <div className="relative aspect-video w-full overflow-hidden rounded-t-xl bg-gray-100">
                 <Image
-                  src={item.image}
+                  src={getProxiedImageUrl(item.image, 400)}
                   alt={item.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -85,7 +86,7 @@ export function Variant5Zigzag({ news }: { news: NewsItem[] }) {
             >
               <div className="relative w-24 aspect-video shrink-0 rounded-lg overflow-hidden bg-gray-100">
                 <Image
-                  src={item.image}
+                  src={getProxiedImageUrl(item.image, 200)}
                   alt={item.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"

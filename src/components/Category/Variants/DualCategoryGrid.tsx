@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { NewsItem } from "@/types/news";
 import { formatBanglaDate, formatBanglaDateTime } from "@/lib/utils";
+import { getProxiedImageUrl } from "@/utils/image";
 import NewsActionButtons from "../../NewsActionButtons";
 import ScrollReveal from "../../ScrollReveal";
 
@@ -22,7 +23,7 @@ export function DualCategoryGrid({ news }: { news: NewsItem[] }) {
         >
           <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-4 bg-gray-100">
             <Image
-              src={lead.image}
+              src={getProxiedImageUrl(lead.image, 600)}
               alt={lead.title}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -59,7 +60,7 @@ export function DualCategoryGrid({ news }: { news: NewsItem[] }) {
             >
               <div className="relative w-24 aspect-video shrink-0 rounded-lg overflow-hidden bg-gray-100">
                 <Image
-                  src={item.image}
+                  src={getProxiedImageUrl(item.image, 400)}
                   alt={item.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"

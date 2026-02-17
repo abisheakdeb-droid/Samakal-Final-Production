@@ -12,6 +12,7 @@ import {
 import { fetchComments } from "@/lib/actions-comment";
 import { auth } from "@/auth";
 import JsonLd from "@/components/JsonLd";
+import Breadcrumb from "@/components/Breadcrumb";
 import { Metadata, ResolvingMetadata } from "next";
 
 interface PageProps {
@@ -107,6 +108,11 @@ export default async function ArticlePage({ params }: PageProps) {
       <ViewTracker articleId={article.id} />
 
       <main className="container mx-auto px-4 py-8 max-w-7xl">
+        <Breadcrumb
+          currentSlug={article.catSlug || article.category}
+          isArticle={true}
+          articleTitle={article.title}
+        />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Main Content Column */}
           <div className="lg:col-span-8">

@@ -1,0 +1,251 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          String    @default("user")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Article {
+  id          String   @id
+  title       String
+  slug        String   @unique
+  summary     String?
+  content     String
+  thumbnail   String?
+  videoUrl    String?
+  isBreaking  Boolean  @default(false)
+  views       Int      @default(0)
+  location    String?
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  categoryId  String
+  reporterId  String
+  Category    Category @relation(fields: [categoryId], references: [id])
+  Reporter    Reporter @relation(fields: [reporterId], references: [id])
+}
+
+model Category {
+  id        String    @id
+  name      String
+  slug      String    @unique
+  color     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+  Article   Article[]
+}
+
+model Reporter {
+  id        String    @id
+  name      String
+  bio       String?
+  role      String    @default("Reporter")
+  imageUrl  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+  Article   Article[]
+}
+
+model article_contributors {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  article_id     String?   @db.Uuid
+  contributor_id String?   @db.Uuid
+  role           String?   @default("reporter") @db.VarChar(50)
+  custom_name    String?   @db.VarChar(255)
+  display_order  Int?      @default(0)
+  created_at     DateTime? @default(now()) @db.Timestamp(6)
+  articles       articles? @relation(fields: [article_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([article_id], map: "idx_article_contributors_article_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model article_images {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  article_id    String?   @db.Uuid
+  image_url     String
+  image_type    String    @db.VarChar(50)
+  caption       String?
+  photographer  String?   @db.VarChar(255)
+  display_order Int?      @default(0)
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  articles      articles? @relation(fields: [article_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([article_id], map: "idx_article_images_article_id")
+  @@index([image_type], map: "idx_article_images_type")
+}
+
+model article_tags {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  article_id String?   @db.Uuid
+  tag        String    @db.VarChar(100)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  articles   articles? @relation(fields: [article_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([article_id], map: "idx_article_tags_article_id")
+  @@index([tag], map: "idx_article_tags_tag")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model articles {
+  id                   String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title                String
+  slug                 String                 @unique
+  content              String?
+  status               String                 @default("draft") @db.VarChar(50)
+  category             String?                @db.VarChar(100)
+  views                Int?                   @default(0)
+  image                String?
+  author_id            String?                @db.Uuid
+  created_at           DateTime?              @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime?              @default(now()) @db.Timestamptz(6)
+  sub_headline         String?
+  news_type            String?                @default("regular") @db.VarChar(50)
+  location             String?                @db.VarChar(100)
+  keywords             String[]
+  video_url            String?
+  video_thumbnail      String?
+  source               String?                @db.VarChar(255)
+  source_url           String?
+  seo_title            String?                @db.VarChar(255)
+  seo_description      String?
+  canonical_url        String?
+  event_id             String?                @db.Uuid
+  public_id            Int                    @unique(map: "idx_articles_public_id") @default(autoincrement())
+  is_featured          Boolean?               @default(false)
+  is_prime             Boolean?               @default(false)
+  featured_priority    Int?                   @default(0)
+  prime_priority       Int?                   @default(0)
+  featured_at          DateTime?              @db.Timestamp(6)
+  prime_at             DateTime?              @db.Timestamp(6)
+  parent_category      String?                @db.VarChar(100)
+  published_at         DateTime?              @default(now()) @db.Timestamptz(6)
+  scheduled_at         DateTime?              @db.Timestamptz(6)
+  home_position        Int?
+  is_pinned_home       Boolean?               @default(false)
+  article_contributors article_contributors[]
+  article_images       article_images[]
+  article_tags         article_tags[]
+  users                users?                 @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  events               events?                @relation(fields: [event_id], references: [id], onUpdate: NoAction)
+  comments             comments[]
+  reading_history      reading_history[]
+  visitor_logs         visitor_logs[]
+
+  @@index([author_id], map: "idx_articles_author")
+  @@index([category], map: "idx_articles_category")
+  @@index([home_position], map: "idx_articles_home_position")
+  @@index([is_pinned_home], map: "idx_articles_is_pinned_home")
+  @@index([location], map: "idx_articles_location")
+  @@index([news_type], map: "idx_articles_news_type")
+  @@index([slug], map: "idx_articles_slug")
+  @@index([status, created_at(sort: Desc)], map: "idx_articles_status_created")
+  @@index([title(ops: raw("gin_trgm_ops"))], map: "idx_articles_title_trgm", type: Gin)
+  @@index([views(sort: Desc)], map: "idx_articles_views")
+}
+
+model comments {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  article_id String    @db.Uuid
+  user_id    String    @db.Uuid
+  content    String
+  status     String?   @default("approved") @db.VarChar(20)
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  articles   articles  @relation(fields: [article_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model events {
+  id           String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title        String     @db.VarChar(255)
+  slug         String     @unique @db.VarChar(255)
+  description  String?
+  banner_image String?    @db.VarChar(255)
+  is_active    Boolean?   @default(false)
+  created_at   DateTime?  @default(now()) @db.Timestamptz(6)
+  articles     articles[]
+}
+
+model push_subscriptions {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id    String?   @db.Uuid
+  endpoint   String    @unique
+  p256dh     String
+  auth       String
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  users      users?    @relation(fields: [user_id], references: [id], onUpdate: NoAction)
+}
+
+model reading_history {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id    String    @db.Uuid
+  article_id String    @db.Uuid
+  viewed_at  DateTime? @default(now()) @db.Timestamptz(6)
+  articles   articles  @relation(fields: [article_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_id, article_id])
+}
+
+model site_settings {
+  id                      Int       @id @default(autoincrement())
+  facebook_live_url       String?
+  facebook_is_live        Boolean?  @default(false)
+  youtube_playlist_id     String?
+  youtube_api_key         String?
+  breaking_news_ticker    String?
+  updated_at              DateTime? @default(now()) @db.Timestamptz(6)
+  breaking_news_is_active Boolean?  @default(true)
+  site_name               String?   @default("সমকাল")
+  site_tagline            String?   @default("অসংকোচ প্রকাশের দুরন্ত সাহস")
+  site_logo               String?   @default("/samakal-logo.png")
+  site_favicon            String?   @default("/favicon.ico")
+  seo_title               String?   @default("সমকাল | অসংকোচ প্রকাশের দুরন্ত সাহস")
+  seo_description         String?
+  seo_keywords            String?
+  footer_copyright        String?   @default("© ২০২৬ সমকাল। সর্বস্বত্ব সংরক্ষিত।")
+  google_analytics_id     String?
+  navigation_menu         Json?
+}
+
+model users {
+  id                 String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name               String               @db.VarChar(255)
+  email              String               @unique
+  password           String
+  role               String               @db.VarChar(50)
+  avatar             String?
+  articles           articles[]
+  comments           comments[]
+  push_subscriptions push_subscriptions[]
+  reading_history    reading_history[]
+}
+
+model visitor_logs {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  article_id String?   @db.Uuid
+  visited_at DateTime? @default(now()) @db.Timestamptz(6)
+  ip_hash    String?   @db.VarChar(255)
+  user_agent String?
+  path       String?
+  articles   articles? @relation(fields: [article_id], references: [id], onUpdate: NoAction)
+
+  @@index([article_id], map: "idx_visitor_logs_article")
+  @@index([visited_at], map: "idx_visitor_logs_time")
+}
+
+

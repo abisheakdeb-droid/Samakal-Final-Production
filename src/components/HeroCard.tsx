@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { generateBlurPlaceholder } from "@/utils/image";
+import { generateBlurPlaceholder, getProxiedImageUrl } from "@/utils/image";
 import { NewsItem } from "@/types/news";
 import { formatBanglaDateTime } from "@/lib/utils";
 import NewsActionButtons from "@/components/NewsActionButtons";
@@ -22,14 +22,13 @@ export default function HeroCard({ news }: HeroCardProps) {
         {/* Image Section */}
         <div className="relative w-full aspect-video overflow-hidden">
           <Image
-            src={news.image}
+            src={getProxiedImageUrl(news.image, 800)}
             alt={news.title}
             fill
             priority
             placeholder="blur"
             blurDataURL={generateBlurPlaceholder(16, 9)}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            unoptimized={news.image?.includes("samakal.com")}
             className="object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
           />
           {/* Category Badge */}

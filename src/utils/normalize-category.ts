@@ -40,7 +40,7 @@ export function normalizeCategory(input: string): string {
         'feature': 'ফিচার',
         'technology': 'প্রযুক্তি',
         'education': 'শিক্ষা',
-        'lifestyle': 'লাইফস্টাইল',
+        'lifestyle': 'জীবনধারা',
         'jobs': 'চাকরি',
         // Common misspells or variations
         'national': 'বাংলাদেশ',

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { X, Search, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { getProxiedImageUrl } from "@/utils/image";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { suggestArticles } from "@/lib/actions-article";
@@ -227,7 +228,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                         >
                           <div className="relative w-16 h-16 shrink-0 rounded overflow-hidden bg-gray-200">
                             <Image
-                              src={item.image}
+                              src={getProxiedImageUrl(item.image, 100)}
                               alt={item.title}
                               fill
                               className="object-cover"

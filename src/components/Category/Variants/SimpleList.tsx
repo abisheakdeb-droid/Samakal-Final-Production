@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { NewsItem } from "@/types/news";
 import { formatBanglaTime } from "@/lib/utils";
+import { getProxiedImageUrl } from "@/utils/image";
 import ScrollReveal from "../../ScrollReveal";
 
 export function SimpleList({ news }: { news: NewsItem[] }) {
@@ -20,7 +21,7 @@ export function SimpleList({ news }: { news: NewsItem[] }) {
           >
             <div className="relative w-20 h-16 shrink-0 rounded-lg overflow-hidden bg-gray-100">
               <Image
-                src={item.image}
+                src={getProxiedImageUrl(item.image, 200)}
                 alt={item.title}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"

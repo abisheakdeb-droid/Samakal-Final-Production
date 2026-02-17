@@ -18,6 +18,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 
 import { getParentCategory } from "@/config/sub-categories";
 import SaradeshFilter from "@/components/Category/SaradeshFilter";
+import Breadcrumb from "@/components/Breadcrumb";
 
 // Helper to check if a slug belongs to Saradesh tree (Saradesh, Division, or District)
 const isSaradeshTree = (slug: string) => {
@@ -112,6 +113,10 @@ export default async function CategoryPage({ params }: PageProps) {
           />
         )
       )}
+
+      <div className="container mx-auto px-4 mt-6 max-w-7xl">
+        <Breadcrumb currentSlug={slug} />
+      </div>
 
       {!newsItems || newsItems.length === 0 ? (
         <main className="container mx-auto px-4 py-8 max-w-7xl flex flex-col items-center justify-center min-h-[50vh] text-center text-gray-500">

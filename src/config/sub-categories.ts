@@ -93,12 +93,12 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
     'europe',
     'africa',
     'usa-canada',
-    'others',
     'australia',
     'india',
     'pakistan',
     'china',
     'middle-east',
+    'others',
   ],
   technology: [
     'gadgets',
@@ -131,6 +131,46 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
   other: [
     'literature',
   ],
+  "special-arrangement": [
+    "anniversary",
+    "roundtable",
+    "national-day",
+    "womens-day",
+    "eid-ananda",
+    "durga-puja",
+    "pohela-boishakh",
+    "kaler-jatra",
+  ],
+  "national-day": [
+    "independence-day",
+    "victory-day",
+    "february-21",
+  ],
+  "shilpomancha": [
+    "literature",
+    "culture",
+    "shilpomancha-interview",
+    "translation",
+    "classic",
+    "book-review",
+    "shilpomancha-travel"
+  ],
+
+  feature: [
+    "kaler-kheya",
+    "nondon",
+    "shoili",
+    "sarabela",
+    "suhrid-somabesh",
+    "ghasforing",
+    "campus",
+    "kichu-alo",
+    "neel",
+    "doctor-bari",
+    "somriddhi",
+    "sahosh",
+    "somota",
+  ],
 };
 
 // Helper to check if a slug is a subcategory
@@ -152,4 +192,20 @@ export function getParentCategory(slug: string): string | null {
 export function getSubcategoriesBengali(parentSlug: string): string[] {
   const childSlugs = SUB_CATEGORIES[parentSlug] || [];
   return childSlugs.map(slug => CATEGORY_MAP[slug]).filter(Boolean);
+}
+// Check if currentSlug is a descendant of parentSlug (recursive)
+export function isDescendantOf(parentSlug: string, currentSlug: string, visited: Set<string> = new Set()): boolean {
+  if (parentSlug === currentSlug) return true;
+  if (visited.has(parentSlug)) return false;
+
+  visited.add(parentSlug);
+  const children = SUB_CATEGORIES[parentSlug] || [];
+  if (children.includes(currentSlug)) return true;
+
+  // Recursively check children
+  for (const child of children) {
+    if (isDescendantOf(child, currentSlug, visited)) return true;
+  }
+
+  return false;
 }

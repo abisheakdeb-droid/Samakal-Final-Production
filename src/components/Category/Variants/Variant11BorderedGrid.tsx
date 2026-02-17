@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { NewsItem } from "@/types/news";
 import { formatBanglaDateTime, formatBanglaTime } from "@/lib/utils";
+import { getProxiedImageUrl } from "@/utils/image";
 import NewsActionButtons from "../../NewsActionButtons";
 import ScrollReveal from "../../ScrollReveal";
 
@@ -24,7 +25,7 @@ export function Variant11BorderedGrid({ news }: { news: NewsItem[] }) {
           >
             <div className="relative aspect-video w-full rounded-t-xl overflow-hidden mb-4 bg-gray-100">
               <Image
-                src={lead.image}
+                src={getProxiedImageUrl(lead.image, 800)}
                 alt={lead.title}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -63,7 +64,7 @@ export function Variant11BorderedGrid({ news }: { news: NewsItem[] }) {
           >
             <div className="relative aspect-video w-full rounded-t-xl overflow-hidden mb-4 bg-gray-100">
               <Image
-                src={second.image}
+                src={getProxiedImageUrl(second.image, 400)}
                 alt={second.title}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"

@@ -1,15 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Tiro_Bangla } from "next/font/google";
+import { Noto_Serif_Bengali } from "next/font/google";
 import "./globals.css";
 
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 import InstallPrompt from "@/components/InstallPrompt";
 import NextTopLoader from "nextjs-toploader";
 
-const tiroBangla = Tiro_Bangla({
-  weight: ["400"],
+const notoSerifBengali = Noto_Serif_Bengali({
+  weight: ["400", "700"],
   subsets: ["bengali"],
-  variable: "--font-tiro-bangla",
+  variable: "--font-noto-serif-bengali",
 });
 
 export const metadata: Metadata = {
@@ -62,6 +62,7 @@ export const viewport: Viewport = {
 import { GoogleAnalytics } from "@next/third-parties/google";
 import TrafficTracker from "@/components/TrafficTracker";
 import ThemeProvider from "@/components/ThemeProvider";
+import Providers from "@/components/Providers";
 
 export default function RootLayout({
   children,
@@ -72,27 +73,29 @@ export default function RootLayout({
     <html lang="bn" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${tiroBangla.variable} font-serif antialiased bg-background text-foreground`}
+        className={`${notoSerifBengali.variable} font-serif antialiased bg-background text-foreground`}
       >
         <ThemeProvider>
-          <NextTopLoader
-            color="#f59e0b"
-            initialPosition={0.08}
-            crawlSpeed={200}
-            height={3}
-            crawl={true}
-            showSpinner={false}
-            easing="ease"
-            speed={200}
-            shadow="0 0 10px #f59e0b,0 0 5px #f59e0b"
-          />
-          <ServiceWorkerRegistration />
-          <TrafficTracker />
-          {children}
-          <InstallPrompt />
-          <GoogleAnalytics
-            gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""}
-          />
+          <Providers>
+            <NextTopLoader
+              color="#f59e0b"
+              initialPosition={0.08}
+              crawlSpeed={200}
+              height={3}
+              crawl={true}
+              showSpinner={false}
+              easing="ease"
+              speed={200}
+              shadow="0 0 10px #f59e0b,0 0 5px #f59e0b"
+            />
+            <ServiceWorkerRegistration />
+            <TrafficTracker />
+            {children}
+            <InstallPrompt />
+            <GoogleAnalytics
+              gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""}
+            />
+          </Providers>
         </ThemeProvider>
       </body>
     </html>

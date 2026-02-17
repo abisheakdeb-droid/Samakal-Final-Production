@@ -14,7 +14,7 @@ export const CATEGORY_MAP: Record<string, string> = {
   entertainment: "বিনোদন",
   technology: "প্রযুক্তি",
   education: "শিক্ষা",
-  lifestyle: "লাইফস্টাইল",
+  lifestyle: "জীবনধারা",
   jobs: "চাকরি",
   other: "অন্যান্য",
   archive: "আর্কাইভ",
@@ -167,12 +167,22 @@ export const CATEGORY_MAP: Record<string, string> = {
   "africa": "আফ্রিকা",
   "usa-canada": "যুক্তরাষ্ট্র-কানাডা",
   "others": "অন্যান্য",
+  "foot-ball-other": "অন্যান্য",
   "australia": "অস্ট্রেলিয়া",
   "india": "ভারত",
   "pakistan": "পাকিস্তান",
   "china": "চীন",
   "middle-east": "মধ্যপ্রাচ্য",
   "war": "যুদ্ধ-সংঘাত",
+
+  // Shilpomancha Sub-categories
+  "literature": "সাহিত্য",
+  "culture": "সংস্কৃতি",
+  "shilpomancha-interview": "সাক্ষাৎকার",
+  "translation": "অনুবাদ",
+  "classic": "ক্ল্যাসিক",
+  "book-review": "বুক রিভিউ",
+  "shilpomancha-travel": "ভ্রমণ",
 
   // Technology
   "gadgets": "গ্যাজেট",
@@ -197,7 +207,6 @@ export const CATEGORY_MAP: Record<string, string> = {
   "admission": "ভর্তি",
   "exam-results": "পরীক্ষা ও ফল",
   "scholarship": "বৃত্তি",
-  "literature": "সাহিত্য ও সংস্কৃতি", // Updated based on user request
 
   // Crime
   "murder": "খুন",
@@ -211,6 +220,31 @@ export const CATEGORY_MAP: Record<string, string> = {
   "south-city": "দক্ষিণ সিটি",
   "traffic": "যানজট",
   "services": "নাগরিক সেবা",
+  "anniversary": "প্রতিষ্ঠাবার্ষিকী",
+  "roundtable": "গোলটেবিল",
+  "national-day": "জাতীয় দিবস",
+  "pohela-boishakh": "পহেলা বৈশাখ",
+  "kaler-jatra": "কালের যাত্রা",
+  "womens-day": "নারী দিবস",
+  "eid-ananda": "ঈদ আনন্দ",
+  "durga-puja": "শারদীয় দুর্গোৎসব",
+  "independence-day": "স্বাধীনতা দিবস",
+  "victory-day": "বিজয় দিবস",
+  "february-21": "২১শে ফেব্রুয়ারি",
+
+  // Feature Sub-categories
+  "kaler-kheya": "কালের খেয়া",
+  "nondon": "নন্দন",
+  "shoili": "শৈলী",
+  "sarabela": "সারাবেলা",
+  "suhrid-somabesh": "সুহৃদ সমাবেশ",
+  "ghasforing": "ঘাসফড়িং",
+  "kichu-alo": "কিছু আলো",
+  "neel": "নীল",
+  "doctor-bari": "ডাক্তারবাড়ি",
+  "somriddhi": "সমৃদ্ধি",
+  "sahosh": "সাহস",
+  "somota": "সমতা",
 };
 
 // List of parent categories only (for homepage)

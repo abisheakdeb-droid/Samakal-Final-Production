@@ -2,6 +2,9 @@
   "name": "samakal-redesign",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,11 +12,14 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.11.1",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@google/generative-ai": "^0.24.1",
     "@next/third-parties": "^16.1.4",
+    "@prisma/client": "^6.19.2",
     "@tailwindcss/typography": "^0.5.19",
+    "@tanstack/react-query": "^5.90.21",
     "@tiptap/extension-character-count": "^3.16.0",
     "@tiptap/extension-highlight": "^3.16.0",
     "@tiptap/extension-image": "^3.16.0",
@@ -48,12 +54,12 @@
     "react-dom": "19.2.3",
     "recharts": "^3.7.0",
     "rss-parser": "^3.13.0",
+    "sharp": "^0.34.5",
     "slugify": "^1.6.6",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
     "web-push": "^3.6.7",
-    "zod": "^4.3.5",
-    "sharp": "^0.34.5"
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -61,13 +67,15 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/web-push": "^3.6.4",
-    "axios": "^1.13.4",
+    "axios": "^1.13.5",
     "cheerio": "^1.2.0",
     "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.1.4",
+    "prisma": "^6.19.2",
     "puppeteer": "^24.36.1",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   },
   "ignoreScripts": [

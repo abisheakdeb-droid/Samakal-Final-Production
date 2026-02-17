@@ -35,25 +35,12 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
   }, [currentSlug]);
 
   // State initialized directly from derived selection
-  const [selectedDivision, setSelectedDivision] = useState(selection.division);
-  const [selectedDistrict, setSelectedDistrict] = useState(selection.district);
   const [isDivOpen, setIsDivOpen] = useState(false);
   const [isDistOpen, setIsDistOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const divRef = useRef<HTMLDivElement>(null);
   const distRef = useRef<HTMLDivElement>(null);
-
-  // Sync state with props when currentSlug changes
-  useEffect(() => {
-    // Only update if changed to avoid loops/unnecessary renders
-    if (selectedDivision !== selection.division) {
-      setSelectedDivision(selection.division);
-    }
-    if (selectedDistrict !== selection.district) {
-      setSelectedDistrict(selection.district);
-    }
-  }, [selection, selectedDivision, selectedDistrict]);
 
   // Close dropdowns on click outside
   useEffect(() => {
@@ -68,22 +55,19 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
   }, []);
 
   const divisions = SUB_CATEGORIES["saradesh"] || [];
-  const districts = selectedDivision
-    ? SUB_CATEGORIES[selectedDivision] || []
+  const districts = selection.division
+    ? SUB_CATEGORIES[selection.division] || []
     : [];
 
   const handleDivisionChange = (division: string) => {
-    setSelectedDivision(division);
-    setSelectedDistrict("");
     setIsDivOpen(false);
     router.push(division ? `/category/${division}` : `/category/saradesh`);
   };
 
   const handleDistrictChange = (district: string) => {
-    setSelectedDistrict(district);
     setIsDistOpen(false);
     router.push(
-      district ? `/category/${district}` : `/category/${selectedDivision}`,
+      district ? `/category/${district}` : `/category/${selection.division}`,
     );
   };
 
@@ -103,9 +87,9 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
             </div>
 
             <AnimatePresence mode="popLayout">
-              {selectedDivision ? (
+              {selection.division ? (
                 <motion.div
-                  key={`division-${selectedDivision}`}
+                  key={`division-${selection.division}`}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
@@ -116,7 +100,7 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
                     onClick={() => handleDivisionChange("")}
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors text-sm font-bold group"
                   >
-                    {CATEGORY_MAP[selectedDivision]}
+                    {CATEGORY_MAP[selection.division]}
                     <X
                       size={12}
                       className="text-gray-400 group-hover:text-red-500"
@@ -125,9 +109,9 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
                 </motion.div>
               ) : null}
 
-              {selectedDistrict ? (
+              {selection.district ? (
                 <motion.div
-                  key={`district-${selectedDistrict}`}
+                  key={`district-${selection.district}`}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
@@ -138,7 +122,7 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
                     onClick={() => handleDistrictChange("")}
                     className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors text-sm font-bold group"
                   >
-                    {CATEGORY_MAP[selectedDistrict]}
+                    {CATEGORY_MAP[selection.district]}
                     <X
                       size={12}
                       className="text-gray-400 group-hover:text-red-500"
@@ -163,8 +147,8 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
                 )}
               >
                 <span className="truncate">
-                  {selectedDivision
-                    ? CATEGORY_MAP[selectedDivision]
+                  {selection.division
+                    ? CATEGORY_MAP[selection.division]
                     : "বিভাগ নির্বাচন"}
                 </span>
                 <ChevronDown
@@ -191,7 +175,7 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
                           onClick={() => handleDivisionChange(div)}
                           className={cn(
                             "px-4 py-2 text-left text-sm font-bold rounded-lg transition-colors",
-                            selectedDivision === div
+                            selection.division === div
                               ? "bg-red-50 text-red-600"
                               : "hover:bg-gray-50 text-gray-600",
                           )}
@@ -209,18 +193,18 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
             <div className="relative flex-1 md:flex-none" ref={distRef}>
               <button
                 onClick={() => setIsDistOpen(!isDistOpen)}
-                disabled={!selectedDivision}
+                disabled={!selection.division}
                 className={cn(
                   "w-full md:w-64 flex items-center justify-between gap-3 px-4 py-2.5 border rounded-xl transition-all font-bold text-sm",
-                  !selectedDivision
+                  !selection.division
                     ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-100"
                     : "bg-gray-50 border-gray-200 hover:border-gray-300",
                   isDistOpen && "border-red-500 ring-4 ring-red-50",
                 )}
               >
                 <span className="truncate">
-                  {selectedDistrict
-                    ? CATEGORY_MAP[selectedDistrict]
+                  {selection.district
+                    ? CATEGORY_MAP[selection.district]
                     : "জেলা নির্বাচন"}
                 </span>
                 <ChevronDown
@@ -262,7 +246,7 @@ export default function SaradeshFilter({ currentSlug }: SaradeshFilterProps) {
                           onClick={() => handleDistrictChange(dist)}
                           className={cn(
                             "px-3 py-1.5 text-left text-xs font-bold rounded-lg transition-colors",
-                            selectedDistrict === dist
+                            selection.district === dist
                               ? "bg-red-50 text-red-600"
                               : "hover:bg-gray-50 text-gray-600",
                           )}

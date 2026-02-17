@@ -11,7 +11,7 @@ export function generateBlurPlaceholder(width: number = 10, height: number = 6):
       <rect width="${width}" height="${height}" fill="#f3f4f6" filter="url(#b)"/>
     </svg>
   `;
-  
+
   const base64 = Buffer.from(svg).toString('base64');
   return `data:image/svg+xml;base64,${base64}`;
 }
@@ -39,7 +39,7 @@ export function generateShimmerPlaceholder(width: number = 700, height: number =
       <rect width="${width}" height="${height}" fill="url(#shimmer)"/>
     </svg>
   `;
-  
+
   const base64 = Buffer.from(shimmer).toString('base64');
   return `data:image/svg+xml;base64,${base64}`;
 }
@@ -62,6 +62,33 @@ export function unsplashLoader({ src, width, quality }: {
     url.searchParams.set('auto', 'format'); // Let Unsplash choose best format
     return url.toString();
   }
-  
+
   return src;
+}
+
+/**
+ * Global Image Proxy Utility (wsrv.nl)
+ * Handles HTTPS/HTTP mismatches, blocking, and performance optimization.
+ */
+export function getProxiedImageUrl(src: string, width?: number, quality: number = 80): string {
+  if (!src) return '';
+
+  // Don't proxy base64 or local images
+  if (src.startsWith('data:') || src.startsWith('/') || src.startsWith('blob:')) {
+    return src;
+  }
+
+  // If already proxied, return as is
+  if (src.includes('wsrv.nl')) {
+    return src;
+  }
+
+  const encodedUrl = encodeURIComponent(src);
+  let proxyUrl = `https://wsrv.nl/?url=${encodedUrl}&q=${quality}&output=webp`;
+
+  if (width) {
+    proxyUrl += `&w=${width}`;
+  }
+
+  return proxyUrl;
 }
