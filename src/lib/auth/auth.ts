@@ -9,6 +9,7 @@ import { authConfig } from './auth.config';
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma) as any, // Cast to any due to subtle version mismatches in @auth/core types
+  trustHost: true,
   session: { strategy: "jwt" },
   providers: [
     Credentials({
