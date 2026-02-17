@@ -12,12 +12,8 @@ export const authConfig = {
   },
   providers: [
     Google({
-      clientId: (() => {
-        const id = process.env.GOOGLE_CLIENT_ID;
-        console.log(`[AUTH_DEBUG] Initializing Google Provider with Client ID: ${id ? id.slice(0, 10) + "..." : "MISSING"}`);
-        return id;
-      })(),
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.AUTH_GOOGLE_ID || process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET || process.env.GOOGLE_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
     }),
   ],
