@@ -12,17 +12,13 @@ export const authConfig = {
   },
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientId: (() => {
+        const id = process.env.GOOGLE_CLIENT_ID;
+        console.log(`[AUTH_DEBUG] Initializing Google Provider with Client ID: ${id ? id.slice(0, 10) + "..." : "MISSING"}`);
+        return id;
+      })(),
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
     }),
   ],
 } satisfies NextAuthConfig;
-
-// CRITICAL: Verification log for Vercel
-if (typeof window === 'undefined') {
-  const cid = process.env.GOOGLE_CLIENT_ID || "";
-  const maskedCid = cid ? `${cid.slice(0, 10)}...${cid.slice(-10)}` : "MISSING";
-  console.log(`[AUTH_VERIFY] Current Client ID in use: ${maskedCid}`);
-  console.log(`[AUTH_VERIFY] Current Client Secret present: ${!!process.env.GOOGLE_CLIENT_SECRET}`);
-}
