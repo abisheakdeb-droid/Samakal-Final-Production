@@ -250,7 +250,8 @@ export default async function CategoryPage({ params }: PageProps) {
                             {news.title}
                           </h2>
                           <div className="text-xs text-gray-400">
-                            {formatBanglaDateTime(news.publishedAt)}
+                            {/* এখানেও আমরা টাইপ চেক বাইপাস করছি এবং ফলব্যাক ডেট দিচ্ছি */}
+                            {formatBanglaDateTime((news as any).publishedAt || (news as any).createdAt || new Date())}
                           </div>
                         </div>
                       </Link>
