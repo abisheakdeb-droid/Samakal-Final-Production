@@ -289,7 +289,8 @@ export default async function CategoryPage({ params }: PageProps) {
                           {news.title}
                         </h3>
                         <div className="mt-2 text-xs text-gray-400">
-                          {formatBanglaDateTime(news.publishedAt)}
+                          {/* এখানেও publishedAt না পেলে createdAt বা বর্তমান সময় দেখাবে */}
+                          {formatBanglaDateTime((news as any).publishedAt || (news as any).createdAt || new Date())}
                         </div>
                       </Link>
                     ))}
