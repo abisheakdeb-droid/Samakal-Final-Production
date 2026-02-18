@@ -216,7 +216,8 @@ export default async function CategoryPage({ params }: PageProps) {
                       <span className="text-sm text-gray-500">
                         {/* (primeBig as any) ব্যবহার করে আমরা টাইপ চেক বাইপাস করছি */}
                         {(primeBig as any).author || "সমকাল প্রতিবেদক"} •{" "}
-                        {formatBanglaDateTime(primeBig.publishedAt)}
+                        {/* আমরা publishedAt না পেলে createdAt নেব, তাও না পেলে বর্তমান সময় */}
+                        {formatBanglaDateTime((primeBig as any).publishedAt || (primeBig as any).createdAt || new Date())}
                       </span>
                       <NewsActionButtons
                         title={primeBig.title}
