@@ -6,65 +6,37 @@ const nextConfig = {
         minimumCacheTTL: 60,
         remotePatterns: [
             {
-                protocol: "https",
-                hostname: "images.unsplash.com",
-                pathname: '/**',
+                protocol: 'https',
+                hostname: 'samakal.com',
             },
             {
-                protocol: "https",
-                hostname: "randomuser.me",
-                pathname: '/**',
+                protocol: 'https',
+                hostname: 'www.samakal.com',
             },
             {
-                protocol: "https",
-                hostname: "img.youtube.com",
-                pathname: '/**',
+                protocol: 'https',
+                hostname: '*.samakal.com',
             },
             {
-                protocol: "https",
-                hostname: "samakal.com",
-                pathname: '/**',
+                protocol: 'https',
+                hostname: 'wsrv.nl',
             },
             {
-                protocol: "http",
-                hostname: "samakal.com",
-                pathname: '/**',
+                protocol: 'https',
+                hostname: 'lh3.googleusercontent.com',
             },
             {
-                protocol: "https",
-                hostname: "www.samakal.com",
-                pathname: '/**',
+                protocol: 'https',
+                hostname: 'images.unsplash.com',
             },
             {
-                protocol: "http",
-                hostname: "www.samakal.com",
-                pathname: '/**',
+                protocol: 'https',
+                hostname: 'randomuser.me',
             },
             {
-                protocol: "https",
-                hostname: "*.samakal.com",
-                pathname: '/**',
+                protocol: 'https',
+                hostname: 'img.youtube.com',
             },
-            {
-                protocol: "https",
-                hostname: "samakal-redesign.vercel.app",
-                pathname: '/**',
-            },
-            {
-                protocol: "https",
-                hostname: "*.vercel.app",
-                pathname: '/**',
-            },
-            {
-                protocol: "https",
-                hostname: "assets.vercel.com",
-                pathname: '/**',
-            },
-            {
-                protocol: "https",
-                hostname: "wsrv.nl",
-                pathname: '/**',
-            }
         ],
     },
 
