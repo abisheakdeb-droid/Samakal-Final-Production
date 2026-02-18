@@ -214,7 +214,8 @@ export default async function CategoryPage({ params }: PageProps) {
                     </p>
                     <div className="flex items-center justify-between mt-4">
                       <span className="text-sm text-gray-500">
-                        {primeBig.author || "সমকাল প্রতিবেদক"} •{" "}
+                        {/* (primeBig as any) ব্যবহার করে আমরা টাইপ চেক বাইপাস করছি */}
+                        {(primeBig as any).author || "সমকাল প্রতিবেদক"} •{" "}
                         {formatBanglaDateTime(primeBig.publishedAt)}
                       </span>
                       <NewsActionButtons
