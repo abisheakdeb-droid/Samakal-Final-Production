@@ -4,34 +4,34 @@ import { formatBanglaDate } from "@/lib/utils";
 import { z } from "zod";
 
 export const ArticleSchema = z.object({
-  id: z.string(),
-  title: z.string().min(1, "Title is required"),
-  slug: z.string().min(1, "Slug is required"),
-  content: z.string().optional(),
-  status: z.enum(["draft", "published", "archived", "scheduled"]),
-  category: z.string().optional(),
-  image: z.string().optional(),
-  author_id: z.string().optional(),
-  views: z.number().optional(),
-  date: z.string().optional(), // For UI display purposes
-  published_at: z.string().optional(),
-  scheduled_at: z.string().optional(),
-  // Phase 1: Core Metadata
-  sub_headline: z.string().optional(),
-  news_type: z.enum(["breaking", "regular", "feature", "opinion", "photo_story"]).optional(),
-  location: z.string().optional(),
-  keywords: z.array(z.string()).optional(),
-  tags: z.array(z.string()).optional(),
-  event_id: z.string().optional(),
-  // Phase 2: Media Enhancement
-  video_url: z.string().optional(),
-  video_thumbnail: z.string().optional(),
-  // Phase 3: Attribution & SEO
-  source: z.string().optional(),
-  source_url: z.string().optional(),
-  seo_title: z.string().optional(),
-  seo_description: z.string().optional(),
-  canonical_url: z.string().optional(),
+    id: z.string(),
+    title: z.string().min(1, "Title is required"),
+    slug: z.string().min(1, "Slug is required"),
+    content: z.string().optional(),
+    status: z.enum(["draft", "published", "archived", "scheduled"]),
+    category: z.string().optional(),
+    image: z.string().optional(),
+    author_id: z.string().optional(),
+    views: z.number().optional(),
+    date: z.string().optional(), // For UI display purposes
+    published_at: z.string().optional(),
+    scheduled_at: z.string().optional(),
+    // Phase 1: Core Metadata
+    sub_headline: z.string().optional(),
+    news_type: z.enum(["breaking", "regular", "feature", "opinion", "photo_story"]).optional(),
+    location: z.string().optional(),
+    keywords: z.array(z.string()).optional(),
+    tags: z.array(z.string()).optional(),
+    event_id: z.string().optional(),
+    // Phase 2: Media Enhancement
+    video_url: z.string().optional(),
+    video_thumbnail: z.string().optional(),
+    // Phase 3: Attribution & SEO
+    source: z.string().optional(),
+    source_url: z.string().optional(),
+    seo_title: z.string().optional(),
+    seo_description: z.string().optional(),
+    canonical_url: z.string().optional(),
 });
 
 export const CreateArticle = ArticleSchema.omit({ id: true, date: true, views: true, author_id: true });
@@ -50,7 +50,7 @@ function decodeHTMLEntities(text: string): string {
         '&#39;': "'",
         '&apos;': "'"
     };
-    
+
     return text.replace(/&[#\w]+;/g, (entity) => entities[entity] || entity);
 }
 
@@ -61,29 +61,39 @@ function stripHtml(html: string): string {
 }
 
 export function mapArticleToNewsItem(
-    article: ArticleRow, 
+    article: ArticleRow,
     extraData: ExtraArticleData = {}
 ) {
     const dateObj = new Date(article.created_at);
-    
+
     // Video Mapping
     let relatedVideo = undefined;
     if (article.video_url) {
         const isYoutube = article.video_url.includes('youtube') || article.video_url.includes('youtu.be');
-        // Removed unused isFacebook check
-        
-        let videoId = article.video_url; 
+
+        let videoId = article.video_url;
+        let isValidId = false;
+
         if (isYoutube) {
-             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-             const match = article.video_url.match(regExp);
-             videoId = (match && match[2].length === 11) ? match[2] : videoId;
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = article.video_url.match(regExp);
+            if (match && match[2].length === 11) {
+                videoId = match[2];
+                isValidId = true;
+            }
+        } else {
+            // Basic check for non-youtube links
+            isValidId = article.video_url.length > 5;
         }
 
-        relatedVideo = {
-            id: videoId,
-            source: (isYoutube ? 'youtube' : 'facebook') as 'youtube' | 'facebook',
-            title: 'Related Video'
-        };
+        if (isValidId) {
+            relatedVideo = {
+                id: videoId,
+                source: (isYoutube ? 'youtube' : 'facebook') as 'youtube' | 'facebook',
+                title: 'Related Video',
+                thumbnail: article.video_thumbnail
+            };
+        }
     }
 
     return {
@@ -98,7 +108,7 @@ export function mapArticleToNewsItem(
         author: article.author || 'ডেস্ক রিপোর্ট',
         date: formatBanglaDate(dateObj),
         time: formatRelativeTime(dateObj.toISOString()),
-        summary: stripHtml(article.content || '').substring(0, 150) + '...',
+        summary: String(article.sub_headline || stripHtml(article.content || '')).substring(0, 150) + (article.content ? '...' : ''),
         content: article.content || '',
         news_type: article.news_type as 'breaking' | 'regular' | 'feature' | 'opinion' | 'photo_story',
         location: article.location,
@@ -115,9 +125,9 @@ export function mapArticleToNewsItem(
             type: img.image_type
         })),
         contributors: extraData.contributors?.map((con) => ({
-             id: con.id,
-             name: con.display_name || 'Contributor', 
-             role: con.role
+            id: con.id,
+            name: con.display_name || 'Contributor',
+            role: con.role
         })),
         relatedVideo: relatedVideo
     };

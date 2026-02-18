@@ -1,9 +1,5 @@
-import LatestSidebarWidget from "@/components/LatestSidebarWidget";
-import ScrollReveal from "@/components/ScrollReveal";
-import AdSlot from "@/components/AdSlot";
 import { redirect } from "next/navigation";
-import ArticleContent from "@/components/ArticleContent";
-import ViewTracker from "@/components/ViewTracker";
+import ArticleView from "@/components/ArticleView";
 import {
   fetchArticleById,
   fetchArticlesByCategory,
@@ -11,9 +7,8 @@ import {
 } from "@/lib/actions-article";
 import { fetchComments } from "@/lib/actions-comment";
 import { auth } from "@/auth";
-import JsonLd from "@/components/JsonLd";
-import Breadcrumb from "@/components/Breadcrumb";
 import { Metadata, ResolvingMetadata } from "next";
+import { NewsItem } from "@/types/news";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -42,7 +37,7 @@ export async function generateMetadata(
     metadataBase: new URL(
       process.env.NEXT_PUBLIC_BASE_URL || "https://samakal.com",
     ),
-    title: `${article.title} | সমকাল`,
+    title: article.title,
     description:
       article.sub_headline ||
       article.summary ||
@@ -102,56 +97,23 @@ export default async function ArticlePage({ params }: PageProps) {
   const comments = await fetchComments(article.id);
   const session = await auth();
 
+  const formattedComments = comments.map((c) => ({
+    id: c.id,
+    content: c.content,
+    author: c.author,
+    avatar: c.avatar || undefined,
+    created_at: c.created_at,
+    timeAgo: c.timeAgo,
+  }));
+
   return (
-    <div className="min-h-screen bg-background text-foreground font-serif">
-      <JsonLd article={article} />
-      <ViewTracker articleId={article.id} />
-
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
-        <Breadcrumb
-          currentSlug={article.catSlug || article.category}
-          isArticle={true}
-          articleTitle={article.title}
-        />
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Main Content Column */}
-          <div className="lg:col-span-8">
-            <ArticleContent
-              article={article}
-              relatedNews={relatedNews}
-              authorNews={authorNews}
-              comments={comments.map((c) => ({
-                id: c.id,
-                content: c.content,
-                author: c.author,
-                avatar: c.avatar || undefined,
-                created_at: c.created_at,
-                timeAgo: c.timeAgo,
-              }))}
-              currentUser={session?.user}
-            />
-          </div>
-
-          {/* Sidebar Column - Only Latest News + Ads */}
-          <div className="lg:col-span-4 border-l border-gray-200 dark:border-gray-800 lg:pl-8">
-            <ScrollReveal direction="left">
-              <aside className="sticky bottom-4">
-                <LatestSidebarWidget news={sidebarNews} />
-
-                {/* Advertisement 1 */}
-                <div className="mb-6 mt-8 w-full flex justify-center">
-                  <AdSlot slotId="article-sidebar-1" format="rectangle" />
-                </div>
-
-                {/* Advertisement 2 */}
-                <div className="flex justify-center w-full">
-                  <AdSlot slotId="article-sidebar-2" format="rectangle" />
-                </div>
-              </aside>
-            </ScrollReveal>
-          </div>
-        </div>
-      </main>
-    </div>
+    <ArticleView
+      article={article}
+      relatedNews={relatedNews.map((n: NewsItem) => ({ ...n, author: String(n.author || 'ডেস্ক রিপোর্ট'), date: String(n.date || ''), time: String(n.time || ''), sub_headline: (n.sub_headline as string) || undefined, summary: String(n.summary || ''), category: String(n.category || ''), image: String(n.image || '') })) as NewsItem[]}
+      authorNews={authorNews.map((n: NewsItem) => ({ ...n, author: String(n.author || 'ডেস্ক রিপোর্ট'), date: String(n.date || ''), time: String(n.time || ''), sub_headline: (n.sub_headline as string) || undefined, summary: String(n.summary || ''), category: String(n.category || ''), image: String(n.image || '') })) as NewsItem[]}
+      sidebarNews={sidebarNews.map((n: NewsItem) => ({ ...n, author: String(n.author || 'ডেস্ক রিপোর্ট'), date: String(n.date || ''), time: String(n.time || ''), sub_headline: (n.sub_headline as string) || undefined, summary: String(n.summary || ''), category: String(n.category || ''), image: String(n.image || '') })) as NewsItem[]}
+      comments={formattedComments}
+      currentUser={session?.user}
+    />
   );
 }

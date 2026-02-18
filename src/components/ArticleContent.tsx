@@ -25,7 +25,7 @@ import { toast } from "sonner";
 import { NewsItem } from "@/types/news";
 import ScrollReveal from "@/components/ScrollReveal";
 
-interface ArticleComment {
+export interface ArticleComment {
   id: string;
   content: string;
   author: string;
@@ -112,12 +112,6 @@ export default function ArticleContent({
           {article.title}
         </h1>
 
-        {/* Sub-headline (if exists) */}
-        {article.sub_headline && (
-          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
-            {article.sub_headline}
-          </p>
-        )}
       </ScrollReveal>
 
       {/* Font Size Control */}
@@ -190,37 +184,46 @@ export default function ArticleContent({
         </div>
       </div>
 
-      {/* Featured Image */}
-      {article.image && (
-        <ScrollReveal>
-          <div
-            className="relative w-full aspect-video mb-8 rounded-lg overflow-hidden cursor-pointer group hover:shadow-xl transition-shadow duration-300"
-            onClick={() => {
-              setLightboxIndex(0);
-              setLightboxOpen(true);
-            }}
-          >
-            <Image
-              src={getProxiedImageUrl(article.image, 1024)}
-              alt={article.title}
-              fill
-              placeholder="blur"
-              blurDataURL={generateBlurPlaceholder(16, 9)}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 1024px"
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
-              priority
-            />
-            {/* Click hint overlay */}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-              <div className="bg-white/90 px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="text-sm font-bold text-gray-800">
-                  ছবি বড় করে দেখুন
-                </span>
+      {/* Featured Media (Video or Image) */}
+      <ScrollReveal>
+        <div className="mb-8">
+          {article.relatedVideo && article.relatedVideo.source === 'youtube' && article.relatedVideo.id ? (
+            <div className="relative w-full aspect-video rounded-lg overflow-hidden shadow-xl">
+              <iframe
+                src={`https://www.youtube.com/embed/${article.relatedVideo.id}?autoplay=0&rel=0`}
+                title={article.title}
+                className="absolute inset-0 w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          ) : article.image ? (
+            <div
+              className="relative w-full aspect-video rounded-lg overflow-hidden cursor-pointer group hover:shadow-xl transition-shadow duration-300"
+              onClick={() => {
+                setLightboxIndex(0);
+                setLightboxOpen(true);
+              }}
+            >
+              <Image
+                src={getProxiedImageUrl(article.image, 1024)}
+                alt={article.title}
+                fill
+                placeholder="blur"
+                blurDataURL={generateBlurPlaceholder(16, 9)}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 1024px"
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                priority
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                <div className="bg-white/90 px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span className="text-sm font-bold text-gray-800">ছবি বড় করে দেখুন</span>
+                </div>
               </div>
             </div>
-          </div>
-        </ScrollReveal>
-      )}
+          ) : null}
+        </div>
+      </ScrollReveal>
 
       {/* Article Body */}
       <ScrollReveal>
@@ -280,204 +283,214 @@ export default function ArticleContent({
       </div>
 
       {/* Image Lightbox */}
-      {lightboxOpen && (
-        <ImageLightbox
-          images={allImages}
-          initialIndex={lightboxIndex}
-          onClose={() => setLightboxOpen(false)}
-        />
-      )}
+      {
+        lightboxOpen && (
+          <ImageLightbox
+            images={allImages}
+            initialIndex={lightboxIndex}
+            onClose={() => setLightboxOpen(false)}
+          />
+        )
+      }
 
       {/* --- GALLERY SECTION (NEW) --- */}
-      {article.images && article.images.length > 0 && (
-        <ScrollReveal>
-          <div className="w-full my-12">
-            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <ImageIcon className="text-brand-red" size={24} />
-              ফটো গ্যালারি
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {article.images.map((img, idx) => (
-                <div
-                  key={img.id}
-                  className="relative aspect-4/3 rounded-lg overflow-hidden group cursor-pointer hover:shadow-xl transition-shadow duration-300"
-                  onClick={() => {
-                    setLightboxIndex((article.image ? 1 : 0) + idx);
-                    setLightboxOpen(true);
-                  }}
-                >
-                  <Image
-                    src={getProxiedImageUrl(img.url, 800)}
-                    alt={img.caption || "Gallery Image"}
-                    fill
-                    placeholder="blur"
-                    blurDataURL={generateBlurPlaceholder(4, 3)}
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  {img.caption && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-2 text-white text-xs">
-                      {img.caption}
+      {
+        article.images && article.images.length > 0 && (
+          <ScrollReveal>
+            <div className="w-full my-12">
+              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <ImageIcon className="text-brand-red" size={24} />
+                ফটো গ্যালারি
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {article.images.map((img, idx) => (
+                  <div
+                    key={img.id}
+                    className="relative aspect-4/3 rounded-lg overflow-hidden group cursor-pointer hover:shadow-xl transition-shadow duration-300"
+                    onClick={() => {
+                      setLightboxIndex((article.image ? 1 : 0) + idx);
+                      setLightboxOpen(true);
+                    }}
+                  >
+                    <Image
+                      src={getProxiedImageUrl(img.url, 800)}
+                      alt={img.caption || "Gallery Image"}
+                      fill
+                      placeholder="blur"
+                      blurDataURL={generateBlurPlaceholder(4, 3)}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    {img.caption && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-2 text-white text-xs">
+                        {img.caption}
+                      </div>
+                    )}
+                    {/* Click hint */}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                      <ImageIcon
+                        className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        size={48}
+                      />
                     </div>
-                  )}
-                  {/* Click hint */}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                    <ImageIcon
-                      className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      size={48}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </ScrollReveal>
+        )
+      }
+
+      {/* --- AUTHOR'S POPULAR NEWS SUB-SECTION --- */}
+      {
+        authorNews.length > 0 && (
+          <ScrollReveal>
+            <div className="mt-16 mb-12 w-full">
+              <div className="flex items-end justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 relative">
+                    <Image
+                      src={`https://randomuser.me/api/portraits/men/${(article.title.length % 50) + 1}.jpg`}
+                      alt="Author"
+                      fill
+                      className="object-cover"
                     />
                   </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 leading-tight">
+                      এই প্রতিবেদকের আরও খবর
+                    </h3>
+                    <div className="h-0.5 w-full bg-gray-200 mt-1 relative">
+                      <div className="absolute left-0 top-0 h-full w-1/3 bg-brand-red"></div>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Scroll Buttons */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => scroll("left")}
+                    className="p-1.5 rounded-full border border-gray-200 text-gray-600 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all duration-300"
+                    aria-label="Scroll left"
+                  >
+                    <ChevronLeft size={18} />
+                  </button>
+                  <button
+                    onClick={() => scroll("right")}
+                    className="p-1.5 rounded-full border border-gray-200 text-gray-600 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all duration-300"
+                    aria-label="Scroll right"
+                  >
+                    <ChevronRight size={18} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="relative group/slider">
+                <div
+                  ref={scrollRef}
+                  className="flex overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0 no-scrollbar scroll-smooth snap-x"
+                >
+                  {authorNews.slice(0, 10).map((news) => (
+                    <Link
+                      key={news.id}
+                      href={`/article/${news.id}`}
+                      className="shrink-0 w-[85vw] sm:w-[320px] md:w-[280px] lg:w-[300px] snap-start flex items-start gap-4 p-3 rounded-lg border-r border-gray-100 last:border-0 hover:bg-white hover:shadow-lg transition-all duration-300 group"
+                    >
+                      <div className="w-20 h-20 relative overflow-hidden rounded-md shrink-0 bg-gray-100 mt-1">
+                        <Image
+                          src={getProxiedImageUrl(news.image, 200)}
+                          alt={news.title}
+                          fill
+                          sizes="(max-width: 768px) 80px, 80px"
+                          className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <h4 className="text-base font-bold text-gray-900 group-hover:text-brand-red line-clamp-2 leading-snug transition-colors mb-1">
+                          {news.title}
+                        </h4>
+                        <span className="text-xs text-gray-500 flex items-center gap-1">
+                          <Clock size={12} />
+                          {formatBanglaTime(news.published_at || news.date)}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+        )
+      }
+
+      {/* Tags (Dynamic) */}
+      {
+        article.tags && article.tags.length > 0 && (
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="flex flex-wrap gap-2">
+              {article.tags.map((tag: string) => (
+                <Link
+                  key={tag}
+                  href={`/search?q=${tag}`}
+                  className="bg-gray-100 px-4 py-1.5 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-brand-red transition cursor-pointer"
+                >
+                  #{tag}
+                </Link>
               ))}
             </div>
           </div>
-        </ScrollReveal>
-      )}
+        )
+      }
 
-      {/* --- AUTHOR'S POPULAR NEWS SUB-SECTION --- */}
-      {authorNews.length > 0 && (
-        <ScrollReveal>
-          <div className="mt-16 mb-12 w-full">
-            <div className="flex items-end justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 relative">
-                  <Image
-                    src={`https://randomuser.me/api/portraits/men/${(article.title.length % 50) + 1}.jpg`}
-                    alt="Author"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900 leading-tight">
-                    এই প্রতিবেদকের আরও খবর
-                  </h3>
-                  <div className="h-0.5 w-full bg-gray-200 mt-1 relative">
-                    <div className="absolute left-0 top-0 h-full w-1/3 bg-brand-red"></div>
-                  </div>
-                </div>
-              </div>
+      {/* RELATED NEWS SECTION (8 Items) */}
+      {
+        relatedNews.length > 0 && (
+          <ScrollReveal>
+            <div className="mt-16 pt-12 border-t-4 border-gray-900">
+              <h3 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+                <span className="w-2 h-8 bg-brand-red rounded"></span>
+                আরও পড়ুন
+              </h3>
 
-              {/* Scroll Buttons */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => scroll("left")}
-                  className="p-1.5 rounded-full border border-gray-200 text-gray-600 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all duration-300"
-                  aria-label="Scroll left"
-                >
-                  <ChevronLeft size={18} />
-                </button>
-                <button
-                  onClick={() => scroll("right")}
-                  className="p-1.5 rounded-full border border-gray-200 text-gray-600 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all duration-300"
-                  aria-label="Scroll right"
-                >
-                  <ChevronRight size={18} />
-                </button>
-              </div>
-            </div>
-
-            <div className="relative group/slider">
-              <div
-                ref={scrollRef}
-                className="flex overflow-x-auto pb-4 -mx-4 px-4 md:mx-0 md:px-0 no-scrollbar scroll-smooth snap-x"
-              >
-                {authorNews.slice(0, 10).map((news) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {relatedNews.map((news) => (
                   <Link
                     key={news.id}
                     href={`/article/${news.id}`}
-                    className="shrink-0 w-[85vw] sm:w-[320px] md:w-[280px] lg:w-[300px] snap-start flex items-start gap-4 p-3 rounded-lg border-r border-gray-100 last:border-0 hover:bg-white hover:shadow-lg transition-all duration-300 group"
+                    className="group block bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
                   >
-                    <div className="w-20 h-20 relative overflow-hidden rounded-md shrink-0 bg-gray-100 mt-1">
+                    <div className="aspect-video relative overflow-hidden">
                       <Image
-                        src={getProxiedImageUrl(news.image, 200)}
+                        src={getProxiedImageUrl(news.image, 400)}
                         alt={news.title}
                         fill
-                        sizes="(max-width: 768px) 80px, 80px"
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        placeholder="blur"
+                        blurDataURL={generateBlurPlaceholder(16, 9)}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 250px"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
+                      <div className="absolute top-2 right-2 bg-brand-red text-white px-2 py-0.5 rounded text-[10px] font-bold">
+                        {news.category}
+                      </div>
                     </div>
-                    <div className="flex flex-col">
-                      <h4 className="text-base font-bold text-gray-900 group-hover:text-brand-red line-clamp-2 leading-snug transition-colors mb-1">
+                    <div className="p-4">
+                      <h4 className="font-bold text-gray-800 text-lg leading-snug group-hover:text-brand-red line-clamp-2 mb-2">
                         {news.title}
                       </h4>
-                      <span className="text-xs text-gray-500 flex items-center gap-1">
+                      <div className="flex items-center gap-2 text-xs text-gray-400 mt-2">
                         <Clock size={12} />
-                        {formatBanglaTime(news.published_at || news.date)}
-                      </span>
+                        <span>{news.time}</span>
+                      </div>
                     </div>
                   </Link>
                 ))}
               </div>
             </div>
-          </div>
-        </ScrollReveal>
-      )}
-
-      {/* Tags (Dynamic) */}
-      {article.tags && article.tags.length > 0 && (
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <div className="flex flex-wrap gap-2">
-            {article.tags.map((tag: string) => (
-              <Link
-                key={tag}
-                href={`/search?q=${tag}`}
-                className="bg-gray-100 px-4 py-1.5 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-brand-red transition cursor-pointer"
-              >
-                #{tag}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* RELATED NEWS SECTION (8 Items) */}
-      {relatedNews.length > 0 && (
-        <ScrollReveal>
-          <div className="mt-16 pt-12 border-t-4 border-gray-900">
-            <h3 className="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-2">
-              <span className="w-2 h-8 bg-brand-red rounded"></span>
-              আরও পড়ুন
-            </h3>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedNews.map((news) => (
-                <Link
-                  key={news.id}
-                  href={`/article/${news.id}`}
-                  className="group block bg-white rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1"
-                >
-                  <div className="aspect-video relative overflow-hidden">
-                    <Image
-                      src={getProxiedImageUrl(news.image, 400)}
-                      alt={news.title}
-                      fill
-                      placeholder="blur"
-                      blurDataURL={generateBlurPlaceholder(16, 9)}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 250px"
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute top-2 right-2 bg-brand-red text-white px-2 py-0.5 rounded text-[10px] font-bold">
-                      {news.category}
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <h4 className="font-bold text-gray-800 text-lg leading-snug group-hover:text-brand-red line-clamp-2 mb-2">
-                      {news.title}
-                    </h4>
-                    <div className="flex items-center gap-2 text-xs text-gray-400 mt-2">
-                      <Clock size={12} />
-                      <span>{news.time}</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </ScrollReveal>
-      )}
+          </ScrollReveal>
+        )
+      }
 
       <HistoryTracker articleId={article.id} />
-    </div>
+    </div >
   );
 }

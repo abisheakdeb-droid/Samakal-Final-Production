@@ -2,11 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ChevronLeft, ChevronRight, Camera } from "lucide-react";
 import { clsx } from "clsx";
 
 interface PhotoSlide {
   id: string | number;
+  slug?: string;
   url: string;
   title: string;
   photographer?: string;
@@ -64,7 +66,7 @@ export default function PhotoSlider({ photos = [] }: PhotoSliderProps) {
       />
 
       {/* Main Slide Image */}
-      <div className="absolute inset-0 flex items-center justify-center">
+      <Link href={`/article/${currentPhoto.id}`} className="absolute inset-0 flex items-center justify-center">
         <div className="relative w-full h-full md:w-[90%] md:h-[90%] overflow-hidden shadow-2xl transition-all duration-700 ease-out">
           <Image
             src={currentPhoto.url}
@@ -74,7 +76,7 @@ export default function PhotoSlider({ photos = [] }: PhotoSliderProps) {
             priority
           />
         </div>
-      </div>
+      </Link>
 
       {/* Overlay Content */}
       <div className="absolute bottom-0 left-0 w-full bg-linear-to-t from-black/90 to-transparent p-6 md:p-12 text-white">

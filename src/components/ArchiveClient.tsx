@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { formatBanglaDate } from "@/lib/utils";
 import ScrollReveal from "@/components/ScrollReveal";
+import { getProxiedImageUrl } from "@/utils/image";
 
 interface Article {
   id: string;
@@ -70,7 +71,7 @@ export default function ArchiveClient({
     entertainment: "বিনোদন",
     technology: "প্রযুক্তি",
     education: "শিক্ষা",
-    lifestyle: "লাইফস্টাইল",
+    lifestyle: "জীবন ধারা",
     jobs: "চাকরি",
     probash: "প্রবাস",
   };
@@ -220,12 +221,24 @@ export default function ArchiveClient({
       {/* Content or Loader */}
       {articles.length === 0 ? (
         <ScrollReveal>
-          <div className="flex flex-col items-center justify-center py-20 text-center text-gray-500 dark:text-gray-400 min-h-[40vh] bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700 animate-fade-in-up">
-            <CalendarIcon size={64} className="mb-6 opacity-20" />
-            <h2 className="text-2xl font-bold dark:text-gray-300">
-              কোনো সংবাদ পাওয়া যায়নি
+          <div className="flex flex-col items-center justify-center py-20 text-center text-gray-500 min-h-[40vh] bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700 animate-fade-in-up">
+            <svg
+              className="w-16 h-16 mb-4 text-gray-300"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              />
+            </svg>
+            <h2 className="text-xl font-bold dark:text-gray-300">
+              দুঃখিত, এই তারিখে বা ক্যাটাগরিতে কোনো খবর পাওয়া যায়নি।
             </h2>
-            <p className="mt-2 text-gray-400 dark:text-gray-500">
+            <p className="mt-2 text-gray-400 dark:text-gray-500 text-sm">
               অনুগ্রহ করে অন্য তারিখ বা ক্যাটাগরি নির্বাচন করুন
             </p>
           </div>
@@ -245,7 +258,7 @@ export default function ArchiveClient({
               >
                 <div className="aspect-video relative overflow-hidden bg-gray-100 dark:bg-gray-800">
                   <Image
-                    src={article.image}
+                    src={getProxiedImageUrl(article.image, 400)}
                     alt={article.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"

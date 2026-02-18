@@ -83,7 +83,7 @@ const nextConfig = {
                             "img-src 'self' data: https: http:",
                             "font-src 'self' https://fonts.gstatic.com",
                             "frame-src 'self' https://www.youtube.com https://www.facebook.com",
-                            "connect-src 'self' https://www.youtube.com https://www.facebook.com",
+                            "connect-src 'self' https://www.youtube.com https://www.facebook.com https://wsrv.nl https://samakal.com https://*.samakal.com",
                             "media-src 'self' https:",
                         ].join("; "),
                     },
@@ -102,6 +102,10 @@ const nextConfig = {
                     {
                         key: "Permissions-Policy",
                         value: "camera=(), microphone=(), geolocation=()",
+                    },
+                    {
+                        key: "Cross-Origin-Resource-Policy",
+                        value: "cross-origin",
                     },
                 ],
             },

@@ -1,59 +1,64 @@
 "use client";
 
 import Link from "next/link";
+import NewsImage from "@/components/NewsImage";
 import { NewsItem } from "@/types/news";
-import { toBanglaDigits } from "@/utils/bn";
+import { formatBanglaDateTime } from "@/lib/utils";
 import ScrollReveal from "@/components/ScrollReveal";
 
 interface LatestSidebarWidgetProps {
   news: NewsItem[];
+  hideImages?: boolean;
 }
-
-// Mock relative time generator (since mock data doesn't have real timestamps)
-// In a real app, this would use date-fns/moment to diff current time vs published time
-const getRelativeTime = (index: number): string => {
-  if (index === 0) return "১০ মিনিট আগে";
-  if (index === 1) return "৩২ মিনিট আগে";
-  if (index === 2) return "১ ঘণ্টা আগে";
-  if (index === 3) return "২ ঘণ্টা আগে";
-  if (index === 4) return "৩ ঘণ্টা আগে";
-  return `${toBanglaDigits(index + 1)} ঘণ্টা আগে`;
-};
 
 export default function LatestSidebarWidget({
   news,
+  hideImages = false,
 }: LatestSidebarWidgetProps) {
   return (
     <ScrollReveal direction="left">
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 font-serif">
         {/* Header */}
-        <div className="flex items-center gap-2 mb-4 border-b-2 border-brand-gold dark:border-brand-gold/50 pb-2">
-          <span className="w-2 h-2 rounded-full bg-brand-red"></span>
-          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">
-            সর্বশেষ
+        <div className="flex items-center gap-3 mb-2 border-b border-gray-100 dark:border-gray-800 pb-3">
+          <span className="w-1.5 h-6 bg-brand-red rounded-full"></span>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+            সর্বশেষ সংবাদ
           </h2>
         </div>
 
         {/* News List Container with Scroll */}
-        <div className="h-[480px] overflow-y-auto pr-2 custom-scrollbar">
-          <div className="flex flex-col gap-0 divide-y divide-gray-100 dark:divide-gray-800">
-            {news.map((item, index) => (
+        <div className="max-h-[800px] overflow-y-auto pr-2 custom-scrollbar">
+          <div className="flex flex-col gap-4">
+            {news.map((item) => (
               <Link
                 key={item.id}
                 href={`/article/${item.id}`}
-                className="group flex gap-3 p-3 items-start border-b border-gray-100 dark:border-gray-800 last:border-0 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-all font-serif"
+                className="group flex gap-3 p-2 items-start border-b border-gray-50 dark:border-gray-900 last:border-0 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900/40 transition-all"
               >
-                {/* Number */}
-                <span className="text-3xl font-bold text-gray-300 dark:text-gray-700 group-hover:text-brand-red transition-colors font-serif leading-none mt-1">
-                  {toBanglaDigits(index + 1)}
-                </span>
+                {/* Image Section - Conditional */}
+                {!hideImages && (
+                  <div className="w-24 h-16 relative overflow-hidden rounded-lg shrink-0 bg-gray-100 dark:bg-gray-800">
+                    <NewsImage
+                      src={item.image || "/samakal-logo.png"}
+                      alt={item.title}
+                      fill
+                      sizes="100px"
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+                )}
 
-                <div>
-                  <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 group-hover:text-brand-red leading-snug">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 group-hover:text-brand-red leading-snug line-clamp-2 mb-1">
                     {item.title}
                   </h3>
-                  <span className="text-xs text-gray-400 dark:text-gray-500 mt-1 block">
-                    {getRelativeTime(index)}
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-1 mb-1">
+                    {item.summary}
+                  </p>
+                  <span className="text-[10px] text-gray-400 dark:text-gray-500 font-medium">
+                    {item.published_at
+                      ? formatBanglaDateTime(item.published_at)
+                      : (item.time || item.date)}
                   </span>
                 </div>
               </Link>
@@ -64,7 +69,7 @@ export default function LatestSidebarWidget({
         {/* Footer Button */}
         <Link
           href="/category/latest"
-          className="w-full py-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 font-bold rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition text-sm block text-center"
+          className="w-full py-2.5 bg-gray-50 dark:bg-gray-800/50 text-brand-red text-center font-bold rounded-full hover:bg-brand-red hover:text-white transition-all duration-300 text-xs border border-gray-100 dark:border-gray-700"
         >
           সব খবর পড়ুন
         </Link>

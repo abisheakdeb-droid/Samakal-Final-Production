@@ -81,7 +81,7 @@ export async function fetchPhotoAlbums(limit: number = 12): Promise<PhotoAlbum[]
         a.is_prime
       FROM articles a
       LEFT JOIN users u ON a.author_id = u.id
-      WHERE a.category = 'photo' AND a.status = 'published'
+      WHERE a.category = 'ছবি' AND a.status = 'published'
       ORDER BY a.published_at DESC
       LIMIT ${limit}
     `;
@@ -128,7 +128,7 @@ export async function getMediaLibrary() {
       id: blob.url,
       url: blob.url,
       name: blob.pathname,
-      type: "IMAGE", 
+      type: "IMAGE",
       size: (blob.size / 1024 / 1024).toFixed(2) + " MB"
     }));
   } catch (error) {

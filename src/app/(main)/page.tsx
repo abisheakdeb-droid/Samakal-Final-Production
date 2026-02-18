@@ -6,16 +6,15 @@ import Sidebar from "@/components/Sidebar";
 import ScrollReveal from "@/components/ScrollReveal";
 
 import {
-  fetchArticlesByCategory,
+  getArticles,
   fetchMostReadArticles,
   fetchFeaturedArticles,
   getHomepageData,
 } from "@/lib/actions-article";
-import { fetchVideoArticles, fetchPhotoAlbums } from "@/lib/actions-media";
+
 import { formatBanglaDateTime } from "@/lib/utils";
 import SelectedNews from "@/components/SelectedNews";
 import CategorySection from "@/components/CategorySection";
-import HomeMediaSection from "@/components/HomeMediaSection";
 import { NewsItem } from "@/types/news";
 
 // Dynamically Import Heavy / Below-Fold Components
@@ -36,6 +35,13 @@ const NativeAd = dynamic(() => import("@/components/NativeAd"));
 export const dynamicParams = true;
 export const revalidate = 60;
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "সমকাল | অসংকোচ প্রকাশের দুরন্ত সাহস",
+  description: "সমকাল - বাংলাদেশের অন্যতম জনপ্রিয় বাংলা নিউজ পোর্টাল। সর্বশেষ খবর, রাজনীতি, অর্থনীতি, খেলাধুলা, এবং বিনোদনের আপডেট জানুন।",
+};
+
 export default async function Home() {
   // --- UNIFIED PARALLEL FETCHING STRATEGY ---
 
@@ -45,35 +51,39 @@ export default async function Home() {
   // 2. Fetch Other Sections in Parallel
   const categories = [
     "বাংলাদেশ", "সারাদেশ", "রাজধানী", "রাজনীতি", "বিশ্ব", "অর্থনীতি",
-    "খেলা", "অপরাধ", "লাইফস্টাইল", "প্রযুক্তি", "বিনোদন", "চাকরি"
+    "খেলা", "অপরাধ", "জীবন ধারা", "প্রযুক্তি", "বিনোদন", "চাকরি"
   ];
 
   const categoryPromises = categories.map((cat) =>
-    fetchArticlesByCategory(cat, cat === "চাকরি" ? 8 : 6, cat !== "চাকরি", undefined)
+    getArticles({ category: cat, limit: cat === "চাকরি" ? 8 : 6 })
   );
 
   const [
     homepageData,
-    videoArticles,
-    photoAlbums,
     mostReadNews,
     opinionNews,
     featuredArticles,
     ...categoryResults
   ] = await Promise.all([
     homepagePromise,
-    fetchVideoArticles(4),
-    fetchPhotoAlbums(3),
     fetchMostReadArticles(5),
-    fetchArticlesByCategory("মতামত", 5, true),
+    getArticles({ category: "মতামত", limit: 5 }),
     fetchFeaturedArticles(10),
     ...categoryPromises
   ]);
 
   // 3. Destructure & Assign Data
-  const { heroArticles, sidebarArticles, latestFeed: _latestFeed } = homepageData;
+  const { heroArticles, sidebarArticles } = homepageData;
   const leadNewsFull = heroArticles;
-  const categoryData = categoryResults as NewsItem[][];
+  const categoryData = (categoryResults as any[][]).map(items =>
+    items.map((n: any) => ({
+      ...n,
+      author: n.author || 'ডেস্ক রিপোর্ট',
+      date: n.date || '',
+      time: n.time || '',
+      sub_headline: n.sub_headline || undefined
+    }))
+  ) as NewsItem[][];
 
   // Backfill Logic for Selected News
   let selectedNewsFull = featuredArticles || [];
@@ -100,13 +110,13 @@ export default async function Home() {
   // Slice Hero Data
   const heroNews = leadNewsFull[0];
   const subHeroNews = leadNewsFull.slice(1, 3);
-  const gridNews = leadNewsFull.slice(3, 11);
+  const gridNews = leadNewsFull.slice(3, 13);
 
   // Category slug mapping
   const categorySlugMap: Record<string, string> = {
     বাংলাদেশ: "bangladesh", সারাদেশ: "saradesh", রাজধানী: "capital", রাজনীতি: "politics",
     বিশ্ব: "world", অর্থনীতি: "economics", খেলা: "sports", অপরাধ: "crime",
-    লাইফস্টাইল: "lifestyle", প্রযুক্তি: "technology", বিনোদন: "entertainment",
+    "জীবন ধারা": "lifestyle", প্রযুক্তি: "technology", বিনোদন: "entertainment",
     চাকরি: "jobs", মতামত: "opinion",
   };
 
@@ -366,9 +376,6 @@ export default async function Home() {
 
       {/* --- SELECTED NEWS SECTION (Nirbachito - Redesigned) --- */}
       <SelectedNews news={selectedNewsFull} latestNews={listNews} />
-
-      {/* --- MULTIMEDIA SECTION --- */}
-      <HomeMediaSection videos={videoArticles} photos={photoAlbums} />
 
       {/* --- ALL CATEGORY SECTIONS (Varied Layouts) --- */}
       <CategorySection

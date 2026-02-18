@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { suggestArticles } from "@/lib/actions-article";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface SearchOverlayProps {
   isOpen: boolean;
@@ -29,7 +30,8 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  // Remove debounced query and auto-effect
+  // 1. Use the useDebounce hook (500ms delay)
+  const debouncedQuery = useDebounce(query, 500);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
@@ -52,32 +54,34 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
     };
   }, [isOpen]);
 
-  const performSearch = async () => {
-    if (!query.trim()) {
+  // 2. Trigger search automatically when debouncedQuery changes
+  useEffect(() => {
+    // If search box is empty, clear results
+    if (!debouncedQuery.trim()) {
       setResults([]);
-      setHasSearched(false); // If query is empty, reset hasSearched
+      setHasSearched(false);
       return;
     }
 
-    setIsLoading(true);
-    setHasSearched(true);
-    try {
-      const data = await suggestArticles(query);
-      setResults(data);
-    } catch (error) {
-      console.error("Search failed", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const performLiveSearch = async () => {
+      setIsLoading(true);
+      setHasSearched(true);
+      try {
+        const data = await suggestArticles(debouncedQuery);
+        setResults(data);
+      } catch (error) {
+        console.error("Search failed", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    performLiveSearch();
+  }, [debouncedQuery]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      // Check for IME composition (Avro/Phonetic)
-      if (e.nativeEvent.isComposing) {
-        return;
-      }
-      performSearch();
+      handleFullSearch();
     } else if (e.key === "Escape") {
       onClose();
     }

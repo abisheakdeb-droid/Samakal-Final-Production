@@ -17,11 +17,15 @@ export const getHomepageData = cache(
     async () => {
       // Fetch everything in PARALLEL to reduce load time
       const [heroArticlesRaw, sidebarArticlesRaw, latestFeedRaw] = await Promise.all([
-        // 1. Hero Data (Latest News - Relaxed filter to ensure data shows)
+        // 1. Hero Data (Prioritize Pinned and Featured)
         prisma.news.findMany({
           where: { status: 'published' },
           take: 13,
-          orderBy: { publishedAt: 'desc' },
+          orderBy: [
+            { is_pinned_home: 'desc' },
+            { is_featured: 'desc' },
+            { publishedAt: 'desc' }
+          ],
         }),
         // 2. Sidebar Data (Popular/Trending)
         prisma.news.findMany({
@@ -65,8 +69,8 @@ export const getHomepageData = cache(
         latestFeed: filteredFeed
       };
     },
-    ['homepage-data-unified'],
-    { revalidate: 60, tags: ['articles', 'homepage'] }
+    ['homepage-data-v2'],
+    { revalidate: 60, tags: ['articles', 'homepage', 'force-refresh'] }
   )
 );
 
@@ -340,11 +344,10 @@ export const fetchLatestArticles = cache(
 );
 
 export const fetchArticlesByCategory = cache(
-  unstable_cache(
-    async (category: string, limit: number = 10, isParentCategory: boolean = false, parentCategory?: string, excludeIds: string[] = []) => {
-      try {
+  async (category: string, limit: number = 6, isParentCategory: boolean = false, parentCategory?: string, excludeIds: string[] = []) => {
+    return unstable_cache(
+      async () => {
         const normalizedCategory = normalizeCategory(category);
-        // console.log('fetchArticlesByCategory:', { category, normalizedCategory, isParentCategory, parentCategory });
         let data;
 
         // Base Conditions matches existing logic... but injecting AND id <> ALL(${excludeIds})
@@ -359,12 +362,13 @@ export const fetchArticlesByCategory = cache(
 
         const hasExclusions = excludeIds.length > 0;
 
-        if (isParentCategory) {
-          const isSaradesh = normalizedCategory === 'সারাদেশ';
+        try {
+          if (isParentCategory) {
+            const isSaradesh = normalizedCategory === 'সারাদেশ';
 
-          if (isSaradesh) {
-            if (hasExclusions) {
-              data = await sql`
+            if (isSaradesh) {
+              if (hasExclusions) {
+                data = await sql`
                 SELECT 
                     articles.id, articles.title, articles.slug, articles.status,
                     articles.category, articles.parent_category, articles.views,
@@ -384,8 +388,8 @@ export const fetchArticlesByCategory = cache(
                 ORDER BY articles.published_at DESC
                 LIMIT ${limit}
                 `;
-            } else {
-              data = await sql`
+              } else {
+                data = await sql`
                 SELECT 
                     articles.id, articles.title, articles.slug, articles.status,
                     articles.category, articles.parent_category, articles.views,
@@ -404,10 +408,10 @@ export const fetchArticlesByCategory = cache(
                 ORDER BY articles.published_at DESC
                 LIMIT ${limit}
                 `;
-            }
-          } else {
-            if (hasExclusions) {
-              data = await sql`
+              }
+            } else {
+              if (hasExclusions) {
+                data = await sql`
                 SELECT 
                     articles.id, articles.title, articles.slug, articles.status,
                     articles.category, articles.parent_category, articles.views,
@@ -423,8 +427,8 @@ export const fetchArticlesByCategory = cache(
                 ORDER BY articles.published_at DESC
                 LIMIT ${limit}
                 `;
-            } else {
-              data = await sql`
+              } else {
+                data = await sql`
                 SELECT 
                     articles.id, articles.title, articles.slug, articles.status,
                     articles.category, articles.parent_category, articles.views,
@@ -439,49 +443,49 @@ export const fetchArticlesByCategory = cache(
                 ORDER BY articles.published_at DESC
                 LIMIT ${limit}
                 `;
-            }
-          }
-        } else {
-          if (parentCategory) {
-            if (hasExclusions) {
-              data = await sql`
-                SELECT 
-                articles.id, articles.title, articles.slug, articles.status,
-                articles.category, articles.parent_category, articles.views,
-                articles.image, articles.created_at, articles.content,
-                articles.sub_headline, articles.news_type, articles.location,
-                articles.video_url, users.name as author
-                FROM articles
-                LEFT JOIN users ON articles.author_id = users.id
-                WHERE 
-                articles.status = 'published' AND articles.published_at <= NOW() AND
-                articles.category ILIKE ${normalizedCategory} AND
-                articles.parent_category = ${parentCategory}
-                AND articles.id <> ALL(${excludeIds})
-                ORDER BY articles.published_at DESC
-                LIMIT ${limit}
-            `;
-            } else {
-              data = await sql`
-                SELECT 
-                articles.id, articles.title, articles.slug, articles.status,
-                articles.category, articles.parent_category, articles.views,
-                articles.image, articles.created_at, articles.content,
-                articles.sub_headline, articles.news_type, articles.location,
-                articles.video_url, users.name as author
-                FROM articles
-                LEFT JOIN users ON articles.author_id = users.id
-                WHERE 
-                articles.status = 'published' AND articles.published_at <= NOW() AND
-                articles.category ILIKE ${normalizedCategory} AND
-                articles.parent_category = ${parentCategory}
-                ORDER BY articles.published_at DESC
-                LIMIT ${limit}
-            `;
+              }
             }
           } else {
-            if (hasExclusions) {
-              data = await sql`
+            if (parentCategory) {
+              if (hasExclusions) {
+                data = await sql`
+                SELECT 
+                articles.id, articles.title, articles.slug, articles.status,
+                articles.category, articles.parent_category, articles.views,
+                articles.image, articles.created_at, articles.content,
+                articles.sub_headline, articles.news_type, articles.location,
+                articles.video_url, users.name as author
+                FROM articles
+                LEFT JOIN users ON articles.author_id = users.id
+                WHERE 
+                articles.status = 'published' AND articles.published_at <= NOW() AND
+                articles.category ILIKE ${normalizedCategory} AND
+                articles.parent_category = ${parentCategory}
+                AND articles.id <> ALL(${excludeIds})
+                ORDER BY articles.published_at DESC
+                LIMIT ${limit}
+            `;
+              } else {
+                data = await sql`
+                SELECT 
+                articles.id, articles.title, articles.slug, articles.status,
+                articles.category, articles.parent_category, articles.views,
+                articles.image, articles.created_at, articles.content,
+                articles.sub_headline, articles.news_type, articles.location,
+                articles.video_url, users.name as author
+                FROM articles
+                LEFT JOIN users ON articles.author_id = users.id
+                WHERE 
+                articles.status = 'published' AND articles.published_at <= NOW() AND
+                articles.category ILIKE ${normalizedCategory} AND
+                articles.parent_category = ${parentCategory}
+                ORDER BY articles.published_at DESC
+                LIMIT ${limit}
+            `;
+              }
+            } else {
+              if (hasExclusions) {
+                data = await sql`
                 SELECT 
                 articles.id, articles.title, articles.slug, articles.status,
                 articles.category, articles.parent_category, articles.views,
@@ -497,8 +501,8 @@ export const fetchArticlesByCategory = cache(
                 ORDER BY articles.published_at DESC
                 LIMIT ${limit}
             `;
-            } else {
-              data = await sql`
+              } else {
+                data = await sql`
                 SELECT 
                 articles.id, articles.title, articles.slug, articles.status,
                 articles.category, articles.parent_category, articles.views,
@@ -513,47 +517,49 @@ export const fetchArticlesByCategory = cache(
                 ORDER BY articles.published_at DESC
                 LIMIT ${limit}
             `;
+              }
             }
           }
+
+          return data.rows.map(row => mapArticleToNewsItem(row as ArticleRow));
+        } catch (error) {
+          console.error('Database Error:', error);
+          return [];
         }
-
-        return data.rows.map(row => mapArticleToNewsItem(row as ArticleRow));
-      } catch (error) {
-        console.error('Database Error:', error);
-        return [];
-      }
-    },
-    ['articles-by-category'],
-    { revalidate: 60, tags: ['articles'] }
-  )
-);
+      },
+      [`articles-category-${category}-${limit}`],
+      { revalidate: 60, tags: ['articles', `category-${category}`] }
+    )();
+  });
 
 export const fetchFeaturedArticles = cache(
-  unstable_cache(
-    async (limit: number = 6) => {
-      try {
-        const data = await sql`
-          SELECT 
-            articles.id, articles.title, articles.slug, articles.status, articles.category,
-            articles.views, articles.image, articles.created_at, articles.content,
-            articles.sub_headline, articles.news_type, articles.location,
-            articles.video_url, articles.is_featured, articles.is_prime,
-            users.name as author
-          FROM articles
-          LEFT JOIN users ON articles.author_id = users.id
-          WHERE articles.status = 'published' AND articles.published_at <= NOW() AND articles.is_featured = true
-          ORDER BY articles.published_at DESC
-          LIMIT ${limit}
-        `;
-        return data.rows.map(row => mapArticleToNewsItem(row as ArticleRow));
-      } catch (error) {
-        console.error('Database Error:', error);
-        return [];
-      }
-    },
-    ['featured-articles'],
-    { revalidate: 60, tags: ['articles', 'featured'] }
-  )
+  async (limit: number = 6) => {
+    return unstable_cache(
+      async () => {
+        try {
+          const data = await sql`
+            SELECT 
+              articles.id, articles.title, articles.slug, articles.status, articles.category,
+              articles.views, articles.image, articles.created_at, articles.content,
+              articles.sub_headline, articles.news_type, articles.location,
+              articles.video_url, articles.is_featured, articles.is_prime,
+              users.name as author
+            FROM articles
+            LEFT JOIN users ON articles.author_id = users.id
+            WHERE articles.status = 'published' AND articles.published_at <= NOW() AND articles.is_featured = true
+            ORDER BY articles.published_at DESC
+            LIMIT ${limit}
+          `;
+          return data.rows.map(row => mapArticleToNewsItem(row as ArticleRow));
+        } catch (error) {
+          console.error('Database Error:', error);
+          return [];
+        }
+      },
+      [`featured-articles-${limit}`],
+      { revalidate: 60, tags: ['articles', 'featured'] }
+    )();
+  }
 );
 
 export async function fetchArticlesWithPagination(offset: number = 0, limit: number = 20) {
@@ -562,12 +568,12 @@ export async function fetchArticlesWithPagination(offset: number = 0, limit: num
       SELECT 
         articles.id, articles.title, articles.slug, articles.category,
         articles.parent_category, articles.views, articles.image, 
-        articles.created_at, articles.content, articles.sub_headline,
+        articles.published_at as created_at, articles.content, articles.sub_headline,
         users.name as author
       FROM articles
       LEFT JOIN users ON articles.author_id = users.id
-      WHERE articles.status = 'published'
-      ORDER BY articles.created_at DESC
+      WHERE articles.status = 'published' AND articles.published_at <= NOW()
+      ORDER BY articles.published_at DESC
       LIMIT ${limit} OFFSET ${offset}
     `;
     return data.rows.map(row => mapArticleToNewsItem(row as ArticleRow));
@@ -584,7 +590,8 @@ export const fetchMostReadArticles = cache(
         const data = await sql`
           SELECT 
             articles.id, articles.title, articles.slug, articles.status, articles.category,
-            articles.views, articles.image, articles.created_at, users.name as author
+            articles.views, articles.image, articles.created_at, articles.sub_headline,
+            users.name as author
           FROM articles
           LEFT JOIN users ON articles.author_id = users.id
           WHERE articles.status = 'published'

@@ -42,6 +42,9 @@ export function normalizeCategory(input: string): string {
         'education': 'শিক্ষা',
         'lifestyle': 'জীবনধারা',
         'jobs': 'চাকরি',
+        'photo': 'ছবি',
+        'photogallery': 'ছবি',
+        'gallery': 'ছবি',
         // Common misspells or variations
         'national': 'বাংলাদেশ',
         'literature': 'সাহিত্য ও সংস্কৃতি',

@@ -6,7 +6,7 @@ import { formatBanglaDateTime } from "@/lib/utils";
 import NewsActionButtons from "@/components/NewsActionButtons";
 import { clsx } from "clsx";
 import {
-  fetchArticlesByCategory,
+  getArticles,
   fetchLatestArticles,
   fetchMostReadArticles,
 } from "@/lib/actions-article";
@@ -19,19 +19,52 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { getParentCategory } from "@/config/sub-categories";
 import SaradeshFilter from "@/components/Category/SaradeshFilter";
 import Breadcrumb from "@/components/Breadcrumb";
-
-// Helper to check if a slug belongs to Saradesh tree (Saradesh, Division, or District)
-const isSaradeshTree = (slug: string) => {
-  if (slug === "saradesh") return true;
-  if (SUB_CATEGORIES["saradesh"].includes(slug)) return true; // Is Division
-  // Is District (check if parent is a Division)
-  const parent = getParentCategory(slug);
-  return parent && SUB_CATEGORIES["saradesh"].includes(parent);
-};
+import { Metadata, ResolvingMetadata } from "next";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
+
+export async function generateMetadata(
+  { params }: PageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const resolvedParams = await params;
+  const rawSlug = resolvedParams.slug || "latest";
+  const slug = decodeURIComponent(rawSlug);
+  const categoryLabel =
+    CATEGORY_MAP[slug] || (slug === "latest" ? "সর্বশেষ সংবাদ" : slug);
+
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_BASE_URL || "https://samakal.com",
+    ),
+    title: categoryLabel,
+    description: `সমকালের ${categoryLabel} বিভাগে পড়ুন দেশ-বিদেশের সর্বশেষ সংবাদ ও বিশ্লেষণ।`,
+    openGraph: {
+      type: "website",
+      title: categoryLabel,
+      description: `সমকালের ${categoryLabel} বিভাগে পড়ুন দেশ-বিদেশের সর্বশেষ সংবাদ ও বিশ্লেষণ।`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL || "https://samakal.com"}/category/${slug}`,
+      siteName: "Samakal",
+      images: [...previousImages],
+    },
+    alternates: {
+      canonical: `/category/${slug}`,
+    },
+  };
+}
+
+// Helper to check if a slug belongs to Saradesh tree (Saradesh, Division, or District)
+const isSaradeshTree = (slug: string) => {
+  if (slug === "saradesh") return true;
+  if (SUB_CATEGORIES["saradesh"]?.includes(slug)) return true; // Is Division
+  // Is District (check if parent is a Division)
+  const parent = getParentCategory(slug);
+  return parent && SUB_CATEGORIES["saradesh"]?.includes(parent);
+};
 
 export default async function CategoryPage({ params }: PageProps) {
   const resolvedParams = await params;
@@ -55,24 +88,19 @@ export default async function CategoryPage({ params }: PageProps) {
   } else {
     // If it has children (like Dhaka division), we treat it as a Parent Category to fetch aggregated news
     // If it is a subcat but has NO children (like Gazipur), we fetch specific
-    const shouldFetchAggregated = hasChildren;
 
-    const parentSlug = getParentCategory(slug);
-    const parentBengali = parentSlug ? CATEGORY_MAP[parentSlug] : undefined;
-
-    newsItems = await fetchArticlesByCategory(
-      categoryForQuery,
-      20,
-      shouldFetchAggregated, // true if it has children (Parent logic), false otherwise
-      parentBengali,
-    );
+    newsItems = await getArticles({
+      category: categoryForQuery,
+      limit: 20
+    });
   }
 
   // Sidebar Data
-  const sidebarOpinion = await fetchArticlesByCategory(
-    CATEGORY_MAP["opinion"],
-    10,
-  );
+  const sidebarOpinionRaw = await getArticles({
+    category: CATEGORY_MAP["opinion"],
+    limit: 10,
+  });
+  const sidebarOpinion = sidebarOpinionRaw;
   const sidebarLatest = await fetchLatestArticles(10);
   const sidebarMostRead = await fetchMostReadArticles(5);
 
@@ -168,9 +196,9 @@ export default async function CategoryPage({ params }: PageProps) {
                     href={`/article/${primeBig.id}`}
                     className="lg:col-span-8 group block lg:border-r lg:border-gray-200 lg:pr-8 p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-all"
                   >
-                    <div className="aspect-video relative overflow-hidden rounded-lg mb-4">
+                    <div className="aspect-video relative overflow-hidden rounded-lg mb-4 text-center">
                       <Image
-                        src={primeBig.image}
+                        src={primeBig.image || "/samakal-logo.png"}
                         alt={primeBig.title}
                         fill
                         sizes="(max-width: 1024px) 100vw, 800px"
@@ -186,8 +214,8 @@ export default async function CategoryPage({ params }: PageProps) {
                     </p>
                     <div className="flex items-center justify-between mt-4">
                       <span className="text-sm text-gray-500">
-                        {primeBig.author} •{" "}
-                        {formatBanglaDateTime(primeBig.published_at)}
+                        {primeBig.author || "সমকাল প্রতিবেদক"} •{" "}
+                        {formatBanglaDateTime(primeBig.publishedAt)}
                       </span>
                       <NewsActionButtons
                         title={primeBig.title}
@@ -207,7 +235,7 @@ export default async function CategoryPage({ params }: PageProps) {
                       >
                         <div className="w-1/3 lg:w-full aspect-video relative overflow-hidden rounded-lg shrink-0">
                           <Image
-                            src={news.image}
+                            src={news.image || "/samakal-logo.png"}
                             alt={news.title}
                             fill
                             sizes="(max-width: 768px) 100vw, 400px"
@@ -220,7 +248,7 @@ export default async function CategoryPage({ params }: PageProps) {
                             {news.title}
                           </h2>
                           <div className="text-xs text-gray-400">
-                            {formatBanglaDateTime(news.published_at)}
+                            {formatBanglaDateTime(news.publishedAt)}
                           </div>
                         </div>
                       </Link>
@@ -246,7 +274,7 @@ export default async function CategoryPage({ params }: PageProps) {
                       >
                         <div className="aspect-video relative overflow-hidden rounded-lg mb-3">
                           <Image
-                            src={news.image}
+                            src={news.image || "/samakal-logo.png"}
                             alt={news.title}
                             fill
                             sizes="(max-width: 768px) 100vw, 300px"
@@ -258,7 +286,7 @@ export default async function CategoryPage({ params }: PageProps) {
                           {news.title}
                         </h3>
                         <div className="mt-2 text-xs text-gray-400">
-                          {formatBanglaDateTime(news.published_at)}
+                          {formatBanglaDateTime(news.publishedAt)}
                         </div>
                       </Link>
                     ))}
@@ -280,7 +308,7 @@ export default async function CategoryPage({ params }: PageProps) {
                       >
                         <div className="w-full md:w-64 aspect-video md:aspect-4/3 relative overflow-hidden rounded-lg shrink-0">
                           <Image
-                            src={news.image}
+                            src={news.image || "/samakal-logo.png"}
                             alt={news.title}
                             fill
                             sizes="(max-width: 768px) 100vw, 400px"
@@ -296,7 +324,7 @@ export default async function CategoryPage({ params }: PageProps) {
                             {news.summary}
                           </p>
                           <span className="text-xs text-gray-400">
-                            {formatBanglaDateTime(news.published_at)}
+                            {formatBanglaDateTime(news.publishedAt)}
                           </span>
                         </div>
                       </Link>

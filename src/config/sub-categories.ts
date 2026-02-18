@@ -20,28 +20,28 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
     'mymensingh'
   ],
   dhaka: [
-    'dhaka', 'faridpur', 'gazipur', 'gopalganj', 'kishoreganj', 'madaripur', 'manikganj', 'munshiganj', 'narayanganj', 'narsingdi', 'rajbari', 'shariatpur', 'tangail'
+    'faridpur', 'gazipur', 'gopalganj', 'kishoreganj', 'madaripur', 'manikganj', 'munshiganj', 'narayanganj', 'narsingdi', 'rajbari', 'shariatpur', 'tangail'
   ],
   chattogram: [
-    'bandarban', 'brahmanbaria', 'chandpur', 'chattogram', 'comilla', 'coxs-bazar', 'feni', 'khagrachari', 'lakshmipur', 'noakhali', 'rangamati'
+    'bandarban', 'brahmanbaria', 'chandpur', 'comilla', 'coxs-bazar', 'feni', 'khagrachari', 'lakshmipur', 'noakhali', 'rangamati'
   ],
   rajshahi: [
-    'bogra', 'joypurhat', 'naogaon', 'natore', 'pabna', 'rajshahi', 'sirajganj', 'chapainawabganj'
+    'bogra', 'joypurhat', 'naogaon', 'natore', 'pabna', 'sirajganj', 'chapainawabganj'
   ],
   khulna: [
-    'bagerhat', 'chuadanga', 'jessore', 'jhenaidah', 'khulna', 'kushtia', 'magura', 'meherpur', 'narail', 'satkhira'
+    'bagerhat', 'chuadanga', 'jessore', 'jhenaidah', 'kushtia', 'magura', 'meherpur', 'narail', 'satkhira'
   ],
   barishal: [
-    'barguna', 'barishal', 'bhola', 'jhalokati', 'patuakhali', 'pirojpur'
+    'barguna', 'bhola', 'jhalokati', 'patuakhali', 'pirojpur'
   ],
   sylhet: [
-    'habiganj', 'moulvibazar', 'sunamganj', 'sylhet'
+    'habiganj', 'moulvibazar', 'sunamganj'
   ],
   rangpur: [
-    'dinajpur', 'gaibandha', 'kurigram', 'lalmonirhat', 'nilphamari', 'panchagarh', 'rangpur', 'thakurgaon'
+    'dinajpur', 'gaibandha', 'kurigram', 'lalmonirhat', 'nilphamari', 'panchagarh', 'thakurgaon'
   ],
   mymensingh: [
-    'jamalpur', 'mymensingh', 'netrokona', 'sherpur'
+    'jamalpur', 'netrokona', 'sherpur'
   ],
   economics: [
     'industry-trade',
@@ -76,9 +76,7 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
     'tennis',
     'golf',
     'badminton',
-    't20-world-cup',
     'other-sports',
-    'miscellaneous',
   ],
   politics: [
     'awami-league',
@@ -208,4 +206,40 @@ export function isDescendantOf(parentSlug: string, currentSlug: string, visited:
   }
 
   return false;
+}
+// Reverse lookup: Bengali name → English slug
+// Ejemplo: "খেলা" → "sports", "ক্রিকেট" → "cricket"
+function resolveToSlug(input: string): string {
+  // Si ya es un slug conocido, devolverlo directamente
+  if (SUB_CATEGORIES[input] || CATEGORY_MAP[input]) {
+    return input;
+  }
+
+  // Buscar en CATEGORY_MAP por valor (Bengali → slug)
+  for (const [slug, bengaliName] of Object.entries(CATEGORY_MAP)) {
+    if (bengaliName === input) {
+      return slug;
+    }
+  }
+
+  return input;
+}
+
+// Get entire category tree (parent + all children recursively) as flat array
+export function getCategoryTree(input: string, visited: Set<string> = new Set()): string[] {
+  const slug = resolveToSlug(input);
+
+  // Prevent infinite recursion
+  if (visited.has(slug)) return [];
+  visited.add(slug);
+
+  const tree = [slug];
+  const children = SUB_CATEGORIES[slug] || [];
+
+  for (const child of children) {
+    tree.push(...getCategoryTree(child, visited));
+  }
+
+  // Remove duplicates just in case
+  return Array.from(new Set(tree));
 }

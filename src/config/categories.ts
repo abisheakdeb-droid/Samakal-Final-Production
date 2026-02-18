@@ -7,27 +7,38 @@ export const CATEGORY_MAP: Record<string, string> = {
   crime: "অপরাধ",
   world: "বিশ্ব",
   business: "বাণিজ্য",
-  economics: "অর্থনীতি",  // Added for /category/economics
-  feature: "ফিচার",        // Added for /category/feature
+  economics: "অর্থনীতি",
+  feature: "ফিচার",
   opinion: "মতামত",
   sports: "খেলা",
   entertainment: "বিনোদন",
   technology: "প্রযুক্তি",
   education: "শিক্ষা",
-  lifestyle: "জীবনধারা",
+  lifestyle: "জীবন ধারা",
   jobs: "চাকরি",
+  chakri: "চাকরি", // Alias
   other: "অন্যান্য",
   archive: "আর্কাইভ",
   gallery: "গ্যালারি",
+  photogallery: "ছবি",
+  "video-gallery": "ভিডিও",
   probash: "প্রবাস",
+  probas: "প্রবাস", // Alias
   "jibon-songram": "জীবন সংগ্রাম",
+  "life-struggle": "জীবন সংগ্রাম", // Alias
   "special-samakal": "বিশেষ সমকাল",
   investigation: "সমকাল অনুসন্ধান",
+  "samakal-investigation": "সমকাল অনুসন্ধান", // Alias
   offbeat: "অফবিট",
+  offbit: "অফবিট", // Alias
   shilpomancha: "শিল্পমঞ্চ",
+  shilpomoncho: "শিল্পমঞ্চ", // Alias
   samagra: "সমগ্র",
   "samagra-features": "সমগ্র ফিচার",
   "special-arrangement": "বিশেষ আয়োজন",
+  "special-ayojon": "বিশেষ আয়োজন", // Alias
+  international: "বিশ্ব", // Alias for world
+  "whole-country": "সারাদেশ", // Alias for saradesh
   // Divisions
   dhaka: "ঢাকা",
   chattogram: "চট্টগ্রাম",
@@ -149,9 +160,7 @@ export const CATEGORY_MAP: Record<string, string> = {
   "tennis": "টেনিস",
   "golf": "গলফ",
   "badminton": "ব্যাডমিন্টন",
-  "t20-world-cup": "টি–টোয়েন্টি বিশ্বকাপ",
   "other-sports": "অন্যান্য",
-  "miscellaneous": "বিবিধ",
 
   // Politics
   "awami-league": "আওয়ামী লীগ",

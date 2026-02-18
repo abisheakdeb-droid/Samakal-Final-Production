@@ -10,7 +10,6 @@ interface JsonLdProps {
     updated_at?: string;
     category?: string;
     sub_headline?: string;
-    [key: string]: unknown;
   };
 }
 
@@ -23,7 +22,7 @@ export default function JsonLd({ article }: JsonLdProps) {
       article.image && article.image !== "/placeholder.svg"
         ? article.image
         : (process.env.NEXT_PUBLIC_BASE_URL || "https://samakal.com") +
-          "/samakal-logo.png",
+        "/samakal-logo.png",
     ],
     datePublished: article.date || new Date().toISOString(), // Fallback
     dateModified: article.date || new Date().toISOString(),

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import NewsImage from "@/components/NewsImage";
 import { NewsItem } from "@/types/news";
 import { formatBanglaDateTime } from "@/lib/utils";
 import { toBanglaDigits } from "@/utils/bn";
@@ -14,7 +14,7 @@ interface MostReadWidgetProps {
   hideOpinion?: boolean;
 }
 
-// Get consistent profileauthor image IDs from Unsplash
+// Get consistent profile/author image IDs from Unsplash
 const getAuthorImageId = (index: number): string => {
   const imageIds = [
     "1580489944761-99b265f6fa56", // Professional
@@ -42,67 +42,72 @@ export default function MostReadWidget({
     <ScrollReveal direction="left">
       <div className="bg-transparent mb-8 font-serif">
         {/* Tabs */}
-        <div className="flex bg-gray-100 dark:bg-gray-800 rounded-full p-1 mb-4 relative">
+        <div className="flex bg-gray-100 dark:bg-gray-800 rounded-full p-1 mb-6 relative border border-gray-200 dark:border-gray-700">
           {!hideOpinion && (
             <button
               onClick={() => setActiveTab("opinion")}
-              className={`flex-1 px-4 py-2 font-bold text-sm rounded-full transition-all duration-300 relative z-10 ${
-                activeTab === "opinion"
-                  ? "bg-white dark:bg-gray-700 text-brand-red shadow-sm"
-                  : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
-              }`}
+              className={`flex-1 px-4 py-2 font-bold text-sm rounded-full transition-all duration-300 relative z-10 ${activeTab === "opinion"
+                ? "bg-white dark:bg-gray-700 text-brand-red shadow-md"
+                : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+                }`}
             >
               মতামত
             </button>
           )}
           <button
             onClick={() => setActiveTab("mostRead")}
-            className={`flex-1 px-4 py-2 font-bold text-sm rounded-full transition-all duration-300 relative z-10 ${
-              activeTab === "mostRead"
-                ? "bg-white dark:bg-gray-700 text-brand-red shadow-sm"
-                : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
-            }`}
+            className={`flex-1 px-4 py-2 font-bold text-sm rounded-full transition-all duration-300 relative z-10 ${activeTab === "mostRead"
+              ? "bg-white dark:bg-gray-700 text-brand-red shadow-md"
+              : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+              }`}
           >
             সর্বাধিক পঠিত
           </button>
         </div>
 
         {/* List */}
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-3">
           {newsToShow.slice(0, 5).map((news, index) => (
             <Link
               key={news.id}
               href={`/article/${news.id}`}
-              className="group flex gap-4 p-3 border-b border-gray-100 dark:border-gray-800 last:border-none rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-all font-serif"
+              className="group flex gap-4 p-3 border-b border-gray-100 dark:border-gray-800 last:border-none rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-900/40 transition-all"
             >
-              {/* Number Counter or Author Image */}
+              {/* Image Section */}
               {activeTab === "opinion" ? (
-                <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 overflow-hidden relative shrink-0 border border-gray-100 dark:border-gray-700 mt-1">
-                  {/* Author profile images from Unsplash */}
-                  <Image
-                    src={`https://images.unsplash.com/photo-${getAuthorImageId(index)}?w=100&h=100&fit=crop&crop=faces`}
-                    alt="Author"
+                <div className="relative shrink-0 w-16 h-16 rounded-full overflow-hidden border-2 border-brand-red/10">
+                  <NewsImage
+                    src={news.image || `https://images.unsplash.com/photo-${getAuthorImageId(index)}?w=100&h=100&fit=crop&crop=faces`}
+                    alt={news.author || "Author"}
                     fill
-                    className="object-cover"
+                    sizes="100px"
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>
               ) : (
-                <span className="text-3xl font-bold text-gray-200 dark:text-gray-700 group-hover:text-brand-red/20 transition-colors -mt-1 w-8 shrink-0 text-center">
-                  {toBanglaDigits(index + 1)}
-                </span>
+                <div className="shrink-0 w-12 flex items-center justify-center">
+                  <span className="text-4xl font-black text-gray-200 dark:text-gray-700 group-hover:text-brand-red/20 transition-colors">
+                    {toBanglaDigits(index + 1)}
+                  </span>
+                </div>
               )}
 
-              <div className="flex-1">
-                <h4 className="text-sm font-bold text-gray-800 dark:text-gray-200 group-hover:text-brand-red line-clamp-2 mb-1">
+              <div className="flex-1 min-w-0">
+                <h4 className="text-sm font-black text-gray-900 dark:text-gray-100 group-hover:text-brand-red line-clamp-2 leading-snug mb-1 transition-colors">
                   {news.title}
                 </h4>
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-xs font-semibold text-brand-red">
+                {news.summary && (
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-1 mb-1 font-medium italic">
+                    {news.summary}
+                  </p>
+                )}
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-brand-red">
                     {activeTab === "opinion"
                       ? news.author
                       : news.author || "ডেস্ক রিপোর্ট"}
                   </span>
-                  <span className="text-[10px] text-gray-400">
+                  <span className="text-[9px] text-gray-400 dark:text-gray-500 font-medium whitespace-nowrap">
                     {news.published_at
                       ? formatBanglaDateTime(news.published_at)
                       : news.time || news.date}
@@ -114,12 +119,12 @@ export default function MostReadWidget({
         </div>
 
         {/* Footer Link */}
-        <div className="mt-4">
+        <div className="mt-8">
           <Link
             href={
               activeTab === "opinion" ? "/category/opinion" : "/category/latest"
             }
-            className="block bg-gray-50 dark:bg-gray-800 p-3 text-center text-xs font-bold text-brand-red hover:bg-gray-100 dark:hover:bg-gray-700 transition rounded-full border border-gray-100 dark:border-gray-700 shadow-sm"
+            className="block text-center py-2.5 text-xs font-bold text-gray-600 dark:text-gray-400 hover:bg-brand-red hover:text-white transition-all duration-300 border border-gray-200 dark:border-gray-800 rounded-full bg-gray-50 dark:bg-gray-800/50"
           >
             {activeTab === "opinion" ? "সব মতামত পড়ুন" : "সব খবর পড়ুন"}
           </Link>

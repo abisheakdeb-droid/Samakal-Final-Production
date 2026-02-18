@@ -83,6 +83,11 @@ export function getProxiedImageUrl(src: string, width?: number, quality: number 
     return src;
   }
 
+  // Don't proxy samakal.com images to avoid 403 Forbidden from wsrv.nl
+  if (src.includes('samakal.com')) {
+    return src;
+  }
+
   const encodedUrl = encodeURIComponent(src);
   let proxyUrl = `https://wsrv.nl/?url=${encodedUrl}&q=${quality}&output=webp`;
 

@@ -78,7 +78,7 @@ const CATEGORY_ICONS: Record<string, React.ComponentType<{ size?: number; classN
   "বিশেষ সমকাল": Star,
   "মতামত": MessageSquare,
   "শিল্পমঞ্চ": Palette,
-  "জীবনধারা": Zap,
+  "জীবন ধারা": Zap,
   "প্রযুক্তি": Cpu,
   "ভ্রমণ": Plane,
   "অফবিট": Smile,
@@ -111,8 +111,8 @@ const MEGA_MENU_GROUPS = [
     categories: ["মতামত", "শিল্পমঞ্চ", "প্রবাস", "অফবিট"]
   },
   {
-    title: "জীবনধারা ও প্রযুক্তি",
-    categories: ["জীবনধারা", "প্রযুক্তি", "ভ্রমণ", "চাকরি"]
+    title: "জীবন ধারা ও প্রযুক্তি",
+    categories: ["জীবন ধারা", "প্রযুক্তি", "ভ্রমণ", "চাকরি"]
   },
   {
     title: "মিডিয়া ও আর্কাইভ",
@@ -155,7 +155,7 @@ export default function Header({ settings }: HeaderProps) {
             { label: "ভ্রমণ", href: "/category/shilpomancha-travel" },
           ]
         },
-        { label: "জীবনধারা", href: "/category/lifestyle" },
+        { label: "জীবন ধারা", href: "/category/lifestyle" },
         { label: "প্রযুক্তি", href: "/category/technology" },
         { label: "ভ্রমণ", href: "/category/travel" },
         { label: "অফবিট", href: "/category/offbeat" },
