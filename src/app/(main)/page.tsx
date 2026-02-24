@@ -75,15 +75,20 @@ export default async function Home() {
   // 3. Destructure & Assign Data
   const { heroArticles, sidebarArticles } = homepageData;
   const leadNewsFull = heroArticles;
-  const categoryData = (categoryResults as any[][]).map(items =>
-    items.map((n: any) => ({
-      ...n,
-      author: n.author || 'ডেস্ক রিপোর্ট',
-      date: n.date || '',
-      time: n.time || '',
-      sub_headline: n.sub_headline || undefined
-    }))
-  ) as NewsItem[][];
+  const categoryData = (categoryResults as Record<string, unknown>[][]).map(items =>
+    items.map((n: Record<string, unknown>) => {
+      const publishedAt = n.publishedAt as Date | string | null;
+      const dateStr = publishedAt ? formatBanglaDateTime(publishedAt) : '';
+      return {
+        ...n,
+        author: n.author || 'ডেস্ক রিপোর্ট',
+        published_at: publishedAt || '',
+        date: dateStr,
+        time: dateStr,
+        sub_headline: n.sub_headline || undefined
+      };
+    })
+  ) as unknown as NewsItem[][];
 
   // Backfill Logic for Selected News
   let selectedNewsFull = featuredArticles || [];
@@ -163,6 +168,7 @@ export default async function Home() {
                           <Image
                             src={subHeroNews[0].image}
                             alt={subHeroNews[0].title}
+                            sizes="100vw"
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                           />
@@ -181,12 +187,17 @@ export default async function Home() {
                           <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 mb-3 flex-1">
                             {subHeroNews[0].summary}
                           </p>
-                          <div className="text-xs text-gray-400 font-medium mt-auto">
-                            {subHeroNews[0].published_at
-                              ? formatBanglaDateTime(
-                                subHeroNews[0].published_at,
-                              )
-                              : subHeroNews[0].time}
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-auto">
+                            <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                              {subHeroNews[0].author || "ডেস্ক রিপোর্ট"}
+                            </span>
+                            <span className="text-xs text-gray-400 font-medium">
+                              {subHeroNews[0].published_at
+                                ? formatBanglaDateTime(
+                                  subHeroNews[0].published_at,
+                                )
+                                : subHeroNews[0].time || subHeroNews[0].date}
+                            </span>
                           </div>
                         </div>
                       </Link>
@@ -204,6 +215,7 @@ export default async function Home() {
                           <Image
                             src={subHeroNews[1].image}
                             alt={subHeroNews[1].title}
+                            sizes="100vw"
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                           />
@@ -212,12 +224,17 @@ export default async function Home() {
                           <h3 className="text-base font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-brand-red transition-colors line-clamp-2">
                             {subHeroNews[1].title}
                           </h3>
-                          <div className="mt-2 text-xs text-gray-400 font-medium">
-                            {subHeroNews[1].published_at
-                              ? formatBanglaDateTime(
-                                subHeroNews[1].published_at,
-                              )
-                              : subHeroNews[1].time}
+                          <div className="mt-2 flex items-center gap-2">
+                            <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                              {subHeroNews[1].author || "ডেস্ক রিপোর্ট"}
+                            </span>
+                            <span className="text-xs text-gray-400 font-medium">
+                              {subHeroNews[1].published_at
+                                ? formatBanglaDateTime(
+                                  subHeroNews[1].published_at,
+                                )
+                                : subHeroNews[1].time || subHeroNews[1].date}
+                            </span>
                           </div>
                         </div>
                       </Link>
@@ -245,6 +262,7 @@ export default async function Home() {
                       <Image
                         src={news.image}
                         alt={news.title}
+                        sizes="100vw"
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
@@ -262,10 +280,15 @@ export default async function Home() {
                       <h3 className="text-lg font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-brand-red transition-colors mb-2 line-clamp-3">
                         {news.title}
                       </h3>
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-auto">
-                        {news.published_at
-                          ? formatBanglaDateTime(news.published_at)
-                          : news.time}
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-auto">
+                        <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                          {news.author || "ডেস্ক"}
+                        </span>
+                        <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+                          {news.published_at
+                            ? formatBanglaDateTime(news.published_at)
+                            : news.time || news.date}
+                        </span>
                       </div>
                     </div>
                   </Link>
@@ -296,6 +319,7 @@ export default async function Home() {
                         <Image
                           src={news.image}
                           alt={news.title}
+                          sizes="100vw"
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
@@ -304,10 +328,15 @@ export default async function Home() {
                         <h4 className="text-base font-medium leading-snug text-gray-900 dark:text-gray-100 group-hover:text-brand-red transition-colors line-clamp-2">
                           {news.title}
                         </h4>
-                        <div className="mt-1 text-xs text-gray-400">
-                          {news.published_at
-                            ? formatBanglaDateTime(news.published_at)
-                            : news.time}
+                        <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+                          <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                            {news.author || "ডেস্ক"}
+                          </span>
+                          <span className="text-[10px] text-gray-400 font-medium">
+                            {news.published_at
+                              ? formatBanglaDateTime(news.published_at)
+                              : news.time || news.date}
+                          </span>
                         </div>
                       </div>
                     </Link>
@@ -330,6 +359,7 @@ export default async function Home() {
                         <Image
                           src={news.image}
                           alt={news.title}
+                          sizes="100vw"
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
@@ -338,10 +368,15 @@ export default async function Home() {
                         <h4 className="text-base font-medium leading-snug text-gray-900 dark:text-gray-100 group-hover:text-brand-red transition-colors line-clamp-2">
                           {news.title}
                         </h4>
-                        <div className="mt-1 text-xs text-gray-400">
-                          {news.published_at
-                            ? formatBanglaDateTime(news.published_at)
-                            : news.time}
+                        <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+                          <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                            {news.author || "ডেস্ক"}
+                          </span>
+                          <span className="text-[10px] text-gray-400 font-medium">
+                            {news.published_at
+                              ? formatBanglaDateTime(news.published_at)
+                              : news.time || news.date}
+                          </span>
                         </div>
                       </div>
                     </Link>
@@ -362,10 +397,12 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* Column 2: Sidebar / Opinion (Width 3) */}
           <div className="lg:col-span-3 lg:pl-8">
             <ScrollReveal direction="left" delay={2}>
-              <Sidebar opinionNews={opinionNews} mostReadNews={mostReadNews} />
+              <Sidebar
+                opinionNews={opinionNews as unknown as NewsItem[]}
+                mostReadNews={mostReadNews as unknown as NewsItem[]}
+              />
             </ScrollReveal>
           </div>
         </div>
@@ -375,7 +412,10 @@ export default async function Home() {
       <EventSection />
 
       {/* --- SELECTED NEWS SECTION (Nirbachito - Redesigned) --- */}
-      <SelectedNews news={selectedNewsFull} latestNews={listNews} />
+      <SelectedNews
+        news={selectedNewsFull as unknown as NewsItem[]}
+        latestNews={listNews as unknown as NewsItem[]}
+      />
 
       {/* --- ALL CATEGORY SECTIONS (Varied Layouts) --- */}
       <CategorySection

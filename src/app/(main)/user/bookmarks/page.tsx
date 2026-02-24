@@ -62,6 +62,7 @@ export default async function BookmarksPage() {
                   <Image
                     src={article.image as string}
                     alt={article.title}
+                    sizes="100vw"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />

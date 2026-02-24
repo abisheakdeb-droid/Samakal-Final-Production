@@ -1,4 +1,3 @@
-
 {
   "compilerOptions": {
     "target": "ES2017",
@@ -25,13 +24,46 @@
     ],
     "paths": {
       "@/auth": [
-        "./src/lib/auth/auth.ts"
+        "./src/backend/lib/auth/auth.ts"
       ],
       "@/auth.config": [
-        "./src/lib/auth/auth.config.ts"
+        "./src/backend/lib/auth/auth.config.ts"
       ],
       "@/proxy": [
-        "./src/lib/network/proxy.ts"
+        "./src/backend/lib/network/proxy.ts"
+      ],
+      "@/frontend/*": [
+        "./src/frontend/*"
+      ],
+      "@/backend/*": [
+        "./src/backend/*"
+      ],
+      "@/components/*": [
+        "./src/frontend/components/*"
+      ],
+      "@/hooks/*": [
+        "./src/frontend/hooks/*"
+      ],
+      "@/contexts/*": [
+        "./src/frontend/contexts/*"
+      ],
+      "@/context/*": [
+        "./src/frontend/contexts/*"
+      ],
+      "@/constants/*": [
+        "./src/frontend/constants/*"
+      ],
+      "@/lib/*": [
+        "./src/backend/lib/*"
+      ],
+      "@/utils/*": [
+        "./src/backend/utils/*"
+      ],
+      "@/types/*": [
+        "./src/backend/types/*"
+      ],
+      "@/config/*": [
+        "./src/backend/config/*"
       ],
       "@/*": [
         "./src/*"

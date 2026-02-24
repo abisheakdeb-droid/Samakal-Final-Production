@@ -57,6 +57,7 @@ export default async function PhotoPage() {
                         <Image
                           src={album.cover_image || "/placeholder.svg"}
                           alt={album.title}
+                          sizes="100vw"
                           fill
                           className="object-cover"
                         />
@@ -78,6 +79,7 @@ export default async function PhotoPage() {
                                 <Image
                                   src={url || "/placeholder.svg"}
                                   alt="Grid Thumb"
+                                  sizes="100vw"
                                   fill
                                   className="object-cover scale-110 group-hover:scale-100 transition-transform duration-700"
                                 />

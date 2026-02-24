@@ -63,6 +63,7 @@ export default async function ReadingHistoryPage() {
                 <Image
                   src={article.image || "/placeholder.svg"}
                   alt={article.title}
+                  sizes="100vw"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />

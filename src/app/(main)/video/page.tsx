@@ -82,6 +82,7 @@ export default async function VideoPage() {
                     <Image
                       src={youtubeVideos[0].thumbnail}
                       alt={youtubeVideos[0].title}
+                      sizes="100vw"
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -113,6 +114,7 @@ export default async function VideoPage() {
                     <Image
                       src={video.thumbnail}
                       alt={video.title}
+                      sizes="100vw"
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -147,6 +149,7 @@ export default async function VideoPage() {
                       <Image
                         src={video.thumbnail}
                         alt={video.title}
+                        sizes="100vw"
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
@@ -202,6 +205,7 @@ export default async function VideoPage() {
                         <Image
                           src={video.image || "/placeholder.svg"}
                           alt={video.title}
+                          sizes="100vw"
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />

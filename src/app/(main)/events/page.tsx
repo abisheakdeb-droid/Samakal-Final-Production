@@ -27,6 +27,7 @@ export default async function EventsPage() {
                                <Image 
                                   src={event.banner_image} 
                                   alt={event.title}
+                                  sizes="100vw"
                                   fill
                                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                                />

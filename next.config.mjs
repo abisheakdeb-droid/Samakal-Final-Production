@@ -4,20 +4,21 @@ const nextConfig = {
     typescript: {
         ignoreBuildErrors: true,
     },
-    // ২. লিন্টিং এরর ইগনোর করবে
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
     // ৩. ইমেজ কনফিগারেশন (যা আগেই ছিল)
     images: {
         remotePatterns: [
             { protocol: 'https', hostname: 'samakal.com' },
             { protocol: 'https', hostname: 'www.samakal.com' },
             { protocol: 'https', hostname: '*.samakal.com' },
+            { protocol: 'https', hostname: 'images.unsplash.com' },
+            { protocol: 'https', hostname: 'unsplash.com' },
+            { protocol: 'https', hostname: 'img.youtube.com' },
             { protocol: 'https', hostname: 'wsrv.nl' },
             { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
-        ],
+            { protocol: 'https', hostname: 'randomuser.me' },],
     },
+    // ৪. টার্বোপ্যাক এরর ফিক্স (নেটিভ মডিউল এর জন্য)
+    serverExternalPackages: ['pg'],
 };
 
 export default nextConfig;

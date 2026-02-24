@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "schema": "src/backend/prisma/schema.prisma",
+    "seed": "tsx src/backend/prisma/seed.ts"
   },
   "scripts": {
     "dev": "next dev",

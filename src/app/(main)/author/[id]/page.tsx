@@ -51,6 +51,7 @@ export default async function AuthorPage({
                 `https://randomuser.me/api/portraits/men/${(author.name.length % 50) + 1}.jpg`
               }
               alt={author.name}
+              sizes="100vw"
               fill
               className="object-cover"
             />
@@ -108,6 +109,7 @@ export default async function AuthorPage({
                 <Image
                   src={article.image}
                   alt={article.title}
+                  sizes="100vw"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />

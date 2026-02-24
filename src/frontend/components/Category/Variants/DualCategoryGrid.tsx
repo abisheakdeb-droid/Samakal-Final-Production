@@ -1,0 +1,97 @@
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import { NewsItem } from "@/types/news";
+import { formatBanglaDateTime } from "@/lib/utils";
+import { getProxiedImageUrl } from "@/utils/image";
+import NewsActionButtons from "../../NewsActionButtons";
+import ScrollReveal from "../../ScrollReveal";
+
+export function DualCategoryGrid({ news }: { news: NewsItem[] }) {
+  if (news.length < 1) return null;
+  const lead = news[0];
+  const list = news.slice(1, 5);
+
+  return (
+    <ScrollReveal>
+      <div className="flex flex-col gap-6">
+        {/* Lead Item (Card Style) */}
+        <Link
+          href={`/article/${lead.id}`}
+          className="group block bg-white rounded-xl p-4 shadow-sm border border-white hover:border-red-50 hover:shadow-md transition-all duration-300"
+        >
+          <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-4 bg-gray-100">
+            <Image
+              src={getProxiedImageUrl(lead.image, 600)}
+              alt={lead.title}
+              sizes="100vw"
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+          </div>
+          <div className="">
+            <h2 className="text-gray-900 text-xl md:text-2xl font-bold leading-tight mb-2 group-hover:text-brand-red transition-colors">
+              {lead.title}
+            </h2>
+            <p className="text-gray-600 line-clamp-2 text-sm mb-3">
+              {lead.summary}
+            </p>
+            <div className="flex items-center justify-between mt-4">
+              <div className="flex items-center gap-3">
+                <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                  {lead.author || "ডেস্ক রিপোর্ট"}
+                </span>
+                <span className="text-gray-400 text-[11px] md:text-xs">
+                  {lead.published_at
+                    ? formatBanglaDateTime(lead.published_at)
+                    : lead.time || lead.date}
+                </span>
+              </div>
+              <NewsActionButtons
+                title={lead.title}
+                url={`${typeof window !== "undefined" ? window.location.origin : ""}/article/${lead.id}`}
+              />
+            </div>
+          </div>
+        </Link>
+
+        {/* List Items */}
+        <div className="flex flex-col">
+          {list.map((item) => (
+            <Link
+              key={item.id}
+              href={`/article/${item.id}`}
+              className="group flex gap-3 items-start p-3 bg-transparent hover:bg-white rounded-xl shadow-none hover:shadow-md border-b border-gray-200 last:border-0 transition-all duration-300"
+            >
+              <div className="relative w-24 aspect-video shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                <Image
+                  src={getProxiedImageUrl(item.image, 400)}
+                  alt={item.title}
+                  sizes="100vw"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <h3 className="text-gray-900 text-sm md:text-base font-medium leading-snug group-hover:text-brand-red line-clamp-2">
+                  {item.title}
+                </h3>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                    {item.author || "ডেস্ক রিপোর্ট"}
+                  </span>
+                  <span className="text-gray-400 text-[10px] md:text-xs">
+                    {item.published_at
+                      ? formatBanglaDateTime(item.published_at)
+                      : item.time || item.date}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </ScrollReveal>
+  );
+}

@@ -1,571 +1,233 @@
-# 🏆 Samakal Redesign - Premium News Portal
+# সমকাল রিডিজাইন (Samakal Redesign) - বিকাশকারী নির্দেশিকা (Developer Guide)
 
-<div align="center">
+এই রিপোজিটরিটি বাংলাদেশের অন্যতম শীর্ষস্থানীয় নিউজ পোর্টাল **সমকাল (Samakal)**-এর সম্পূর্ণ নতুন, আধুনিক এবং দ্রুতগতির ফ্রন্টএন্ড ও ব্যাকএন্ড আর্কিটেকচার।
 
-![Samakal Hero](./docs/screenshot-hero.png)
-
-**সমকাল | অসংকোচ প্রকাশের দুরন্ত সাহস**
-
-[![Live Demo](https://img.shields.io/badge/Live-Demo-success?style=for-the-badge&logo=vercel)](https://samakal-redesign.vercel.app)
-[![Next.js](https://img.shields.io/badge/Next.js-16.1.4-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Grade](https://img.shields.io/badge/Grade-A++-gold?style=for-the-badge)](https://samakal-redesign.vercel.app)
-
-**Enterprise-Ready • Production-Certified • A++ Rated (99/100)**
-
-[Live Demo](https://samakal-redesign.vercel.app) • [Features](#-features) • [Architecture](#-architecture) • [Certification](#-certification-journey)
-
-</div>
+পুরনো লিগ্যাসি (PHP/Laravel) সিস্টেম থেকে বের হয়ে এসে সম্পূর্ণ একটি আধুনিক, স্কেলেবল এবং SEO-বান্ধব আর্কিটেকচার দাঁড় করানো হয়েছে। একজন নতুন ডেভেলপার হিসেবে প্রজেক্টটি বুঝে নিতে এই ডকুমেন্টটি আপনাকে A-to-Z সাহায্য করবে।
 
 ---
 
-## 📋 Table of Contents
+## 🛠 প্রযুক্তি স্ট্যাক (Tech Stack)
 
-- [Overview](#-overview)
-- [Screenshots](#-screenshots)
-- [Architecture](#-architecture)
-- [Features](#-features)
-- [Certification Journey](#-certification-journey)
-- [Technical Stack](#-technical-stack)
-- [Performance Metrics](#-performance-metrics)
-- [Getting Started](#-getting-started)
-- [Deployment](#-deployment)
-- [Project Structure](#-project-structure)
-- [Contributing](#-contributing)
+এই প্রজেক্টটি আধুনিক ওয়েব ডেভেলপমেন্টের সেরা টুলস দিয়ে তৈরি:
 
----
-
-## 🌟 Overview
-
-Samakal Redesign is an **enterprise-grade news portal** redesign featuring cutting-edge web technologies, premium UX, and industry-leading performance. Built with Next.js 14 App Router, this project achieved **A++ certification (99/100)** through rigorous quality assurance and implementation of modern web standards.
-
-### Key Highlights
-
-- 🚀 **99/100 Quality Score** - A++ Grade certification
-- 📱 **Progressive Web App** - Installable with offline support
-- ⚡ **Core Web Vitals Optimized** - Lightning-fast performance
-- ♿ **WCAG AA Compliant** - Fully accessible
-- 🔍 **SEO Optimized** - Rich snippets with JSON-LD
-- 🎨 **Premium UI/UX** - Smooth animations and transitions
-- 💰 **Ad Monetization Ready** - Strategic, non-intrusive placements
+- **ফ্রেমওয়ার্ক:** Next.js 16.1 (App Router, Turbopack)
+- **ভাষা:** TypeScript
+- **স্টাইলিং:** Vanilla CSS (CSS Modules) + TailwindCSS (শুধুমাত্র ইউটিলিটির জন্য)
+- **উইজেট ও অ্যানিমেশন:** Framer Motion (Glassmorphism, Stagger effects)
+- **ডেটাবেইজ:** PostgreSQL (Neon Serverless)
+- **ORM:** Prisma
+- **অথেনটিকেশন:** NextAuth.js (v5) - Google OAuth & Credentials
+- **এডিটর:** TipTap (Rich Text Editor for Admin)
+- **ইমেজ প্রসেসিং:** `wsrv.nl` (Image Proxy Server for CDN caching) + Next.js `<Image>`
 
 ---
 
-## 📸 Screenshots
+## 🔄 পুরনো সাইট বনাম নতুন সাইট (Old vs New Architecture)
 
-<div align="center">
-
-### Hero Section
-
-![Hero Section](./docs/screenshot-hero.png)
-
-### Content Layout
-
-![Content Layout](./docs/screenshot-content.png)
-
-</div>
+| ফিচার | পুরনো সাইট (Laravel) | নতুন সাইট (Next.js) |
+| --- | --- | --- |
+| **রেন্ডারিং** | Server-Side Rendering (PHP) | React Server Components (RSC) + Static Generation |
+| **ডেটাবেইজ** | MySQL (Monolithic) | PostgreSQL (Neon - Serverless & Scalable) |
+| **ডিজাইন ল্যাঙ্গুয়েজ** | Flat, legacy design | Glassmorphism, Dynamic Gradients, Micro-animations |
+| **পারফরম্যান্স** | ধীরগতির পেজ লোড | Turbopack-এর কারণে ইনস্ট্যান্ট নেভিগেশন |
+| **ইউজার এক্সপেরিয়েন্স** | রিফ্রেশ-নির্ভর | SPA-like smooth transitions |
 
 ---
 
-## 🏗 Architecture
+## 🏗 কিভাবে কাজ করে? (System Architecture)
 
-### System Design
+প্রজেক্টটি মূলত তিনটি প্রধান স্তরে (Layers) বিভক্ত:
 
-```
-┌─────────────────────────────────────────────────────┐
-│                 Next.js 14 App Router                │
-├─────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌──────────────┐  ┌────────────┐ │
-│  │   Pages     │  │  Components  │  │  Contexts  │ │
-│  │  /app/*     │  │ /components/*│  │ /contexts/*│ │
-│  └─────────────┘  └──────────────┘  └────────────┘ │
-├─────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌──────────────┐  ┌────────────┐ │
-│  │    Data     │  │    Utils     │  │   Hooks    │ │
-│  │  /data/*    │  │  /utils/*    │  │  /hooks/*  │ │
-│  └─────────────┘  └──────────────┘  └────────────┘ │
-├─────────────────────────────────────────────────────┤
-│           Service Worker (Offline Support)           │
-└─────────────────────────────────────────────────────┘
+1.  **ফ্রন্টএন্ড (Frontend React Components):** `src/frontend/` ফোল্ডারে সমস্ত UI কম্পোনেন্ট থাকে। এটি Server Components এবং Client Components-এর মিশ্রণ।
+2.  **ব্যাকএন্ড ও এপিআই (Backend & API Routes):** `src/app/api/` ফোল্ডারে API রুটস এবং `src/backend/lib/` এ ডেটা ফেচিং লজিক (Custom Server Actions) থাকে।
+3.  **ডেটাবেজ ও সিঙ্ক (Prisma & Sync Pipeline):** যেহেতু সমকালের প্রোডাকশন ডেটাবেইজ আলাদা (Laravel), আমরা একটি **Sync Webhook (`/api/sync`)** তৈরি করেছি যা পুরনো সাইট থেকে ডেটা এনে আমাদের PostgreSQL-এ সেভ করে।
+
+## ৩. Sync Script (Cron / Webhook)
+
+যেহেতু সমকালের প্রোডাকশন DB-তে সরাসরি কানেক্ট করা যাবে না (বা রিকমেন্ডেড নয়), আমরা একটি Sync Service বানাবো।
+
+**করণীয়:**
+
+1.  সমকালের Laravel সাইটে একটি ছোট API Endpoint তৈরি করা যা latest articles JSON ফরম্যাটে রিটার্ন করবে।
+2.  গিটহাব একশন বা Vercel Cron ব্যবহার করে প্রতি মিনিটে আমাদের `Sync Script` রান করা।
+3.  স্ক্রিপ্টটি নতুন আর্টিকেলগুলো নিয়ে আমাদের PostgreSQL (Neon)-এ ইনসার্ট করবে।
+
+## ৪. ধাপে ধাপে বাস্তবায়ন (Implementation Steps)
+
+---
+
+## 🎨 ডিজাইন সিস্টেম (Design System)
+
+ডিজাইনের ক্ষেত্রে এই প্রজেক্টে **"Readability and Visual Excellence"**-কে সর্বোচ্চ গুরুত্ব দেওয়া হয়েছে।
+
+-   **Glassmorphism:** মেগা মেনু, স্টিকি হেডার এবং কিছু কার্ডে গ্লাসমরফিজম (অর্ধ-স্বচ্ছ, ব্লার ব্যাকগ্রাউন্ড) ব্যবহার করা হয়েছে।
+-   **CSS Variables:** `src/app/globals.css` ফোল্ডারে `:root` ভ্যারিয়েবলের মাধ্যমে কালার থিম (যেমন: `--color-brand-red`, `--color-surface`) কন্ট্রোল করা হয়।
+-   **Responsive Layouts:** সাইটটি সম্পূর্ণ মোবাইল-ফার্স্ট। `MobileMenu.tsx`, `Sidebar.tsx` ইত্যাদি স্ক্রিন সাইজ অনুযায়ী রেন্ডার হয়।
+
+---
+
+## 📦 প্রধান মডিউলসমূহ (Core Modules)
+
+প্রজেক্টের ফোল্ডার স্ট্রাকচার:
+
+```text
+src/
+├── app/                  # Next.js App Router (Pages & Layouts)
+│   ├── (main)/           # পাবলিক সাইট (Home, Category, Article pages)
+│   ├── admin/            # এডমিন ড্যাশবোর্ড
+│   └── api/              # API Endpoints (Sync, Auth)
+├── backend/              # ডাটাবেইজ ও বিজনেস লজিক
+│   ├── lib/              # Prisma client, Fetching Logic (actions)
+│   ├── prisma/           # Schema.prisma ও Migrations
+│   └── scripts/          # Scrapers & Cron jobs (Data sync etc.)
+├── frontend/             # UI Components
+│   └── components/       # Header, Footer, NewsCard, Sidebar ইত্যাদি
+└── middleware.ts / proxy.ts # Edge Routing ও SEO Redirects
 ```
 
-### Core Patterns
+---
 
-1. **Server-First Architecture**
-   - Server Components by default
-   - Client Components only when needed
-   - Optimal hydration strategy
+##  SEO এবং লিগ্যাসি রিডাইরেক্ট (Crucial for Migration)
 
-2. **State Management**
-   - React Context for global state (Video Player)
-   - Local state for component-specific logic
-   - No external state library needed
+সমকালের লক্ষাধিক পুরনো আর্টিকেল গুগলে ইনডেক্স করা আছে। সাইট মাইগ্রেশনের সময় **SEO Ranking** ধরে রাখতে একটি শক্তিশালী
 
-3. **Data Flow**
-   - Mock data layer (`/data/mockNews.ts`)
-   - TypeScript interfaces for type safety
-   - Ready for API integration
+### Step 1: Middleware & Category Route Mapping
 
-4. **Code Organization**
-   - Feature-based component structure
-   - Shared utilities and hooks
-   - Modular, reusable architecture
+-   `src/proxy.ts` তৈরি করা (middleware.ts থেকে মাইগ্রেট করা)।
+-   `categoryMap` ডিকশনারি দিয়ে `/international` -> `/world`, `/whole-country` -> `/saradesh` রিডাইরেক্ট কনফিগার করা।
+
+### Step 2: Article ID Lookup Logic
+
+**আর্টিকেল আইডি লুকআপ:** পুরনো আর্টিকেলের URL-এ থাকা আইডি (যেমন: `.../article/1255`) ধরে আমাদের `proxy.ts` এজ-এপিআই কলের মাধ্যমে নতুন UUID বের করে এবং ইউজারকে নতুন পেজে রিডাইরেক্ট করে।
+3.  **Sync Pipeline (`/api/sync`):** পুরনো CMS থেকে ডেটা আসার সময় পুরনো `id`-কে আমাদের `News` টেবিলের `public_id` হিসেবে সেভ করা হয় ইউনিক আইডেন্টিফায়ার হিসেবে।
 
 ---
 
-## ✨ Features
+## ⚙️ লোকাল সেটআপ (How to Setup & Run)
 
-### 🎯 Core Functionality
+নতুন ডেভেলপার হিসেবে প্রজেক্ট রান করতে নিচের ধাপগুলো অনুসরণ করুন:
 
-#### **Homepage**
-
-- ✅ Premium hero section with animated cards
-- ✅ Breaking news ticker with live updates
-- ✅ Numbered latest news sidebar
-- ✅ Category-wise news sections
-- ✅ Curated news grid (নির্বাচিত খবর)
-- ✅ Sticky sidebar with most-read articles
-- ✅ Social media video widgets (Facebook & YouTube)
-
-#### **Article Pages**
-
-- ✅ Full-featured article reader
-- ✅ AI Summary widget with copy functionality
-- ✅ Floating video player with hand-off
-- ✅ Related articles section
-- ✅ Social sharing integration
-- ✅ Reading progress indicator
-- ✅ JSON-LD structured data for SEO
-
-#### **Category Pages**
-
-- ✅ Dynamic category routing
-- ✅ Division-specific pages (Dhaka, Chattogram, etc.)
-- ✅ Infinite scroll capability
-- ✅ Category-specific content filtering
-
-#### **Media Pages**
-
-- ✅ Video Gallery (Bento Grid layout)
-- ✅ Photo Gallery with carousel slider
-- ✅ Embedded social media content
-- ✅ Responsive media players
-
-### 🎨 Premium UX Features
-
-#### **Animations & Interactions**
-
-- ✅ Smooth scroll with Lenis
-- ✅ Framer Motion page transitions
-- ✅ Scroll-triggered reveals
-- ✅ Staggered animations for content
-- ✅ Hover effects and micro-interactions
-- ✅ Loading skeletons for perceived performance
-
-#### **Navigation**
-
-- ✅ Sticky header with glassmorphism
-- ✅ Multi-level dropdown menus
-- ✅ Mobile-responsive drawer menu
-- ✅ Full-screen search overlay
-- ✅ Breadcrumb navigation
-- ✅ Category mega-menu
-
-#### **Video Player**
-
-- ✅ Floating player with drag-and-drop
-- ✅ Multi-source support (YouTube & Facebook)
-- ✅ Custom controls overlay
-- ✅ Seamless handover from inline to floating
-- ✅ Picture-in-picture mode
-- ✅ Keyboard shortcuts support
-- ✅ Smart pause behavior on navigation
-- ✅ Settings panel (autoplay, quality, etc.)
-
-### 🔧 Technical Excellence
-
-#### **Performance**
-
-- ✅ Image optimization with blur placeholders
-- ✅ Priority loading for LCP images
-- ✅ Lazy loading for ads and media
-- ✅ Code splitting and route prefetching
-- ✅ WebP/AVIF automatic format selection
-- ✅ Service Worker caching strategy
-
-#### **SEO**
-
-- ✅ Dynamic sitemap.xml generation
-- ✅ robots.txt configuration
-- ✅ JSON-LD structured data (NewsArticle)
-- ✅ Open Graph metadata
-- ✅ Semantic HTML structure
-- ✅ Proper heading hierarchy
-
-#### **Accessibility**
-
-- ✅ WCAG AA color contrast compliance
-- ✅ Skip-to-content link
-- ✅ ARIA labels throughout
-- ✅ Keyboard navigation support
-- ✅ Screen reader optimized
-- ✅ Focus management
-
-#### **PWA Capabilities**
-
-- ✅ Web App Manifest
-- ✅ Service Worker for offline support
-- ✅ Installable on mobile/desktop
-- ✅ Offline fallback page
-- ✅ Theme color configuration
-- ✅ Apple Web App meta tags
-
-#### **Error Handling**
-
-- ✅ Global error boundary
-- ✅ Custom 404 page
-- ✅ Graceful error messages
-- ✅ Offline fallback with retry
-- ✅ Loading states everywhere
-
-#### **Security**
-
-- ✅ Content Security Policy (CSP) headers
-- ✅ Security headers configured
-- ✅ No hardcoded secrets
-- ✅ HTTPS-ready
-- ✅ XSS protection
-
-### 💰 Monetization
-
-#### **Ad Strategy**
-
-- ✅ Lazy-loaded ad components
-- ✅ Native ads (blend with content)
-- ✅ Banner ads (leaderboard, rectangle)
-- ✅ Strategic placements (IAB compliant)
-- ✅ Ad density rules
-- ✅ Google AdSense ready
-- ✅ Viewability optimized
-
-**Ad Placements:**
-
-- Homepage: 4 strategic positions
-- Article pages: 3-4 positions
-- Sidebar: Sticky + native compact
-- Category pages: In-feed natives
-
----
-
-## 🏅 Certification Journey
-
-This project underwent a rigorous **13-phase development and certification process**:
-
-### Phase Timeline
-
-| Phase         | Focus                 | Grade            | Status      |
-| ------------- | --------------------- | ---------------- | ----------- |
-| **Phase 1-8** | Core Development      | -                | ✅ Complete |
-| **Phase 9**   | Initial QCA Audit     | **B+ (85/100)**  | ✅ Complete |
-| **Phase 10**  | Production Readiness  | **A- (92/100)**  | ✅ Complete |
-| **Phase 11**  | Premium Enhancements  | **A+ (98/100)**  | ✅ Complete |
-| **Phase 12**  | Advanced Features     | **A++ (99/100)** | ✅ Complete |
-| **Phase 13**  | Monetization Strategy | -                | ✅ Complete |
-
-### Grade Breakdown (Final)
-
-| Category                  | Score      | Notes                                   |
-| ------------------------- | ---------- | --------------------------------------- |
-| **SEO & Discoverability** | 93/100     | Sitemap, robots.txt, JSON-LD, OpenGraph |
-| **Accessibility**         | 98/100     | WCAG AA compliant, skip links, ARIA     |
-| **Performance & UX**      | 99/100     | Blur placeholders, priority loading     |
-| **Modern Standards**      | 100/100    | PWA, service worker, offline support    |
-| **Code Quality**          | 95/100     | TypeScript, modular, documented         |
-| **Security**              | 88/100     | CSP, security headers                   |
-| **OVERALL**               | **99/100** | **A++ Grade - Excellence Achieved**     |
-
-### Achievement Highlights
-
-✅ **+14 Point Improvement** from initial audit (85 → 99)  
-✅ **Production Certified** - Enterprise-ready  
-✅ **World-Class** - Exceeds industry standards  
-✅ **Zero P0/P1 Issues** - All critical fixes implemented
-
----
-
-## 🛠 Technical Stack
-
-### Frontend
-
-```json
-{
-  "framework": "Next.js 16.1.4",
-  "runtime": "React 19",
-  "language": "TypeScript 5.0",
-  "styling": "Tailwind CSS 4.0",
-  "animations": "Framer Motion 12.0",
-  "smooth-scroll": "Lenis 1.1",
-  "icons": "Lucide React 0.469"
-}
-```
-
-### Infrastructure
-
-- **Hosting:** Vercel
-- **CDN:** Vercel Edge Network
-- **Version Control:** Git & GitHub
-- **Package Manager:** npm
-
-### Key Dependencies
-
+### ১. রিপোজিটরি ক্লোন ও প্যাকেজ ইনস্টল
 ```bash
-# Core
-next@16.1.4
-react@19.0.0
-typescript@5.0
-
-# Styling
-tailwindcss@4.0.19
-framer-motion@12.10.3
-clsx@2.1.1
-
-# Utilities
-lenis@1.1.20
-lucide-react@0.469.0
-```
-
-### Development Tools
-
-- ESLint for code linting
-- Turbopack for faster builds
-- Environment variable management
-- Git hooks for quality control
-
----
-
-## 📊 Performance Metrics
-
-### Expected Lighthouse Scores
-
-| Metric         | Score  | Status       |
-| -------------- | ------ | ------------ |
-| Performance    | 95-98  | ✅ Excellent |
-| Accessibility  | 98-100 | ✅ Perfect   |
-| Best Practices | 95+    | ✅ Excellent |
-| SEO            | 100    | ✅ Perfect   |
-| PWA            | 100    | ✅ Perfect   |
-
-### Core Web Vitals
-
-- **LCP** (Largest Contentful Paint): < 2.5s
-- **FID** (First Input Delay): < 100ms
-- **CLS** (Cumulative Layout Shift): < 0.1
-
-### Bundle Size
-
-- **First Load JS:** ~120KB (optimized)
-- **Route-specific:** ~40-60KB each
-- **Total Pages:** 7 routes
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-```bash
-Node.js >= 18.0.0
-npm >= 8.0.0
-```
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/abisheakdeb-droid/samakal-redesign.git
-
-# Navigate to project directory
+git clone <repository-url>
 cd samakal-redesign
-
-# Install dependencies
 npm install
+```
 
-# Run development server
+### ২. এনভায়রনমেন্ট ভেরিয়েবল (.env)
+প্রজেক্টের রুটে একটি `.env.local` ফাইল তৈরি করুন এবং নিচের ক্রেডেনশিয়ালগুলো বসান:
+
+```env
+# Database (Neon PostgreSQL)
+DATABASE_URL="postgresql://user:password@endpoint/?sslmode=require"
+
+# NextAuth (Authentication)
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="any-generate-random-string"
+GOOGLE_CLIENT_ID="your_google_client_id"
+GOOGLE_CLIENT_SECRET="your_google_client_secret"
+
+# Sync Webhook Secret (For data ingestion)
+SYNC_SECRET="samakal-sync-secret-2026-xYz"
+```
+
+### ৩. ডেটাবেইজ ইনিশিয়ালাইজ (Prisma)
+যেহেতু প্রজেক্টটি Prisma ব্যবহার করে, ডেটাবেস স্কিমা সিঙ্ক করতে হবে:
+
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+### ৪. ডেভেলপমেন্ট সার্ভার চালু করা
+```bash
 npm run dev
 ```
 
-Visit `http://localhost:3000` to see the app.
-
-### Available Scripts
-
-```bash
-npm run dev          # Start development server (Turbopack)
-npm run build        # Build for production
-npm start            # Start production server
-npm run lint         # Run ESLint
-npm run type-check   # Run TypeScript compiler
-```
-
-### Environment Variables
-
-Create a `.env.local` file:
-
-```env
-# Google Gemini AI (Required for AI features)
-# Get your free key from: https://makersuite.google.com/app/apikey
-GEMINI_API_KEY=your_gemini_api_key_here
-
-# Optional: Add your Google AdSense Publisher ID
-NEXT_PUBLIC_ADSENSE_ID=ca-pub-XXXXXXXXXX
-
-# Optional: Analytics
-NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
-```
+সার্ভার চালু হলে ব্রাউজারে `http://localhost:3000` এ যান।
+*নোট: Next.js 16.1 Turbopack ব্যবহার করায় প্রথমবার পেজ লোড হতে একটু সময় লাগতে পারে, এরপর রকেটের মতো স্পিড পাবেন।*
 
 ---
 
-## 📦 Deployment
+## 🧪 কাস্টম স্ক্রিপ্টস এবং টেস্টিং
 
-### Vercel (Recommended)
+যেহেতু পুরনো সাইট থেকে ডেটা আনা একটা বড় চ্যালেঞ্জ, `src/backend/scripts/` এর ভেতর কিছু গুরুত্বপূর্ণ টুলস আছে:
 
-1. **Connect Repository**
-
-   ```bash
-   # Deploy to Vercel
-   vercel --prod
-   ```
-
-2. **Auto-Deploy**
-   - Push to `main` branch
-   - Vercel auto-deploys
-
-### Manual Deployment
-
-```bash
-# Build the project
-npm run build
-
-# Start production server
-npm start
-```
-
-### Production Checklist
-
-- [ ] Update production URLs in `sitemap.ts`
-- [ ] Update `robots.txt` sitemap URL
-- [ ] Configure custom domain
-- [ ] Set up Google AdSense
-- [ ] Enable analytics
-- [ ] Test PWA install
-- [ ] Test offline mode
-- [ ] Submit sitemap to Google Search Console
+-   **ডেটা স্ক্র্যাপার:** `npm run scrape` (সমকালের বর্তমান সাইট থেকে ডামি ডেটা আনার জন্য)
+-   **সিঙ্ক টেস্টার:** `node src/backend/scripts/debug/test-sync-redirect.js` (Webhook এবং 301 Redirect ঠিকমতো কাজ করছে কিনা চেক করতে)
 
 ---
 
-## 📁 Project Structure
+## ⚠️ মেনে চলার মতো কিছু নিয়ম (Developer Rules)
 
-```
-samakal-redesign/
-├── public/
-│   ├── manifest.json          # PWA manifest
-│   ├── sw.js                  # Service worker
-│   ├── offline.html           # Offline fallback
-│   ├── robots.txt             # SEO crawl rules
-│   └── samakal-logo.png       # Brand logo
-├── src/
-│   ├── app/
-│   │   ├── layout.tsx         # Root layout
-│   │   ├── page.tsx           # Homepage
-│   │   ├── template.tsx       # Page transitions
-│   │   ├── loading.tsx        # Root loading state
-│   │   ├── error.tsx          # Error boundary
-│   │   ├── not-found.tsx      # 404 page
-│   │   ├── sitemap.ts         # Dynamic sitemap
-│   │   ├── article/[slug]/    # Article pages
-│   │   ├── category/[slug]/   # Category pages
-│   │   ├── video/             # Video gallery
-│   │   └── photo/             # Photo gallery
-│   ├── components/
-│   │   ├── Header.tsx         # Global header
-│   │   ├── Footer.tsx         # Global footer
-│   │   ├── AdSlot.tsx         # Ad component
-│   │   ├── NativeAd.tsx       # Native ad
-│   │   ├── FloatingVideoPlayer/ # Video player
-│   │   ├── MobileMenu.tsx     # Mobile nav
-│   │   ├── SearchOverlay.tsx  # Search UI
-│   │   ├── Skeletons.tsx      # Loading states
-│   │   └── ...                # 30+ components
-│   ├── contexts/
-│   │   └── VideoPlayerContext.tsx
-│   ├── data/
-│   │   ├── mockNews.ts        # Mock data
-│   │   └── searchIndex.ts     # Search data
-│   ├── hooks/
-│   │   └── useRouteChange.ts
-│   ├── utils/
-│   │   ├── bn.ts              # Bengali utils
-│   │   └── image.ts           # Image optimization
-│   └── config/
-│       └── adPlacements.ts    # Ad strategy
-├── docs/                      # Documentation
-├── next.config.ts             # Next.js config
-├── tailwind.config.ts         # Tailwind config
-└── tsconfig.json              # TypeScript config
-```
+1.  **Readability > Cleverness:** কোড এমনভাবে লিখুন যেন অন্য ডেভেলপার সহজেই বুঝতে পারে। অপ্রয়োজনীয় জটিলতা (magic one-liners) এড়িয়ে চলুন।
+2.  **Vanilla CSS First:** প্রজেক্টে CSS Modules কে প্রাধান্য দেওয়া হয়েছে, Tailwind শুধুমাত্র হেল্পার হিসেবে ব্যবহৃত।
+3.  **Console Errors:** ব্রাউজার কনসোলে যেন কোনো React Hydration Error বা Image Missing Warning না থাকে সেদিকে খেয়াল রাখবেন।
+4.  **Vercel vs Cloudflare:** Vercel-এর কিছু স্পেসিফিক মডিউল (`@vercel/blob` বা `next/image` optimizer) ব্যবহার করা হয়েছে। ভবিষ্যতে Cloudflare-এ ডিপ্লয় করলে কনফিগারেশন চেঞ্জ করতে হতে পারে।
 
 ---
 
-## 🤝 Contributing
+## 🌐 ডিপ্লয়মেন্ট গাইডলাইন (Deployment Guidelines)
 
-Contributions are welcome! Please follow these guidelines:
+এই প্রজেক্টটি Vercel এবং Cloudflare, উভয় প্ল্যাটফর্মেই ডিপ্লয় করা সম্ভব, তবে কিছু স্পেসিফিক কনফিগারেশন মাথায় রাখতে হবে:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### Vercel Deployment
+Vercel-এ ডিপ্লয় করা সবচেয়ে সহজ, কারণ এটি Next.js-এর নেটিভ হোস্ট।
+-   `Settings > Environment Variables`-এ গিয়ে `.env.local` এর সব ভ্যারিয়েবল বসাতে হবে।
+-   **Important:** Vercel-এর Image Optimization লিমিট ও সমকালের সার্ভারের হটলিংক ব্লকের কারণে `src/backend/utils/image.ts` এ **`wsrv.nl`** প্রক্সি ব্যবহার করা হয়েছে। এটি `next.config.mjs` এ bypass করা আছে।
 
-### Development Guidelines
-
-- Follow TypeScript best practices
-- Maintain component modularity
-- Write descriptive commit messages
-- Test before pushing
-- Update documentation
+### Cloudflare Pages / Workers
+যদি ট্রাফিক কস্ট কমাতে Cloudflare ব্যবহার করা হয়:
+- `next-auth` এবং `Prisma` Edge runtime-এ ঠিকমতো কাজ করে কিনা নিশ্চিত করতে হবে (Prisma Accelerate লাগতে পারে)।
+- `@vercel/blob` (যদি ইমেজ আপলোডে ব্যবহৃত হয়) রিপ্লেস করে Cloudflare R2 স্টোরেজ অ্যাড করতে হবে।
 
 ---
 
-## 📄 License
+## 💾 ডাটাবেজ মাইগ্রেশন এবং সিডিং (Database Operations)
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+নতুন কোনো ডেভেলপার জয়েন করলে বা ডাটাবেজে নতুন ফিল্ড অ্যাড করলে Prisma ডাটাবেজ আপডেট করতে হবে:
 
----
+- **Migration Development:** যদি স্কিমা চেঞ্জ করেন, ডাটাবেজ আপডেট করতে:
 
-## 🙏 Acknowledgments
+  ```bash
+  npx prisma migrate dev --name your_change_name
+  ```
 
-- **Next.js Team** - Amazing framework
-- **Vercel** - Hosting platform
-- **Unsplash** - Stock images
-- **Lucide Icons** - Icon library
-- **Framer Motion** - Animation library
+- **Seeding Data:** ডাটাবেজে ডামি ক্যাটেগরি বা ডিফল্ট অ্যাডমিন ইউজার তৈরি করতে:
 
----
+  ```bash
+  npx prisma db seed
+  ```
 
-## 📞 Contact
-
-**Developer:** Abisheak Deb  
-**GitHub:** [@abisheakdeb-droid](https://github.com/abisheakdeb-droid)  
-**Project Link:** [https://github.com/abisheakdeb-droid/samakal-redesign](https://github.com/abisheakdeb-droid/samakal-redesign)  
-**Live Demo:** [https://samakal-redesign.vercel.app](https://samakal-redesign.vercel.app)
+  *(নোট: `seed.ts` ফাইলটি `src/backend/prisma/` ফোল্ডারে কনফিগার করা আছে)*
 
 ---
 
-<div align="center">
+## 📰 এডিটরিয়াল প্যানেল (Admin Panel Access)
 
-**Built with ❤️ using Next.js 16**
+নিউজ পাবলিশ করা এবং এডিট করার জন্য এই সাইটের নিজস্ব একটি অ্যাডমিন ড্যাশবোর্ড রয়েছে।
 
-**Grade: A++ (99/100) | Status: Production Ready | Certified: Enterprise-Grade**
+- **অ্যাক্সেস URL:** `http://localhost:3000/admin`
+- **লগইন:** `next-auth` দিয়ে সুরক্ষিত। Google OAuth বা Credentials দিয়ে লগইন করা যায়।
+- **Tiptap Editor:** খবর লেখার জন্য `src/frontend/components/Editor/` এ একটি কাস্টম রিচ-টেক্সট এডিটর (Tiptap) বানানো হয়েছে, যা ইমেজ আপলোড ও ফরম্যাটিং সাপোর্ট করে।
+- **পাবলিশিং ফ্লো:** ড্রাফট সেভ করা, শিডিউল পাবলিশিং এবং লাইভ প্রিভিউ ফিচার এখানে ইন্টিগ্রেট করা আছে।
 
-[⬆ Back to Top](#-samakal-redesign---premium-news-portal)
+---
 
-</div>
+## ⚡ ক্যাশিং মেকানিজম (Caching & Revalidation)
+
+Next.js-এর শক্তিশালী ক্যাশিং সিস্টেম সাইটকে রকেটের মতো স্পিড দেয়, তবে ডাইনামিক নিউজ সাইট হওয়ায় ক্যাশ ভাঙার মেকানিজম বুঝতে হবে:
+
+- **Static Cache (ISR):** হোমপেজ এবং ক্যাটেগরি পেজগুলো Incremental Static Regeneration-এর সাহায্যে ক্যাশ করা হয়।
+- **On-demand Revalidation:** কোনো নতুন আর্টিকেল পাবলিশ হলে বা अपडेट হলে, অ্যাডমিন প্যানেল থেকে `revalidateTag` বা `revalidatePath` ট্রিগার হয়, যাতে ভিজিটররা তাৎক্ষণিকভাবে আপডেট দেখতে পান।
+- `fetch` রিকোয়েস্টের সাথে `{ next: { revalidate: 60 } }` বা ট্যাগ ব্যবহার করা হয়েছে।
+
+---
+
+## 📞 লাইসেন্স এবং মেইনটেন্যান্স (Contact & Support)
+
+- কোনো মেজর সিস্টেম ক্র্যাশ হলে, লগ চেক করার জন্য Vercel Dashboard-এর Logs ট্যাব অথবা Neon Database-এর Query Logs মনিটর করতে হবে।
+- কোনো এপিআই (যেমন: Sync API) কাজ না করলে প্রথমে `.env`-এ `SYNC_SECRET` ঠিক আছে কিনা চেক করতে হবে।
+
+---
+*Developed & Designed by Abisheak AI Assistant.* 🚀

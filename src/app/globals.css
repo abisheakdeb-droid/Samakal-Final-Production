@@ -125,6 +125,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Global Image Centering — সকল ইমেজ তাদের কন্টেইনারের মাঝখানে থাকবে */
+img {
+  object-position: center !important;
+}
+
+/* Next.js Image containers (relative wrappers with fill) — flex center fallback */
+[style*="position: relative"]>img,
+[style*="position:relative"]>img {
+  object-position: center !important;
+}
+
 /* Typography Utility Classes */
 .text-xs {
   font-size: var(--text-xs);
@@ -316,19 +327,9 @@ a[class*="btn"] {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-button:hover,
-[role="button"]:hover,
-a[class*="btn"]:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
+/* Button hover effects removed — specific components should add their own hover states */
+/* The global translateY(-2px) and box-shadow was causing unwanted "floating box" on nav icons */
 
-button:active,
-[role="button"]:active,
-a[class*="btn"]:active {
-  transform: translateY(0);
-  box-shadow: var(--shadow-sm);
-}
 
 /* Ripple Effect for Buttons */
 button::after,
@@ -369,13 +370,15 @@ input:focus-visible {
   outline: none;
 }
 
-/* Navigation Item Transitions */
+/* Navigation Item Transitions - Simplified to remove automatic underlines */
 nav a,
 .nav-link {
   position: relative;
   transition: color 0.2s ease;
 }
 
+/* Underline effect removed as per user request */
+/* 
 nav a::after,
 .nav-link::after {
   content: '';
@@ -388,13 +391,11 @@ nav a::after,
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Only show underline on hover for non-active items */
 nav a:hover::after,
 .nav-link:hover::after {
   width: 100%;
 }
 
-/* Remove underline from active state completely - only color highlight needed */
 nav a.text-brand-red::after,
 .nav-link.text-brand-red::after,
 nav a[aria-current="page"]::after,
@@ -402,6 +403,7 @@ nav a[aria-current="page"]::after,
   width: 0 !important;
   display: none;
 }
+*/
 
 /* Fade-in animation for dynamic content */
 .fade-in-up {

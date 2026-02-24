@@ -79,6 +79,7 @@ export default async function EventDetailPage({
             <Image
               src={event.banner_image}
               alt={event.title}
+              sizes="100vw"
               fill
               className="object-cover"
             />
@@ -103,6 +104,7 @@ export default async function EventDetailPage({
                 <Image
                   src={article.image || "/placeholder.svg"}
                   alt={article.title}
+                  sizes="100vw"
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
