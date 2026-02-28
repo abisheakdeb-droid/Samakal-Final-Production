@@ -1,68 +1,58 @@
-# সমকাল রিডিজাইন (Samakal Redesign) - বিকাশকারী নির্দেশিকা (Developer Guide)
+# Samakal Redesign - Developer Guide
 
-এই রিপোজিটরিটি বাংলাদেশের অন্যতম শীর্ষস্থানীয় নিউজ পোর্টাল **সমকাল (Samakal)**-এর সম্পূর্ণ নতুন, আধুনিক এবং দ্রুতগতির ফ্রন্টএন্ড ও ব্যাকএন্ড আর্কিটেকচার।
+This repository contains the completely new, modern, and high-performance frontend and backend architecture for **Samakal**, one of Bangladesh's leading news portals.
 
-পুরনো লিগ্যাসি (PHP/Laravel) সিস্টেম থেকে বের হয়ে এসে সম্পূর্ণ একটি আধুনিক, স্কেলেবল এবং SEO-বান্ধব আর্কিটেকচার দাঁড় করানো হয়েছে। একজন নতুন ডেভেলপার হিসেবে প্রজেক্টটি বুঝে নিতে এই ডকুমেন্টটি আপনাকে A-to-Z সাহায্য করবে।
+The project transitions away from the legacy PHP/Laravel system to a modern, scalable, and SEO-friendly architecture. This guide provides an A-to-Z overview to help new developers get started.
 
 ---
 
-## 🛠 প্রযুক্তি স্ট্যাক (Tech Stack)
+## 🛠 Tech Stack
 
-এই প্রজেক্টটি আধুনিক ওয়েব ডেভেলপমেন্টের সেরা টুলস দিয়ে তৈরি:
+Built with modern web development tools:
 
-- **ফ্রেমওয়ার্ক:** Next.js 16.1 (App Router, Turbopack)
-- **ভাষা:** TypeScript
-- **স্টাইলিং:** Vanilla CSS (CSS Modules) + TailwindCSS (শুধুমাত্র ইউটিলিটির জন্য)
-- **উইজেট ও অ্যানিমেশন:** Framer Motion (Glassmorphism, Stagger effects)
-- **ডেটাবেইজ:** PostgreSQL (Neon Serverless)
+- **Framework:** Next.js 16.1 (App Router, Turbopack)
+- **Language:** TypeScript
+- **Styling:** Vanilla CSS (CSS Modules) + TailwindCSS (for utility-only usage)
+- **Widgets & Animations:** Framer Motion (Glassmorphism, Stagger effects)
+- **Database:** PostgreSQL (Neon Serverless)
 - **ORM:** Prisma
-- **অথেনটিকেশন:** NextAuth.js (v5) - Google OAuth & Credentials
-- **এডিটর:** TipTap (Rich Text Editor for Admin)
-- **ইমেজ প্রসেসিং:** `wsrv.nl` (Image Proxy Server for CDN caching) + Next.js `<Image>`
+- **Authentication:** NextAuth.js (v5) - Google OAuth & Credentials
+- **Editor:** TipTap (Rich Text Editor for Admin)
+- **Image Processing:** `wsrv.nl` (Image Proxy Server for CDN caching) + Next.js `<Image>`
 
 ---
 
-## 🔄 পুরনো সাইট বনাম নতুন সাইট (Old vs New Architecture)
+## 🔄 Old vs New Architecture
 
-| ফিচার | পুরনো সাইট (Laravel) | নতুন সাইট (Next.js) |
+| Feature | Old Site (Laravel) | New Site (Next.js) |
 | --- | --- | --- |
-| **রেন্ডারিং** | Server-Side Rendering (PHP) | React Server Components (RSC) + Static Generation |
-| **ডেটাবেইজ** | MySQL (Monolithic) | PostgreSQL (Neon - Serverless & Scalable) |
-| **ডিজাইন ল্যাঙ্গুয়েজ** | Flat, legacy design | Glassmorphism, Dynamic Gradients, Micro-animations |
-| **পারফরম্যান্স** | ধীরগতির পেজ লোড | Turbopack-এর কারণে ইনস্ট্যান্ট নেভিগেশন |
-| **ইউজার এক্সপেরিয়েন্স** | রিফ্রেশ-নির্ভর | SPA-like smooth transitions |
+| **Rendering** | Server-Side Rendering (PHP) | React Server Components (RSC) + Static Generation |
+| **Database** | MySQL (Monolithic) | PostgreSQL (Neon - Serverless & Scalable) |
+| **Design Language** | Flat, legacy design | Glassmorphism, Dynamic Gradients, Micro-animations |
+| **Performance** | Slow page loads | Instant navigation thanks to Turbopack |
+| **User Experience** | Refresh-heavy | SPA-like smooth transitions |
 
 ---
 
-## 🏗 কিভাবে কাজ করে? (System Architecture)
+## 🏗 System Architecture
 
-প্রজেক্টটি মূলত তিনটি প্রধান স্তরে (Layers) বিভক্ত:
+The project is divided into three main layers:
 
-1. **ফ্রন্টএন্ড (Frontend React Components):** `src/frontend/` ফোল্ডারে সমস্ত UI কম্পোনেন্ট থাকে। এটি Server Components এবং Client Components-এর মিশ্রণ।
-2. **ব্যাকএন্ড ও এপিআই (Backend & API Routes):** `src/app/api/` ফোল্ডারে API রুটস এবং `src/backend/lib/` এ ডেটা ফেচিং লজিক (Custom Server Actions) থাকে।
-3. **ডেটাবেজ ও সিঙ্ক (Prisma & Sync Pipeline):** যেহেতু সমকালের প্রোডাকশন ডেটাবেইজ আলাদা (Laravel), আমরা একটি **Sync Webhook (`/api/sync`)** তৈরি করেছি যা পুরনো সাইট থেকে ডেটা এনে আমাদের PostgreSQL-এ সেভ করে।
-
-## ৩. Sync Script (Cron / Webhook)
-
-যেহেতু সমকালের প্রোডাকশন DB-তে সরাসরি কানেক্ট করা যাবে না (বা রিকমেন্ডেড নয়), আমরা একটি Sync Service বানাবো।
-
-**করণীয়:**
-
-1. সমকালের Laravel সাইটে একটি ছোট API Endpoint তৈরি করা যা latest articles JSON ফরম্যাটে রিটার্ন করবে।
-2. গিটহাব একশন বা Vercel Cron ব্যবহার করে প্রতি মিনিটে আমাদের `Sync Script` রান করা।
-3. স্ক্রিপ্টটি নতুন আর্টিকেলগুলো নিয়ে আমাদের PostgreSQL (Neon)-এ ইনসার্ট করবে।
-
-## ৪. ধাপে ধাপে বাস্তবায়ন (Implementation Steps)
+1. **Frontend (React Components):** All UI components reside in the `src/frontend/` folder. This is a mix of Server Components and Client Components.
+2. **Backend & API (API Routes):** API routes are in the `src/app/api/` folder, and data fetching logic (Custom Server Actions) is in `src/backend/lib/`.
+3. **Database & Sync (Prisma & Sync Pipeline):** Since Samakal's production database is separate (Laravel), we have created a **Sync Webhook (`/api/sync`)** that fetches data from the old site and saves it to our PostgreSQL.
 
 ---
 
-## 🎨 ডিজাইন সিস্টেম (Design System)
+## ⚡ Sync Script (Cron / Webhook)
 
-ডিজাইনের ক্ষেত্রে এই প্রজেক্টে **"Readability and Visual Excellence"**-কে সর্বোচ্চ গুরুত্ব দেওয়া হয়েছে।
+Since direct connection to the production DB is restricted (or not recommended), we use a Sync Service.
 
-- **Glassmorphism:** মেগা মেনু, স্টিকি হেডার এবং কিছু কার্ডে গ্লাসমরফিজম (অর্ধ-স্বচ্ছ, ব্লার ব্যাকগ্রাউন্ড) ব্যবহার করা হয়েছে।
-- **CSS Variables:** `src/app/globals.css` ফোল্ডারে `:root` ভ্যারিয়েবলের মাধ্যমে কালার থিম (যেমন: `--color-brand-red`, `--color-surface`) কন্ট্রোল করা হয়।
-- **Responsive Layouts:** সাইটটি সম্পূর্ণ মোবাইল-ফার্স্ট। `MobileMenu.tsx`, `Sidebar.tsx` ইত্যাদি স্ক্রিন সাইজ অনুযায়ী রেন্ডার হয়।
+**To Do:**
+
+1. Create a small API Endpoint on Samakal's Laravel site that will return the latest articles in JSON format.
+2. Run our `Sync Script` every minute using GitHub Actions or Vercel Cron.
+3. The script will fetch new articles and insert them into our PostgreSQL (Neon).
 
 ---
 
@@ -85,48 +75,42 @@ A consistent metadata format is now enforced across all news cards (Homepage, Ca
 
 ---
 
-## 📦 প্রধান মডিউলসমূহ (Core Modules)
+## 🎨 Design System
 
-প্রজেক্টের ফোল্ডার স্ট্রাকচার:
+In terms of design, this project prioritizes **"Readability and Visual Excellence"**.
+
+- **Glassmorphism:** Glassmorphism (semi-transparent, blurred background) is used in mega menus, sticky headers, and some cards.
+- **CSS Variables:** Color themes (e.g., `--color-brand-red`, `--color-surface`) are controlled via `:root` variables in the `src/app/globals.css` file.
+- **Responsive Layouts:** The site is completely mobile-first. `MobileMenu.tsx`, `Sidebar.tsx`, etc., render according to screen size.
+
+---
+
+## 📦 Core Modules
+
+Folder Structure:
 
 ```text
 src/
 ├── app/                  # Next.js App Router (Pages & Layouts)
-│   ├── (main)/           # পাবলিক সাইট (Home, Category, Article pages)
-│   ├── admin/            # এডমিন ড্যাশবোর্ড
+│   ├── (main)/           # Public site (Home, Category, Article pages)
+│   ├── admin/            # Admin Dashboard
 │   └── api/              # API Endpoints (Sync, Auth)
-├── backend/              # ডাটাবেইজ ও বিজনেস লজিক
+├── backend/              # Database & Business Logic
 │   ├── lib/              # Prisma client, Fetching Logic (actions)
-│   ├── prisma/           # Schema.prisma ও Migrations
+│   ├── prisma/           # Schema.prisma & Migrations
 │   └── scripts/          # Scrapers & Cron jobs (Data sync etc.)
 ├── frontend/             # UI Components
-│   └── components/       # Header, Footer, NewsCard, Sidebar ইত্যাদি
-└── middleware.ts / proxy.ts # Edge Routing ও SEO Redirects
+│   └── components/       # Core UI components (Header, Footer, NewsCard, etc.)
+└── middleware.ts         # Edge Routing & SEO Redirects
 ```
 
 ---
 
-## SEO এবং লিগ্যাসি রিডাইরেক্ট (Crucial for Migration)
+## ⚙️ Local Setup
 
-সমকালের লক্ষাধিক পুরনো আর্টিকেল গুগলে ইনডেক্স করা আছে। সাইট মাইগ্রেশনের সময় **SEO Ranking** ধরে রাখতে একটি শক্তিশালী
+Follow these steps to run the project locally:
 
-### Step 1: Middleware & Category Route Mapping
-
-- `src/proxy.ts` তৈরি করা (middleware.ts থেকে মাইগ্রেট করা)।
-- `categoryMap` ডিকশনারি দিয়ে `/international` -> `/world`, `/whole-country` -> `/saradesh` রিডাইরেক্ট কনফিগার করা।
-
-### Step 2: Article ID Lookup Logic
-
-**আর্টিকেল আইডি লুকআপ:** পুরনো আর্টিকেলের URL-এ থাকা আইডি (যেমন: `.../article/1255`) ধরে আমাদের `proxy.ts` এজ-এপিআই কলের মাধ্যমে নতুন UUID বের করে এবং ইউজারকে নতুন পেজে রিডাইরেক্ট করে।
-3.  **Sync Pipeline (`/api/sync`):** পুরনো CMS থেকে ডেটা আসার সময় পুরনো `id`-কে আমাদের `News` টেবিলের `public_id` হিসেবে সেভ করা হয় ইউনিক আইডেন্টিফায়ার হিসেবে।
-
----
-
-## ⚙️ লোকাল সেটআপ (How to Setup & Run)
-
-নতুন ডেভেলপার হিসেবে প্রজেক্ট রান করতে নিচের ধাপগুলো অনুসরণ করুন:
-
-### ১. রিপোজিটরি ক্লোন ও প্যাকেজ ইনস্টল
+### 1. Clone & Install
 
 ```bash
 git clone <repository-url>
@@ -134,9 +118,9 @@ cd samakal-redesign
 npm install
 ```
 
-### ২. এনভায়রনমেন্ট ভেরিয়েবল (.env)
+### 2. Environment Variables (.env)
 
-প্রজেক্টের রুটে একটি `.env.local` ফাইল তৈরি করুন এবং নিচের ক্রেডেনশিয়ালগুলো বসান:
+Create a `.env.local` file in the root directory:
 
 ```env
 # Database (Neon PostgreSQL)
@@ -144,117 +128,94 @@ DATABASE_URL="postgresql://user:password@endpoint/?sslmode=require"
 
 # NextAuth (Authentication)
 NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="any-generate-random-string"
+NEXTAUTH_SECRET="your-secret"
 GOOGLE_CLIENT_ID="your_google_client_id"
 GOOGLE_CLIENT_SECRET="your_google_client_secret"
 
 # Sync Webhook Secret (For data ingestion)
-SYNC_SECRET="samakal-sync-secret-2026-xYz"
+SYNC_SECRET="your-sync-secret"
 ```
 
-### ৩. ডেটাবেইজ ইনিশিয়ালাইজ (Prisma)
-
-যেহেতু প্রজেক্টটি Prisma ব্যবহার করে, ডেটাবেস স্কিমা সিঙ্ক করতে হবে:
+### 3. Database Initialization (Prisma)
 
 ```bash
 npx prisma generate
 npx prisma db push
 ```
 
-### ৪. ডেভেলপমেন্ট সার্ভার চালু করা
+### 4. Run Development Server
 
 ```bash
 npm run dev
 ```
 
-সার্ভার চালু হলে ব্রাউজারে `http://localhost:3000` এ যান।
-*নোট: Next.js 16.1 Turbopack ব্যবহার করায় প্রথমবার পেজ লোড হতে একটু সময় লাগতে পারে, এরপর রকেটের মতো স্পিড পাবেন।*
+---
+
+## 🧪 Custom Scripts & Testing
+
+Since fetching data from the old site is a large task, there are important tools in `src/backend/scripts/`:
+
+- **Data Scraper:** `npm run scrape` (To fetch dummy data from Samakal's current site)
+- **Sync Tester:** `node src/backend/scripts/debug/test-sync-redirect.js` (To check if Webhook and 301 Redirect are working correctly)
 
 ---
 
-## 🧪 কাস্টম স্ক্রিপ্টস এবং টেস্টিং
+## ⚠️ Developer Rules
 
-যেহেতু পুরনো সাইট থেকে ডেটা আনা একটা বড় চ্যালেঞ্জ, `src/backend/scripts/` এর ভেতর কিছু গুরুত্বপূর্ণ টুলস আছে:
-
-- **ডেটা স্ক্র্যাপার:** `npm run scrape` (সমকালের বর্তমান সাইট থেকে ডামি ডেটা আনার জন্য)
-- **সিঙ্ক টেস্টার:** `node src/backend/scripts/debug/test-sync-redirect.js` (Webhook এবং 301 Redirect ঠিকমতো কাজ করছে কিনা চেক করতে)
-
----
-
-## ⚠️ মেনে চলার মতো কিছু নিয়ম (Developer Rules)
-
-1. **Readability > Cleverness:** কোড এমনভাবে লিখুন যেন অন্য ডেভেলপার সহজেই বুঝতে পারে। অপ্রয়োজনীয় জটিলতা (magic one-liners) এড়িয়ে চলুন।
-2. **Vanilla CSS First:** প্রজেক্টে CSS Modules কে প্রাধান্য দেওয়া হয়েছে, Tailwind শুধুমাত্র হেল্পার হিসেবে ব্যবহৃত।
-3. **Console Errors:** ব্রাউজার কনসোলে যেন কোনো React Hydration Error বা Image Missing Warning না থাকে সেদিকে খেয়াল রাখবেন।
-4. **Vercel vs Cloudflare:** Vercel-এর কিছু স্পেসিফিক মডিউল (`@vercel/blob` বা `next/image` optimizer) ব্যবহার করা হয়েছে। ভবিষ্যতে Cloudflare-এ ডিপ্লয় করলে কনফিগারেশন চেঞ্জ করতে হতে পারে।
+1. **Readability > Cleverness:** Write code so that other developers can easily understand. Avoid unnecessary complexity.
+2. **Vanilla CSS First:** Prefer CSS Modules; use Tailwind only as a helper.
+3. **Console Errors:** Ensure no Hydration Errors or Image warnings persist in the browser console.
 
 ---
 
-## 🌐 ডিপ্লয়মেন্ট গাইডলাইন (Deployment Guidelines)
+## 🌐 Deployment Guidelines
 
-এই প্রজেক্টটি Vercel এবং Cloudflare, উভয় প্ল্যাটফর্মেই ডিপ্লয় করা সম্ভব, তবে কিছু স্পেসিফিক কনফিগারেশন মাথায় রাখতে হবে:
+Compatible with **Vercel** and **Cloudflare**.
 
 ### Vercel Deployment
 
-Vercel-এ ডিপ্লয় করা সবচেয়ে সহজ, কারণ এটি Next.js-এর নেটিভ হোস্ট।
+Vercel is the easiest, as it is the native host for Next.js.
 
-- `Settings > Environment Variables`-এ গিয়ে `.env.local` এর সব ভ্যারিয়েবল বসাতে হবে।
-- **Important:** Vercel-এর Image Optimization লিমিট ও সমকালের সার্ভারের হটলিংক ব্লকের কারণে `src/backend/utils/image.ts` এ **`wsrv.nl`** প্রক্সি ব্যবহার করা হয়েছে। এটি `next.config.mjs` এ bypass করা আছে।
+- **Important:** Due to Vercel's Image Optimization limits and hotlink blocking from Samakal's server, a **`wsrv.nl`** proxy is used in `src/backend/utils/image.ts`.
 
 ### Cloudflare Pages / Workers
 
-যদি ট্রাফিক কস্ট কমাতে Cloudflare ব্যবহার করা হয়:
+If using Cloudflare to reduce traffic costs:
 
-- `next-auth` এবং `Prisma` Edge runtime-এ ঠিকমতো কাজ করে কিনা নিশ্চিত করতে হবে (Prisma Accelerate লাগতে পারে)।
-- `@vercel/blob` (যদি ইমেজ আপলোডে ব্যবহৃত হয়) রিপ্লেস করে Cloudflare R2 স্টোরেজ অ্যাড করতে হবে।
-
----
-
-## 💾 ডাটাবেজ মাইগ্রেশন এবং সিডিং (Database Operations)
-
-নতুন কোনো ডেভেলপার জয়েন করলে বা ডাটাবেজে নতুন ফিল্ড অ্যাড করলে Prisma ডাটাবেজ আপডেট করতে হবে:
-
-- **Migration Development:** যদি স্কিমা চেঞ্জ করেন, ডাটাবেজ আপডেট করতে:
-
-  ```bash
-  npx prisma migrate dev --name your_change_name
-  ```
-
-- **Seeding Data:** ডাটাবেজে ডামি ক্যাটেগরি বা ডিফল্ট অ্যাডমিন ইউজার তৈরি করতে:
-
-  ```bash
-  npx prisma db seed
-  ```
-
-  *(নোট: `seed.ts` ফাইলটি `src/backend/prisma/` ফোল্ডারে কনফিগার করা আছে)*
+- Ensure `next-auth` and `Prisma` work correctly in the Edge runtime (Prisma Accelerate may be required).
 
 ---
 
-## 📰 এডিটরিয়াল প্যানেল (Admin Panel Access)
+## 💾 Database Migration & Seeding
 
-নিউজ পাবলিশ করা এবং এডিট করার জন্য এই সাইটের নিজস্ব একটি অ্যাডমিন ড্যাশবোর্ড রয়েছে।
+Update the Prisma database when joining as a new developer or adding new fields:
 
-- **অ্যাক্সেস URL:** `http://localhost:3000/admin`
-- **লগইন:** `next-auth` দিয়ে সুরক্ষিত। Google OAuth বা Credentials দিয়ে লগইন করা যায়।
-- **Tiptap Editor:** খবর লেখার জন্য `src/frontend/components/Editor/` এ একটি কাস্টম রিচ-টেক্সট এডিটর (Tiptap) বানানো হয়েছে, যা ইমেজ আপলোড ও ফরম্যাটিং সাপোর্ট করে।
-- **পাবলিশিং ফ্লো:** ড্রাফট সেভ করা, শিডিউল পাবলিশিং এবং লাইভ প্রিভিউ ফিচার এখানে ইন্টিগ্রেট করা আছে।
+- **Migration Development:** `npx prisma migrate dev --name your_change_name`
+- **Seeding Data:** `npx prisma db seed` (Seed file is in `src/backend/prisma/`)
 
 ---
 
-## ⚡ ক্যাশিং মেকানিজম (Caching & Revalidation)
+## 📰 Admin Panel Access
 
-Next.js-এর শক্তিশালী ক্যাশিং সিস্টেম সাইটকে রকেটের মতো স্পিড দেয়, তবে ডাইনামিক নিউজ সাইট হওয়ায় ক্যাশ ভাঙার মেকানিজম বুঝতে হবে:
+The site has its own admin dashboard for publishing and editing news.
 
-- **Static Cache (ISR):** হোমপেজ এবং ক্যাটেগরি পেজগুলো Incremental Static Regeneration-এর সাহায্যে ক্যাশ করা হয়।
-- **On-demand Revalidation:** কোনো নতুন আর্টিকেল পাবলিশ হলে বা अपडेट হলে, অ্যাডমিন প্যানেল থেকে `revalidateTag` বা `revalidatePath` ট্রিগার হয়, যাতে ভিজিটররা তাৎক্ষণিকভাবে আপডেট দেখতে পান।
-- `fetch` রিকোয়েস্টের সাথে `{ next: { revalidate: 60 } }` বা ট্যাগ ব্যবহার করা হয়েছে।
+- **Access URL:** `http://localhost:3000/admin`
+- **Tiptap Editor:** A custom rich-text editor (Tiptap) in `src/frontend/components/Editor/` supports image uploads and formatting.
+
+---
+
+## ⚡ Caching & Revalidation
+
+- **Static Cache (ISR):** Home and Category pages are cached via Incremental Static Regeneration.
+- **On-demand Revalidation:** `revalidateTag` or `revalidatePath` is triggered when an article is published or updated.
 
 ---
 
-## 📞 লাইসেন্স এবং মেইনটেন্যান্স (Contact & Support)
+## 📞 License & Support
 
-- কোনো মেজর সিস্টেম ক্র্যাশ হলে, লগ চেক করার জন্য Vercel Dashboard-এর Logs ট্যাব অথবা Neon Database-এর Query Logs মনিটর করতে হবে।
-- কোনো এপিআই (যেমন: Sync API) কাজ না করলে প্রথমে `.env`-এ `SYNC_SECRET` ঠিক আছে কিনা চেক করতে হবে।
+- **Maintenance:** Monitor Vercel Logs or Neon Database Query Logs for system crashes.
+- **Sync API:** Check `SYNC_SECRET` in `.env` if the Sync API fails.
 
 ---
+
 *Developed & Designed by Abisheak AI Assistant.* 🚀
