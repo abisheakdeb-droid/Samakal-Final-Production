@@ -132,12 +132,12 @@ export default async function Home() {
       {/* Recommended for You (Personalized) */}
 
       {/* Leaderboard Ad - High visibility below header */}
-      <div className="container mx-auto px-4 py-4">
+      <div className="container py-4">
         <AdSlot slotId="homepage-leaderboard-top" format="leaderboard" />
       </div>
 
       {/* --- TOP SECTION (Lead News & Sidebar) --- */}
-      <div className="container mx-auto px-4 py-8 mb-4">
+      <div className="container py-8 mb-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-gray-200 mb-8">
           {/* MAIN LEAD NEWS (Width 9) - Expanded */}
           <div className="lg:col-span-9 lg:pr-8">

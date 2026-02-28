@@ -142,12 +142,12 @@ export default async function CategoryPage({ params }: PageProps) {
         )
       )}
 
-      <div className="container mx-auto px-4 mt-6 max-w-7xl">
+      <div className="container mt-6">
         <Breadcrumb currentSlug={slug} />
       </div>
 
       {!newsItems || newsItems.length === 0 ? (
-        <main className="container mx-auto px-4 py-8 max-w-7xl flex flex-col items-center justify-center min-h-[50vh] text-center text-gray-500">
+        <main className="container py-8 flex flex-col items-center justify-center min-h-[50vh] text-center text-gray-500">
           <div className="flex justify-center mb-6">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -179,7 +179,7 @@ export default async function CategoryPage({ params }: PageProps) {
           </Link>
         </main>
       ) : (
-        <main className="container mx-auto px-4 py-8 max-w-7xl">
+        <main className="container py-8">
           <div className="flex items-center gap-3 mb-8 border-b border-gray-200 pb-4">
             <span className="w-1.5 h-8 bg-brand-red rounded-full"></span>
             <h1 className="text-3xl font-bold text-gray-900 capitalize">

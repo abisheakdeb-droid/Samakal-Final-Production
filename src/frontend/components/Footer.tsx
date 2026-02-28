@@ -47,7 +47,7 @@ export default function Footer({ settings }: FooterProps) {
     <footer className="font-serif bg-[#1a1a1a] text-white mt-auto">
       {/* Top Newsletter & Social Connect Bar */}
       <div className="border-b border-white/10">
-        <div className="container mx-auto px-4 max-w-7xl py-8">
+        <div className="container py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <span className="w-1.5 h-12 bg-brand-red rounded-full"></span>
@@ -79,7 +79,7 @@ export default function Footer({ settings }: FooterProps) {
       </div>
 
       {/* Main Footer - Content Grid */}
-      <div className="container mx-auto px-4 max-w-7xl py-12">
+      <div className="container py-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
 
           {/* Brand & Editor Info (Left - 5 Cols) */}

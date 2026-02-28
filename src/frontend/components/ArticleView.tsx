@@ -37,7 +37,7 @@ export default function ArticleView({
             <JsonLd article={article} />
             <ViewTracker articleId={article.id} />
 
-            <main className="container mx-auto px-4 py-8 max-w-7xl">
+            <main className="container py-8">
                 <Breadcrumb
                     currentSlug={article.catSlug || article.category}
                     isArticle={true}

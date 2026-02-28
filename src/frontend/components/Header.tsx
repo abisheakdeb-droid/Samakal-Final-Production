@@ -213,7 +213,7 @@ export default function Header({ settings }: HeaderProps) {
     <>
       <header className="flex flex-col border-b border-gray-200/60 dark:border-gray-700/60 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg sticky top-0 z-50 transition-all duration-300 shadow-sm">
         {/* Top Bar: Logo & Date */}
-        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div className="container py-3 flex justify-between items-center">
           <Link href="/" className="relative h-12 w-48 md:h-10 md:w-40">
             <Image
               src={settings?.site_logo || "/samakal-logo.png"}
@@ -243,7 +243,7 @@ export default function Header({ settings }: HeaderProps) {
 
         {/* Navigation Bar */}
         <div className="bg-gray-50/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-100/60 dark:border-gray-700/60 relative">
-          <div className="container mx-auto px-4 flex justify-between items-center h-12">
+          <div className="container flex justify-between items-center h-12">
             {/* Main Nav Links */}
             <nav className="hidden md:flex gap-1 text-gray-800 dark:text-gray-200 font-medium h-full items-center">
               {processedNavItems.map((item: NavItem, idx: number) => {
