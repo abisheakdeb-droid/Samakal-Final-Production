@@ -6,6 +6,13 @@
 /* Forcing rebuild for theme update */
 
 @theme {
+  /* Standard Content Width */
+  --container-7xl: 1240px;
+  --container-2xl: 1240px;
+  --container-xl: 1240px;
+  --container-lg: 1240px;
+  --breakpoint-2xl: 1240px;
+
   --font-serif: var(--font-noto-serif-bengali), serif;
   --font-sans:
     var(--font-noto-serif-bengali), sans-serif;
@@ -100,24 +107,21 @@
   /* 16px */
   --radius-full: 9999px;
   /* Fully rounded */
-
-  /* Standard Content Width */
-  --container-7xl: 1240px;
-  --container-2xl: 1240px;
-  --container-xl: 1240px;
-  --container-lg: 1240px;
-  --breakpoint-2xl: 1240px;
 }
 
-/* Global Container Constraint - Forced Override */
-@layer base {
-  .container {
-    max-width: 1240px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-  }
+/* Global Container Constraint - Forced Centering & Balance */
+.container {
+  width: 100% !important;
+  max-width: 1240px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1.25rem !important;
+  padding-right: 1.25rem !important;
+}
+
+html {
+  scrollbar-gutter: stable;
+  /* Keeps content centered when scrollbar appears */
 }
 
 :root {
