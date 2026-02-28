@@ -76,8 +76,6 @@ interface SidebarProps {
 type Tab = "publishing" | "media" | "details" | "seo";
 
 export default function Sidebar({
-  onPublish,
-  isPublishing,
   category,
   setCategory,
   newsType,
@@ -113,8 +111,6 @@ export default function Sidebar({
   setStatus,
   publishedAt,
   setPublishedAt,
-  scheduledAt,
-  setScheduledAt,
 }: SidebarProps) {
   const [activeTab, setActiveTab] = useState<Tab>("publishing");
 
@@ -135,11 +131,10 @@ export default function Sidebar({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
-                  activeTab === tab.id
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${activeTab === tab.id
                     ? "bg-white text-black shadow-sm ring-1 ring-black/5 scale-[1.02]"
                     : "text-gray-500 hover:text-gray-900 hover:bg-black/5"
-                }`}
+                  }`}
               >
                 <tab.icon
                   size={14}
@@ -333,10 +328,10 @@ export default function Sidebar({
                           onChange={(e) =>
                             setStatus(
                               e.target.value as
-                                | "draft"
-                                | "published"
-                                | "archived"
-                                | "scheduled",
+                              | "draft"
+                              | "published"
+                              | "archived"
+                              | "scheduled",
                             )
                           }
                           className="w-full p-2 bg-white border border-amber-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-amber-500/20"

@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+import puppeteer from 'puppeteer';
 
 async function inspect() {
   const browser = await puppeteer.launch({ headless: 'new' });
@@ -28,7 +28,7 @@ async function inspect() {
     
     console.log('Potential Content Containers:', JSON.stringify(containers, null, 2));
     
-  } catch(e) {
+  } catch {
     console.error(e);
   } finally {
     await browser.close();

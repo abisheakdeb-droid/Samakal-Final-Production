@@ -24,7 +24,7 @@ async function analyzeContent() {
     const total = await client.sql`SELECT COUNT(*) FROM articles`;
     console.log(`\nTotal Articles: ${total.rows[0].count}`);
 
-  } catch (err) {
+  } catch {
     console.error(err);
   } finally {
     await client.end();

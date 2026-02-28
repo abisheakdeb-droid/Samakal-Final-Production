@@ -1,11 +1,11 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
 
 loadEnvConfig(cwd());
 
 async function main() {
   try {
-    const { mapArticleToNewsItem } = require('../../src/lib/mappers');
+    import { mapArticleToNewsItem } from '../../src/lib/mappers';
 
     const mockArticle = {
       id: '8b24b2e6-e3a0-443d-9d0b-0d45df242d4b',
@@ -25,7 +25,7 @@ async function main() {
     console.log('✅ Result:', result ? 'Success' : 'Failure');
     console.log(result);
 
-  } catch (error) {
+  } catch {
     console.error('❌ Error testing mapper:', error);
   }
 }

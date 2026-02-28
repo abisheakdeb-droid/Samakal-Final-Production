@@ -1,5 +1,5 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
 
 loadEnvConfig(cwd());
 
@@ -17,7 +17,7 @@ async function debug() {
     console.log('Content Type:', res.headers.get('content-type'));
     console.log('First 500 chars:');
     console.log(text.substring(0, 500));
-  } catch (e) {
+  } catch {
     console.error(e);
   }
 }

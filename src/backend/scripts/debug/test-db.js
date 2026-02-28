@@ -1,6 +1,7 @@
 
-const { sql } = require('@vercel/postgres');
-require('dotenv').config({ path: '.env.local' });
+import { sql } from '@vercel/postgres';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 async function testDB() {
   console.log('Testing database connection...');
@@ -17,7 +18,7 @@ async function testDB() {
     `;
     console.log('Available tables:', tables.rows.map(r => r.table_name).join(', '));
     
-  } catch (error) {
+  } catch {
     console.error('Database connection failed:', error);
   } finally {
     process.exit();

@@ -6,6 +6,7 @@ const nextConfig = {
     },
     // ৩. ইমেজ কনফিগারেশন (যা আগেই ছিল)
     images: {
+        unoptimized: true,
         remotePatterns: [
             { protocol: 'https', hostname: 'samakal.com' },
             { protocol: 'https', hostname: 'www.samakal.com' },

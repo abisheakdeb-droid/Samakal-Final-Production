@@ -154,7 +154,7 @@ async function updateNavigation() {
     `;
 
     console.log('✅ Navigation menu updated successfully!');
-  } catch (error) {
+  } catch {
     console.error('❌ Error updating navigation:', error);
   } finally {
     await client.end();

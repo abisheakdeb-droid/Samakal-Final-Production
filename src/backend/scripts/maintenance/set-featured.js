@@ -1,6 +1,7 @@
 
-const { createClient } = require('@vercel/postgres');
-require('dotenv').config({ path: '.env.local' });
+import { createClient } from '@vercel/postgres';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 async function setFeatured() {
   const client = createClient();
@@ -29,7 +30,7 @@ async function setFeatured() {
 
     console.log("Success! Article marked as Featured/Prime.");
 
-  } catch (error) {
+  } catch {
     console.error('Error:', error);
   } finally {
     await client.end();

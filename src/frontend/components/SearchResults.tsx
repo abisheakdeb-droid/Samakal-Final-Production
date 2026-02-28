@@ -5,8 +5,18 @@ import Image from "next/image";
 import { localizeTime } from "@/utils/bn";
 import { CATEGORY_MAP } from "@/config/categories";
 
+interface SearchResultItem {
+    id: string | number;
+    image: string;
+    title: string;
+    category?: string;
+    summary?: string;
+    reporter?: string;
+    time: string;
+}
+
 interface SearchResultsProps {
-    results: any[];
+    results: SearchResultItem[];
     query: string;
 }
 

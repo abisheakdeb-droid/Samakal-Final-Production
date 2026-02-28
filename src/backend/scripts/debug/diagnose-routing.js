@@ -1,6 +1,6 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { createClient } = require('@vercel/postgres');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { createClient } from '@vercel/postgres';
 
 loadEnvConfig(cwd());
 
@@ -79,7 +79,7 @@ async function diagnose(slug) {
         const res = await client.query(query, params);
         console.log('Count Result:', res.rows[0].count);
 
-    } catch (err) {
+    } catch {
         console.error('Diagnosis Failed:', err);
     } finally {
         await client.end();

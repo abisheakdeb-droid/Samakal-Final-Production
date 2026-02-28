@@ -1,5 +1,5 @@
-const { sql } = require('@vercel/postgres');
-const dotenv = require('dotenv');
+import { sql } from '@vercel/postgres';
+import dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.local' });
 
@@ -24,7 +24,7 @@ async function up() {
     await sql`CREATE INDEX IF NOT EXISTS idx_visitor_logs_article ON visitor_logs(article_id)`;
 
     console.log('Migration completed: visitor_logs table created.');
-  } catch (error) {
+  } catch {
     console.error('Migration failed:', error);
   }
 }

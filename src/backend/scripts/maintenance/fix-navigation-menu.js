@@ -1,5 +1,6 @@
-const { createClient } = require('@vercel/postgres');
-require('dotenv').config({ path: '.env.local' });
+import { createClient } from '@vercel/postgres';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 async function updateNav() {
     const client = createClient({ connectionString: process.env.POSTGRES_URL_NON_POOLING });

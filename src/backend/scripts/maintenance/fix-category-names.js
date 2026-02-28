@@ -1,6 +1,6 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { db } = require('@vercel/postgres');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { db } from '@vercel/postgres';
 
 loadEnvConfig(cwd());
 
@@ -25,7 +25,7 @@ async function fixCategories() {
     `;
     console.log(`✅ Updated ${featRes.rowCount} articles from 'Feature' to 'ফিচার'`);
 
-  } catch (err) {
+  } catch {
     console.error('❌ Error fixing categories:', err);
   } finally {
     await client.end();

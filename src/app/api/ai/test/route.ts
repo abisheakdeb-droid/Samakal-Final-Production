@@ -5,13 +5,13 @@ import { testGeminiConnection, getAICompletion } from '@/lib/ai/client';
  * Test Gemini API connection
  * GET /api/ai/test
  */
-export async function GET(_request: NextRequest) {
+export async function GET() {
   try {
     // Check if API key is configured
     if (!process.env.GEMINI_API_KEY) {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: 'GEMINI_API_KEY not configured',
           message: 'Please set GEMINI_API_KEY in your .env.local file',
           setup: 'Get your free API key from: https://makersuite.google.com/app/apikey'
@@ -25,8 +25,8 @@ export async function GET(_request: NextRequest) {
 
     if (!isConnected) {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: 'Connection test failed',
           message: 'Could not connect to Gemini API. Check your API key.'
         },
@@ -59,8 +59,8 @@ export async function GET(_request: NextRequest) {
   } catch (error: unknown) {
     const errorMsg = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: errorMsg,
         message: 'An error occurred while testing the connection'
       },
@@ -120,9 +120,9 @@ export async function POST(request: NextRequest) {
   } catch (error: unknown) {
     const errorMsg = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: errorMsg 
+      {
+        success: false,
+        error: errorMsg
       },
       { status: 500 }
     );

@@ -113,7 +113,7 @@ async function main() {
     }
 
     console.log('\n✅ Category normalization complete.');
-  } catch (err) {
+  } catch {
     console.error('❌ Error fixing categories:', err);
   } finally {
     await client.end();

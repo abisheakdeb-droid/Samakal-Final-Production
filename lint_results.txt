@@ -1,0 +1,463 @@
+
+> samakal-redesign@0.1.0 lint
+> eslint
+
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/app/api/ai/test/route.ts
+  8:27  warning  '_request' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/lib/actions-article.ts
+  89:63  warning  '_limit' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/lib/actions-bookmark.ts
+   6:10  warning  'mapArticleToNewsItem' is defined but never used  @typescript-eslint/no-unused-vars
+   7:10  warning  'ArticleRow' is defined but never used            @typescript-eslint/no-unused-vars
+  61:12  warning  'error' is defined but never used                 @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/lib/actions-event.ts
+   94:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  133:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  145:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/lib/actions-history.ts
+  5:10  warning  'revalidatePath' is defined but never used         @typescript-eslint/no-unused-vars
+  7:22  warning  'ArticleImageRow' is defined but never used        @typescript-eslint/no-unused-vars
+  7:39  warning  'ArticleContributorRow' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/lib/actions-layout.ts
+  88:68  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  97:70  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/lib/db.ts
+  20:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:74  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/check_images_script.ts
+  25:14  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/clean-data.mjs
+  97:14  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/check-image-urls.js
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/check-saradesh-images.js
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/check-schema.js
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/check-value.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/debug-db.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/debug-fetch.js
+  1:27  error    A `require()` style import is forbidden        @typescript-eslint/no-require-imports
+  2:17  error    A `require()` style import is forbidden        @typescript-eslint/no-require-imports
+  3:26  error    A `require()` style import is forbidden        @typescript-eslint/no-require-imports
+  8:10  warning  'normalizeCategory' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/debug-mapper.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  8:38  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/debug-rss.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/diagnose-routing.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/health-check.js
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/inspect-feature-dom.js
+  1:19  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/inspect-schema.js
+  1:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/inspect-settings-schema.js
+  1:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/test-db-connection.js
+  2:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/test-db.js
+  2:17  error    A `require()` style import is forbidden      @typescript-eslint/no-require-imports
+  3:1   error    A `require()` style import is forbidden      @typescript-eslint/no-require-imports
+  9:11  warning  'result' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/test-fetch.js
+   1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  14:34  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/debug/test-scraper.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:18  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:19  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/add-featured-columns.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/cleanup-database.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/clear-content.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/fix-category-names.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/fix-navigation-menu.js
+  1:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/fix-parent-categories-v2.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/fix-parent-categories-v3-cleanup.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/fix-parent-categories.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/fix-regional-mapping-v2.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/fix-regional-mapping.js
+   1:27  error    A `require()` style import is forbidden         @typescript-eslint/no-require-imports
+   2:17  error    A `require()` style import is forbidden         @typescript-eslint/no-require-imports
+   3:26  error    A `require()` style import is forbidden         @typescript-eslint/no-require-imports
+  32:15  warning  'divisions' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/move-literature-category.js
+  1:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/optimize-db.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/read-nav.js
+  1:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/set-featured.js
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/smart-fill.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/update-categories-bengali.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/update-lifestyle-subcategories.js
+  1:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/update-nav-v5.js
+    1:17  error    A `require()` style import is forbidden      @typescript-eslint/no-require-imports
+    2:1   error    A `require()` style import is forbidden      @typescript-eslint/no-require-imports
+  158:11  warning  'result' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/update-nav-v6.js
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/update-nav-v7.js
+  2:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/maintenance/update-nav.js
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/migrations/001-add-phase1-metadata.js
+  1:9   warning  'db' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  1:16  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/migrations/002-add-media-support.js
+  1:9   warning  'db' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  1:16  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/migrations/003-add-attribution-seo.js
+  1:9   warning  'db' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  1:16  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/migrations/005-add-site-settings.js
+  1:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/migrations/005-add-visitor-logs.js
+  1:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/migrations/006-add-ticker-toggle.js
+  1:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/migrations/migrate-events.js
+  2:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/migrations/migrate-molecular-control.js
+  1:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/migrations/migrate-scheduled-publishing.js
+  1:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/migrations/migrate-travel-to-lifestyle.js
+  1:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/migrations/migration-add-id.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/migrations/run-migration.js
+   1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  18:23  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/repopulate-core.mjs
+   54:18  warning  'e' is defined but never used    @typescript-eslint/no-unused-vars
+  180:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/run-inspect.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  9:3   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/scrapers/import-economics-batch.js
+    1:27  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    2:17  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    3:16  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    4:19  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    5:15  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    6:12  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    7:14  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    8:16  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   43:12  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+   90:12  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+  121:12  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/scrapers/import-feature.js
+   1:27  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   2:17  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   3:26  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   4:19  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   5:15  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   6:12  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   7:14  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   8:16  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  48:12  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+  93:12  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/scrapers/import-literature.js
+   1:27  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   2:17  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   3:26  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   4:19  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   5:15  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   6:12  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   7:14  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   8:16  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  45:12  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+  90:12  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/scrapers/import-opinion.js
+    1:27  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    2:17  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    3:26  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    4:19  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    5:15  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    6:12  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    7:14  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    8:16  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   42:12  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+   87:12  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+  137:12  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/scrapers/import-real-news.js
+  168:20  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/scrapers/import-samagra.js
+    1:27  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    2:17  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    3:26  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    4:19  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    5:15  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    6:12  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    7:14  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+    8:16  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   42:12  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+   87:12  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+  133:12  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/scrapers/universal-import-batch.js
+    1:27  error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+    2:17  error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+    3:16  error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+    4:19  error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+    5:15  error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+    6:12  error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+    7:14  error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+    8:16  error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+   48:12  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+   53:44  warning  'categoryName' is defined but never used  @typescript-eslint/no-unused-vars
+   98:12  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  112:40  warning  'catUrl' is defined but never used        @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/scrapers/universal-regional-importer.js
+   1:27  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   2:17  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   3:16  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   4:19  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   5:15  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   6:12  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   7:14  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+   8:16  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  36:14  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+  73:14  warning  'error' is defined but never used        @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/seed-universal.mjs
+  326:30  warning  'e' is defined but never used    @typescript-eslint/no-unused-vars
+  335:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/seeds/run-seed-articles.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  6:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/seeds/run-seed.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  9:3   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/seeds/seed-admin.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/seeds/seed-articles.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/seeds/seed-bengali-articles.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/backend/scripts/seeds/seed-samakal-news.js
+  1:27  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  4:17  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/frontend/components/AISummary.tsx
+  3:31  warning  'useRef' is defined but never used  @typescript-eslint/no-unused-vars
+  4:20  warning  'Bot' is defined but never used     @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/frontend/components/FloatingVideoPlayer/index.tsx
+  224:6  warning  React Hook useEffect has missing dependencies: 'currentVideo', 'onPlayerReady', and 'onPlayerStateChange'. Either include them or remove the dependency array    react-hooks/exhaustive-deps
+  275:6  warning  React Hook useEffect has missing dependencies: 'currentVideo', 'isPlaying', 'pauseVideo', and 'resumeVideo'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  286:6  warning  React Hook useEffect has a missing dependency: 'currentVideo?.source'. Either include it or remove the dependency array                                          react-hooks/exhaustive-deps
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/frontend/components/InstallPrompt.tsx
+  43:13  warning  'outcome' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/frontend/components/SearchHero.tsx
+  14:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/frontend/components/SearchHero.tsx:14:9
+  12 |
+  13 |     useEffect(() => {
+> 14 |         setQuery(searchParams.get("q") || "");
+     |         ^^^^^^^^ Avoid calling setState() directly within an effect
+  15 |     }, [searchParams]);
+  16 |
+  17 |     const handleSearch = (e: React.FormEvent) => {  react-hooks/set-state-in-effect
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/frontend/components/SearchResults.tsx
+  9:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/frontend/components/StructuredData.tsx
+  88:5  warning  `next/script`'s `beforeInteractive` strategy should not be used outside of `pages/_document.js`. See: https://nextjs.org/docs/messages/no-before-interactive-script-outside-document  @next/next/no-before-interactive-script-outside-document
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/frontend/components/auth/UserDropdown.tsx
+  25:19  warning  'session' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/frontend/components/dashboard/editor/ArticlePreview.tsx
+  4:27  warning  'Facebook' is defined but never used      @typescript-eslint/no-unused-vars
+  4:37  warning  'Twitter' is defined but never used       @typescript-eslint/no-unused-vars
+  4:46  warning  'Linkedin' is defined but never used      @typescript-eslint/no-unused-vars
+  4:56  warning  'Copy' is defined but never used          @typescript-eslint/no-unused-vars
+  4:62  warning  'PlayCircle' is defined but never used    @typescript-eslint/no-unused-vars
+  5:10  warning  'localizeTime' is defined but never used  @typescript-eslint/no-unused-vars
+  6:8   warning  'clsx' is defined but never used          @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/frontend/components/dashboard/editor/ContributorSelector.tsx
+  4:23  warning  'Search' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/frontend/components/dashboard/editor/SEOPanel.tsx
+  3:20  warning  'useEffect' is defined but never used    @typescript-eslint/no-unused-vars
+  4:25  warning  'AlertCircle' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/frontend/components/dashboard/editor/Sidebar.tsx
+   79:3  warning  'onPublish' is defined but never used       @typescript-eslint/no-unused-vars
+   80:3  warning  'isPublishing' is defined but never used    @typescript-eslint/no-unused-vars
+  116:3  warning  'scheduledAt' is defined but never used     @typescript-eslint/no-unused-vars
+  117:3  warning  'setScheduledAt' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/abisheakshill/Desktop/Antigravity/samakal-redesign/src/frontend/contexts/VideoPlayerContext.tsx
+  3:78  warning  'useEffect' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 265 problems (198 errors, 67 warnings)
+

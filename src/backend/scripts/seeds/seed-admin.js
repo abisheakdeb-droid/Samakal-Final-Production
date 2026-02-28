@@ -1,7 +1,7 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { db } = require('@vercel/postgres');
-const bcrypt = require('bcryptjs');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { db } from '@vercel/postgres';
+import bcrypt from 'bcryptjs';
 
 // Load environment variables
 loadEnvConfig(cwd());
@@ -45,7 +45,7 @@ async function seedUsers(client) {
       createTable,
       user,
     };
-  } catch (error) {
+  } catch {
     console.error('Error seeding users:', error);
     throw error;
   }

@@ -74,7 +74,7 @@ async function migrateParentCategory() {
       console.log(`   ${row.parent_category}: ${row.count} articles`);
     });
     
-  } catch (error) {
+  } catch {
     console.error('❌ Migration failed:', error);
     throw error;
   } finally {

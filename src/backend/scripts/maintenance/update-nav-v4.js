@@ -44,7 +44,7 @@ async function updateNav() {
       WHERE id = 1
     `;
     console.log('Navigation updated successfully!');
-  } catch (error) {
+  } catch {
     console.error('Failed to update navigation:', error);
   } finally {
     process.exit();

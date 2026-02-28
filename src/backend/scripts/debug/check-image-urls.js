@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { sql } = require('@vercel/postgres');
-require('dotenv').config({ path: '.env.local' });
+ 
+import { sql } from '@vercel/postgres';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 async function checkImages() {
     try {
@@ -19,7 +20,7 @@ async function checkImages() {
             console.log(`Image: ${row.image}`);
             console.log(`Source: ${row.source}`);
         });
-    } catch (error) {
+    } catch {
         console.error('Error fetching images:', error);
     } finally {
         process.exit();

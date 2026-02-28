@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Search, X } from "lucide-react";
 
 export default function SearchHero() {
@@ -9,10 +9,6 @@ export default function SearchHero() {
     const router = useRouter();
     const pathname = usePathname();
     const [query, setQuery] = useState(searchParams.get("q") || "");
-
-    useEffect(() => {
-        setQuery(searchParams.get("q") || "");
-    }, [searchParams]);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();

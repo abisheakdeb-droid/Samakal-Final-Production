@@ -46,7 +46,7 @@ async function cleanData() {
         }
 
         console.log('\n🎉 Data Clean Complete!');
-    } catch (err) {
+    } catch {
         console.error('Fatal Error:', err);
     } finally {
         await client.end();
@@ -94,7 +94,7 @@ async function reScrapeBody(id, url) {
             console.log(`[Skipped - Still Short]`);
         }
 
-    } catch (e) {
+    } catch {
         console.log(`[Failed]`);
     }
 }

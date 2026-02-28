@@ -1,6 +1,7 @@
 
-const { createClient } = require('@vercel/postgres');
-require('dotenv').config({ path: '.env.local' });
+import { createClient } from '@vercel/postgres';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 async function checkSchema() {
   const client = createClient();
@@ -21,7 +22,7 @@ async function checkSchema() {
     const hasFeatured = res.rows.some(r => r.column_name === 'is_featured' || r.column_name === 'is_prime');
     console.log(`\nHas 'is_featured' or 'is_prime': ${hasFeatured}`);
 
-  } catch (error) {
+  } catch {
     console.error('Error querying schema:', error);
   } finally {
     await client.end();

@@ -38,9 +38,9 @@
 
 প্রজেক্টটি মূলত তিনটি প্রধান স্তরে (Layers) বিভক্ত:
 
-1.  **ফ্রন্টএন্ড (Frontend React Components):** `src/frontend/` ফোল্ডারে সমস্ত UI কম্পোনেন্ট থাকে। এটি Server Components এবং Client Components-এর মিশ্রণ।
-2.  **ব্যাকএন্ড ও এপিআই (Backend & API Routes):** `src/app/api/` ফোল্ডারে API রুটস এবং `src/backend/lib/` এ ডেটা ফেচিং লজিক (Custom Server Actions) থাকে।
-3.  **ডেটাবেজ ও সিঙ্ক (Prisma & Sync Pipeline):** যেহেতু সমকালের প্রোডাকশন ডেটাবেইজ আলাদা (Laravel), আমরা একটি **Sync Webhook (`/api/sync`)** তৈরি করেছি যা পুরনো সাইট থেকে ডেটা এনে আমাদের PostgreSQL-এ সেভ করে।
+1. **ফ্রন্টএন্ড (Frontend React Components):** `src/frontend/` ফোল্ডারে সমস্ত UI কম্পোনেন্ট থাকে। এটি Server Components এবং Client Components-এর মিশ্রণ।
+2. **ব্যাকএন্ড ও এপিআই (Backend & API Routes):** `src/app/api/` ফোল্ডারে API রুটস এবং `src/backend/lib/` এ ডেটা ফেচিং লজিক (Custom Server Actions) থাকে।
+3. **ডেটাবেজ ও সিঙ্ক (Prisma & Sync Pipeline):** যেহেতু সমকালের প্রোডাকশন ডেটাবেইজ আলাদা (Laravel), আমরা একটি **Sync Webhook (`/api/sync`)** তৈরি করেছি যা পুরনো সাইট থেকে ডেটা এনে আমাদের PostgreSQL-এ সেভ করে।
 
 ## ৩. Sync Script (Cron / Webhook)
 
@@ -48,9 +48,9 @@
 
 **করণীয়:**
 
-1.  সমকালের Laravel সাইটে একটি ছোট API Endpoint তৈরি করা যা latest articles JSON ফরম্যাটে রিটার্ন করবে।
-2.  গিটহাব একশন বা Vercel Cron ব্যবহার করে প্রতি মিনিটে আমাদের `Sync Script` রান করা।
-3.  স্ক্রিপ্টটি নতুন আর্টিকেলগুলো নিয়ে আমাদের PostgreSQL (Neon)-এ ইনসার্ট করবে।
+1. সমকালের Laravel সাইটে একটি ছোট API Endpoint তৈরি করা যা latest articles JSON ফরম্যাটে রিটার্ন করবে।
+2. গিটহাব একশন বা Vercel Cron ব্যবহার করে প্রতি মিনিটে আমাদের `Sync Script` রান করা।
+3. স্ক্রিপ্টটি নতুন আর্টিকেলগুলো নিয়ে আমাদের PostgreSQL (Neon)-এ ইনসার্ট করবে।
 
 ## ৪. ধাপে ধাপে বাস্তবায়ন (Implementation Steps)
 
@@ -60,9 +60,9 @@
 
 ডিজাইনের ক্ষেত্রে এই প্রজেক্টে **"Readability and Visual Excellence"**-কে সর্বোচ্চ গুরুত্ব দেওয়া হয়েছে।
 
--   **Glassmorphism:** মেগা মেনু, স্টিকি হেডার এবং কিছু কার্ডে গ্লাসমরফিজম (অর্ধ-স্বচ্ছ, ব্লার ব্যাকগ্রাউন্ড) ব্যবহার করা হয়েছে।
--   **CSS Variables:** `src/app/globals.css` ফোল্ডারে `:root` ভ্যারিয়েবলের মাধ্যমে কালার থিম (যেমন: `--color-brand-red`, `--color-surface`) কন্ট্রোল করা হয়।
--   **Responsive Layouts:** সাইটটি সম্পূর্ণ মোবাইল-ফার্স্ট। `MobileMenu.tsx`, `Sidebar.tsx` ইত্যাদি স্ক্রিন সাইজ অনুযায়ী রেন্ডার হয়।
+- **Glassmorphism:** মেগা মেনু, স্টিকি হেডার এবং কিছু কার্ডে গ্লাসমরফিজম (অর্ধ-স্বচ্ছ, ব্লার ব্যাকগ্রাউন্ড) ব্যবহার করা হয়েছে।
+- **CSS Variables:** `src/app/globals.css` ফোল্ডারে `:root` ভ্যারিয়েবলের মাধ্যমে কালার থিম (যেমন: `--color-brand-red`, `--color-surface`) কন্ট্রোল করা হয়।
+- **Responsive Layouts:** সাইটটি সম্পূর্ণ মোবাইল-ফার্স্ট। `MobileMenu.tsx`, `Sidebar.tsx` ইত্যাদি স্ক্রিন সাইজ অনুযায়ী রেন্ডার হয়।
 
 ---
 
@@ -87,14 +87,14 @@ src/
 
 ---
 
-##  SEO এবং লিগ্যাসি রিডাইরেক্ট (Crucial for Migration)
+## SEO এবং লিগ্যাসি রিডাইরেক্ট (Crucial for Migration)
 
 সমকালের লক্ষাধিক পুরনো আর্টিকেল গুগলে ইনডেক্স করা আছে। সাইট মাইগ্রেশনের সময় **SEO Ranking** ধরে রাখতে একটি শক্তিশালী
 
 ### Step 1: Middleware & Category Route Mapping
 
--   `src/proxy.ts` তৈরি করা (middleware.ts থেকে মাইগ্রেট করা)।
--   `categoryMap` ডিকশনারি দিয়ে `/international` -> `/world`, `/whole-country` -> `/saradesh` রিডাইরেক্ট কনফিগার করা।
+- `src/proxy.ts` তৈরি করা (middleware.ts থেকে মাইগ্রেট করা)।
+- `categoryMap` ডিকশনারি দিয়ে `/international` -> `/world`, `/whole-country` -> `/saradesh` রিডাইরেক্ট কনফিগার করা।
 
 ### Step 2: Article ID Lookup Logic
 
@@ -108,6 +108,7 @@ src/
 নতুন ডেভেলপার হিসেবে প্রজেক্ট রান করতে নিচের ধাপগুলো অনুসরণ করুন:
 
 ### ১. রিপোজিটরি ক্লোন ও প্যাকেজ ইনস্টল
+
 ```bash
 git clone <repository-url>
 cd samakal-redesign
@@ -115,6 +116,7 @@ npm install
 ```
 
 ### ২. এনভায়রনমেন্ট ভেরিয়েবল (.env)
+
 প্রজেক্টের রুটে একটি `.env.local` ফাইল তৈরি করুন এবং নিচের ক্রেডেনশিয়ালগুলো বসান:
 
 ```env
@@ -132,6 +134,7 @@ SYNC_SECRET="samakal-sync-secret-2026-xYz"
 ```
 
 ### ৩. ডেটাবেইজ ইনিশিয়ালাইজ (Prisma)
+
 যেহেতু প্রজেক্টটি Prisma ব্যবহার করে, ডেটাবেস স্কিমা সিঙ্ক করতে হবে:
 
 ```bash
@@ -140,6 +143,7 @@ npx prisma db push
 ```
 
 ### ৪. ডেভেলপমেন্ট সার্ভার চালু করা
+
 ```bash
 npm run dev
 ```
@@ -153,17 +157,17 @@ npm run dev
 
 যেহেতু পুরনো সাইট থেকে ডেটা আনা একটা বড় চ্যালেঞ্জ, `src/backend/scripts/` এর ভেতর কিছু গুরুত্বপূর্ণ টুলস আছে:
 
--   **ডেটা স্ক্র্যাপার:** `npm run scrape` (সমকালের বর্তমান সাইট থেকে ডামি ডেটা আনার জন্য)
--   **সিঙ্ক টেস্টার:** `node src/backend/scripts/debug/test-sync-redirect.js` (Webhook এবং 301 Redirect ঠিকমতো কাজ করছে কিনা চেক করতে)
+- **ডেটা স্ক্র্যাপার:** `npm run scrape` (সমকালের বর্তমান সাইট থেকে ডামি ডেটা আনার জন্য)
+- **সিঙ্ক টেস্টার:** `node src/backend/scripts/debug/test-sync-redirect.js` (Webhook এবং 301 Redirect ঠিকমতো কাজ করছে কিনা চেক করতে)
 
 ---
 
 ## ⚠️ মেনে চলার মতো কিছু নিয়ম (Developer Rules)
 
-1.  **Readability > Cleverness:** কোড এমনভাবে লিখুন যেন অন্য ডেভেলপার সহজেই বুঝতে পারে। অপ্রয়োজনীয় জটিলতা (magic one-liners) এড়িয়ে চলুন।
-2.  **Vanilla CSS First:** প্রজেক্টে CSS Modules কে প্রাধান্য দেওয়া হয়েছে, Tailwind শুধুমাত্র হেল্পার হিসেবে ব্যবহৃত।
-3.  **Console Errors:** ব্রাউজার কনসোলে যেন কোনো React Hydration Error বা Image Missing Warning না থাকে সেদিকে খেয়াল রাখবেন।
-4.  **Vercel vs Cloudflare:** Vercel-এর কিছু স্পেসিফিক মডিউল (`@vercel/blob` বা `next/image` optimizer) ব্যবহার করা হয়েছে। ভবিষ্যতে Cloudflare-এ ডিপ্লয় করলে কনফিগারেশন চেঞ্জ করতে হতে পারে।
+1. **Readability > Cleverness:** কোড এমনভাবে লিখুন যেন অন্য ডেভেলপার সহজেই বুঝতে পারে। অপ্রয়োজনীয় জটিলতা (magic one-liners) এড়িয়ে চলুন।
+2. **Vanilla CSS First:** প্রজেক্টে CSS Modules কে প্রাধান্য দেওয়া হয়েছে, Tailwind শুধুমাত্র হেল্পার হিসেবে ব্যবহৃত।
+3. **Console Errors:** ব্রাউজার কনসোলে যেন কোনো React Hydration Error বা Image Missing Warning না থাকে সেদিকে খেয়াল রাখবেন।
+4. **Vercel vs Cloudflare:** Vercel-এর কিছু স্পেসিফিক মডিউল (`@vercel/blob` বা `next/image` optimizer) ব্যবহার করা হয়েছে। ভবিষ্যতে Cloudflare-এ ডিপ্লয় করলে কনফিগারেশন চেঞ্জ করতে হতে পারে।
 
 ---
 
@@ -172,12 +176,16 @@ npm run dev
 এই প্রজেক্টটি Vercel এবং Cloudflare, উভয় প্ল্যাটফর্মেই ডিপ্লয় করা সম্ভব, তবে কিছু স্পেসিফিক কনফিগারেশন মাথায় রাখতে হবে:
 
 ### Vercel Deployment
+
 Vercel-এ ডিপ্লয় করা সবচেয়ে সহজ, কারণ এটি Next.js-এর নেটিভ হোস্ট।
--   `Settings > Environment Variables`-এ গিয়ে `.env.local` এর সব ভ্যারিয়েবল বসাতে হবে।
--   **Important:** Vercel-এর Image Optimization লিমিট ও সমকালের সার্ভারের হটলিংক ব্লকের কারণে `src/backend/utils/image.ts` এ **`wsrv.nl`** প্রক্সি ব্যবহার করা হয়েছে। এটি `next.config.mjs` এ bypass করা আছে।
+
+- `Settings > Environment Variables`-এ গিয়ে `.env.local` এর সব ভ্যারিয়েবল বসাতে হবে।
+- **Important:** Vercel-এর Image Optimization লিমিট ও সমকালের সার্ভারের হটলিংক ব্লকের কারণে `src/backend/utils/image.ts` এ **`wsrv.nl`** প্রক্সি ব্যবহার করা হয়েছে। এটি `next.config.mjs` এ bypass করা আছে।
 
 ### Cloudflare Pages / Workers
+
 যদি ট্রাফিক কস্ট কমাতে Cloudflare ব্যবহার করা হয়:
+
 - `next-auth` এবং `Prisma` Edge runtime-এ ঠিকমতো কাজ করে কিনা নিশ্চিত করতে হবে (Prisma Accelerate লাগতে পারে)।
 - `@vercel/blob` (যদি ইমেজ আপলোডে ব্যবহৃত হয়) রিপ্লেস করে Cloudflare R2 স্টোরেজ অ্যাড করতে হবে।
 

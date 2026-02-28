@@ -1,6 +1,6 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { db } = require('@vercel/postgres');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { db } from '@vercel/postgres';
 
 loadEnvConfig(cwd());
 
@@ -21,7 +21,7 @@ async function main() {
     if (res.rowCount > 0 && res.rows[0].content_length === 0) {
       console.log('\n⚠️  WARNING: Article content is empty!');
     }
-  } catch (err) {
+  } catch {
     console.error('❌ Database Error:', err);
   } finally {
     await client.end();

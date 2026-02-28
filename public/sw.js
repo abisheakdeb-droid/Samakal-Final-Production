@@ -1,7 +1,7 @@
 // Service Worker for Samakal PWA
 // Provides offline functionality and static asset caching
 
-const CACHE_NAME = 'samakal-v1';
+// const CACHE_NAME = 'samakal-v1';
 const STATIC_CACHE = 'samakal-static-v1';
 const DYNAMIC_CACHE = 'samakal-dynamic-v1';
 
@@ -97,7 +97,7 @@ self.addEventListener('fetch', (event) => {
   );
 });
 // Push Notification Event
-self.addEventListener('push', function(event) {
+self.addEventListener('push', function (event) {
   if (event.data) {
     const data = event.data.json();
     const options = {
@@ -118,7 +118,7 @@ self.addEventListener('push', function(event) {
 });
 
 // Notification Click Event
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', function (event) {
   console.log('[Service Worker] Notification click Received.');
   event.notification.close();
 

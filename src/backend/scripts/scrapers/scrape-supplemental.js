@@ -43,7 +43,7 @@ async function downloadImage(imageUrl, articleSlug) {
     
     fs.writeFileSync(filepath, response.data);
     return `/uploads/articles/${filename}`;
-  } catch (error) {
+  } catch {
     console.error(`  ❌ Image download failed: ${error.message}`);
     return null;
   }
@@ -113,7 +113,7 @@ async function scrapeArticle(browser, url, category) {
       category,
       originalUrl: url
     };
-  } catch (error) {
+  } catch {
     console.error(`  ❌ Scrape failed: ${error.message}`);
     return null;
   } finally {
@@ -153,7 +153,7 @@ async function getArticleLinks(browser, categoryUrl, limit = 55) {
     await page.close();
     
     return links.slice(0, limit);
-  } catch (error) {
+  } catch {
     console.error(`  ❌ Failed to load category: ${error.message}`);
     await page.close();
     return [];
@@ -181,7 +181,7 @@ async function importArticle(client, articleData, slug) {
       )
     `;
     return true;
-  } catch (error) {
+  } catch {
     console.error(`  ❌ Database import failed: ${error.message}`);
     return false;
   }
@@ -253,7 +253,7 @@ async function importFromSamakal() {
           stats.failed++;
           stats.byCategory[categoryName].failed++;
         }
-      } catch (error) {
+      } catch {
         console.error(`  ❌ Database error: ${error.message}`);
         stats.failed++;
         stats.byCategory[categoryName].failed++;

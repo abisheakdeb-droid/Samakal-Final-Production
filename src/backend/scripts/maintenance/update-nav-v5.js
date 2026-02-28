@@ -1,5 +1,6 @@
-const { sql } = require('@vercel/postgres');
-require('dotenv').config({ path: '.env.local' });
+import { sql } from '@vercel/postgres';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 const newNav = [
     { label: "সর্বশেষ", href: "/category/latest" },
@@ -162,7 +163,7 @@ async function updateNav() {
       WHERE id = 1
     `;
     console.log('Navigation updated successfully!');
-  } catch (error) {
+  } catch {
     console.error('Failed to update navigation:', error);
   } finally {
     process.exit();

@@ -16,7 +16,7 @@ async function checkArticle() {
         if (result.rows.length > 0 && result.rows[0].content_length === 0) {
             console.log('\n⚠️  WARNING: Article has ZERO content!');
         }
-    } catch (error) {
+    } catch {
         console.error('Error:', error);
     } finally {
         process.exit(0);

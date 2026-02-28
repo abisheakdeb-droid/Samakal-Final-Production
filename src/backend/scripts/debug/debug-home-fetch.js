@@ -1,7 +1,7 @@
 /* eslint-disable */
-const { createClient } = require('@vercel/postgres');
-const dotenv = require('dotenv');
-const path = require('path');
+import { createClient } from '@vercel/postgres';
+import dotenv from 'dotenv';
+import path from 'path';
 
 // Load environment variables
 dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
@@ -50,7 +50,7 @@ async function debugHome() {
         console.log('Backfill Count:', backfillQuery.rows.length);
         console.log('Backfill Rows:', backfillQuery.rows.map(r => `${r.id} | ${r.title}`));
 
-    } catch (error) {
+    } catch {
         console.error('DEBUG ERROR:', error);
     } finally {
         await client.end();

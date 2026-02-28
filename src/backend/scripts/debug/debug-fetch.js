@@ -1,6 +1,6 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { createClient } = require('@vercel/postgres');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { createClient } from '@vercel/postgres';
 
 loadEnvConfig(cwd());
 
@@ -50,7 +50,7 @@ async function testFetch(category, limit = 10, isParent = false, parentCategory)
 
         console.log('Results Found:', res.rowCount);
         console.table(res.rows);
-    } catch (err) {
+    } catch {
         console.error('Fetch Failed:', err);
     } finally {
         await client.end();

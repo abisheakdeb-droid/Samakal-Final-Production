@@ -155,7 +155,7 @@ export default async function Home() {
                 {/* Explicit Vertical Divider - Absolute Positioned */}
                 <div className="hidden md:block absolute -left-3 top-0 bottom-0 w-px bg-gray-300 dark:bg-gray-700"></div>
 
-                <div className="flex flex-col h-full gap-4">
+                <div className="flex flex-col h-full gap-6">
                   {/* First Item: Large Vertical Card */}
                   {subHeroNews[0] && (
                     <div className="relative group flex-1">
@@ -164,7 +164,7 @@ export default async function Home() {
                         className="flex flex-col h-full group bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-800 transition-all duration-300"
                       >
                         {/* Image Top */}
-                        <div className="aspect-video w-full relative bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                        <div className="h-48 lg:h-[220px] w-full relative bg-gray-100 dark:bg-gray-800 overflow-hidden shrink-0">
                           <Image
                             src={subHeroNews[0].image}
                             alt={subHeroNews[0].title}
@@ -184,10 +184,10 @@ export default async function Home() {
                           <h3 className="text-xl font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-brand-red transition-colors mb-2">
                             {subHeroNews[0].title}
                           </h3>
-                          <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 mb-3 flex-1">
+                          <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 mb-2 flex-1">
                             {subHeroNews[0].summary}
                           </p>
-                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-auto">
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-auto pt-2 border-t border-gray-100 dark:border-gray-800">
                             <span className="text-[11px] text-gray-500 dark:text-gray-400">
                               {subHeroNews[0].author || "ডেস্ক রিপোর্ট"}
                             </span>
@@ -204,14 +204,15 @@ export default async function Home() {
                     </div>
                   )}
 
-                  {/* Second Item: Standard Horizontal Card */}
+                  {/* Second Item: Large Vertical Card (Matching First Item) */}
                   {subHeroNews[1] && (
-                    <div className="relative group">
+                    <div className="relative group flex-1">
                       <Link
                         href={`/article/${subHeroNews[1].id}`}
-                        className="flex gap-4 items-center group bg-white dark:bg-gray-900 p-3 rounded-xl shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-800 transition-all duration-300"
+                        className="flex flex-col h-full group bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-800 transition-all duration-300"
                       >
-                        <div className="w-24 h-20 relative bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shrink-0">
+                        {/* Image Top */}
+                        <div className="h-48 lg:h-[220px] w-full relative bg-gray-100 dark:bg-gray-800 overflow-hidden shrink-0">
                           <Image
                             src={subHeroNews[1].image}
                             alt={subHeroNews[1].title}
@@ -219,12 +220,19 @@ export default async function Home() {
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                           />
+                          <div className="absolute top-3 left-3">
+                            <span className="bg-brand-red text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
+                              {subHeroNews[1].category}
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <h3 className="text-base font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-brand-red transition-colors line-clamp-2">
+
+                        {/* Content Bottom */}
+                        <div className="p-5 flex flex-col flex-1">
+                          <h3 className="text-xl font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-brand-red transition-colors mb-2 line-clamp-2">
                             {subHeroNews[1].title}
                           </h3>
-                          <div className="mt-2 flex items-center gap-2">
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-auto pt-2 border-t border-gray-100 dark:border-gray-800">
                             <span className="text-[11px] text-gray-500 dark:text-gray-400">
                               {subHeroNews[1].author || "ডেস্ক রিপোর্ট"}
                             </span>

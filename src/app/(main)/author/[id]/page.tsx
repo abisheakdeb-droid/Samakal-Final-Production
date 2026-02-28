@@ -16,6 +16,15 @@ export const metadata = {
   description: "Author details and articles.",
 };
 
+interface AuthorArticle {
+  id: string;
+  title: string;
+  image: string;
+  category: string;
+  time: string;
+  [key: string]: unknown;
+}
+
 export default async function AuthorPage({
   params,
 }: {
@@ -24,10 +33,10 @@ export default async function AuthorPage({
   const resolvedParams = await params;
   const authorId = resolvedParams.id;
 
-  const [author, articles] = await Promise.all([
+  const [author, articles] = (await Promise.all([
     fetchAuthorProfile(authorId),
     fetchArticlesByAuthor(authorId),
-  ]);
+  ])) as [Record<string, string>, AuthorArticle[]];
 
   if (!author) {
     notFound();

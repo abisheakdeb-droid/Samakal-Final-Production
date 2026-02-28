@@ -1,4 +1,4 @@
-const { db } = require('@vercel/postgres');
+import { db } from '@vercel/postgres';
 
 async function inspectSchema(client) {
   try {
@@ -35,7 +35,7 @@ async function inspectSchema(client) {
       console.log(`- ${table.table_name}`);
     });
 
-  } catch (error) {
+  } catch {
     console.error('Error inspecting schema:', error);
     throw error;
   }

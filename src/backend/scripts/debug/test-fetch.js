@@ -1,5 +1,5 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
 
 loadEnvConfig(cwd());
 
@@ -11,13 +11,13 @@ loadEnvConfig(cwd());
 async function main() {
   try {
     // Dynamic import to allow env loading first
-    const { fetchArticleById } = require('../../src/lib/actions-article');
+    import { fetchArticleById } from '../../src/lib/actions-article';
 
     console.log('🧪 Testing fetchArticleById("1")...');
     const article = await fetchArticleById("1");
     console.log('Result:', article ? article.title : 'null');
 
-  } catch (error) {
+  } catch {
     console.error('❌ Error testing fetch:', error);
   }
 }

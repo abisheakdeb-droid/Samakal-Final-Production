@@ -103,7 +103,6 @@ export default function FloatingVideoPlayer() {
         if (userPreferences.pauseBehavior === "auto-pause") {
           pauseVideo();
         } else if (userPreferences.pauseBehavior === "always-ask") {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
           setShowPausePrompt(true);
         }
       }
@@ -151,7 +150,7 @@ export default function FloatingVideoPlayer() {
       const firstScriptTag = document.getElementsByTagName("script")[0];
       firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
     }
-    window.onYouTubeIframeAPIReady = () => {};
+    window.onYouTubeIframeAPIReady = () => { };
 
     // Facebook
     if (!window.FB) {
@@ -221,6 +220,7 @@ export default function FloatingVideoPlayer() {
     return () => {
       if (playerRef.current) playerRef.current.destroy();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentVideo?.url]);
 
   // Initialize Facebook Player
@@ -272,6 +272,7 @@ export default function FloatingVideoPlayer() {
     return () => {
       fbPlayerRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentVideo?.url]);
 
   // Sync Play/Pause/Seek/Mute for FB
@@ -283,7 +284,7 @@ export default function FloatingVideoPlayer() {
 
     if (isMuted) fbPlayerRef.current?.mute();
     else fbPlayerRef.current?.unmute();
-  }, [isPlaying, isMuted]);
+  }, [isPlaying, isMuted, currentVideo?.source]);
 
   // FB Progress Polling (No built-in timeupdate)
   useEffect(() => {
@@ -348,9 +349,9 @@ export default function FloatingVideoPlayer() {
           data-show-text="false"
           data-allowfullscreen="true"
           data-controls="false" // We want custom controls, but FB might force its own. 'false' hides minimal controls?
-          // FB API says data-controls="true" shows native. We might need native if custom seeking is hard?
-          // Actually, let's try custom controls.
-          // Pointer events none on container might block interaction, allowing our overlay.
+        // FB API says data-controls="true" shows native. We might need native if custom seeking is hard?
+        // Actually, let's try custom controls.
+        // Pointer events none on container might block interaction, allowing our overlay.
         ></div>
       </div>
     );
@@ -395,7 +396,7 @@ export default function FloatingVideoPlayer() {
       const duration = Date.now() - clickStartTimeRef.current;
       const dist = Math.sqrt(
         Math.pow(e.clientX - startPosRef.current.x, 2) +
-          Math.pow(e.clientY - startPosRef.current.y, 2),
+        Math.pow(e.clientY - startPosRef.current.y, 2),
       );
 
       if (duration < 200 && dist < 5) {

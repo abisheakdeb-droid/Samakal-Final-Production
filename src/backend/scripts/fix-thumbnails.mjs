@@ -41,7 +41,7 @@ async function fixThumbnails() {
         console.log(`✅ Fixed ${videoRes.rowCount} items in "video_thumbnail" column.`);
 
         console.log('\n🎉 Cleanup Complete!');
-    } catch (err) {
+    } catch {
         console.error('Fatal Error:', err);
     } finally {
         await client.end();

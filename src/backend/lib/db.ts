@@ -17,6 +17,7 @@ export async function sql<O extends QueryResultRow>(
   ...values: Primitive[]
 ): Promise<QueryResult<O>> {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return await vercelSql<O>(strings, ...values as any[]);
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
@@ -32,6 +33,7 @@ export async function sql<O extends QueryResultRow>(
         globalForSql.fallbackClient = createClient();
         await globalForSql.fallbackClient.connect();
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return await globalForSql.fallbackClient.sql(strings, ...values as any[]);
     }
 

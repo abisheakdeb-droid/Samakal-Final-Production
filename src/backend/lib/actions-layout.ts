@@ -85,7 +85,7 @@ export async function fetchHomeLayoutData(): Promise<NewsSlot[]> {
     // Place pinned items
     pinnedArticles.forEach(article => {
       if (article.home_position && article.home_position >= 1 && article.home_position <= 12) {
-        slots[article.home_position - 1].current_news = article as any;
+        slots[article.home_position - 1].current_news = article as NewsSlot['current_news'];
       }
     });
 
@@ -94,7 +94,7 @@ export async function fetchHomeLayoutData(): Promise<NewsSlot[]> {
     for (let i = 0; i < 12; i++) {
       if (slots[i].current_news === null) {
         if (backfillIndex < backfillArticles.length) {
-          slots[i].current_news = backfillArticles[backfillIndex] as any;
+          slots[i].current_news = backfillArticles[backfillIndex] as NewsSlot['current_news'];
           backfillIndex++;
         }
       }

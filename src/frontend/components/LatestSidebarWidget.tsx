@@ -56,6 +56,7 @@ export default function LatestSidebarWidget({
                     {item.summary}
                   </p>
                   <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">
+                    {item.author || "ডেস্ক রিপোর্ট"} •{" "}
                     {item.published_at
                       ? formatBanglaDateTime(item.published_at)
                       : (item.time || item.date)}

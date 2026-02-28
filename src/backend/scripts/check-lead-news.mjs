@@ -29,7 +29,7 @@ async function checkLeadNews() {
             source: r.source_url
         })));
 
-    } catch (err) {
+    } catch {
         console.error(err);
     } finally {
         await client.end();

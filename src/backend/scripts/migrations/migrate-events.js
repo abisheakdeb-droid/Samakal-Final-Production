@@ -1,6 +1,7 @@
 
-require('dotenv').config({ path: '.env.local' });
-const { createClient } = require('@vercel/postgres');
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
+import { createClient } from '@vercel/postgres';
 
 async function migrate() {
   const client = createClient();
@@ -29,7 +30,7 @@ async function migrate() {
       ADD COLUMN IF NOT EXISTS event_id UUID REFERENCES events(id) ON DELETE SET NULL;
     `;
     console.log('Column event_id added to articles.');
-  } catch (err) {
+  } catch {
     console.error('Migration failed:', err);
     process.exit(1);
   } finally {

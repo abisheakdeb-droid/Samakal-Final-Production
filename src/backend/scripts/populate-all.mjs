@@ -284,7 +284,7 @@ async function populate() {
         }
 
         console.log('\n🎉 Population Complete!');
-    } catch (err) {
+    } catch {
         console.error('Fatal Error:', err);
     } finally {
         await client.end();
@@ -431,7 +431,7 @@ async function processTarget(target) {
         }
         console.log(`[Done] - Saved ${insertedCount} items.`);
 
-    } catch (err) {
+    } catch {
         console.log(`[Failed] - ${err.message}`);
     }
 }

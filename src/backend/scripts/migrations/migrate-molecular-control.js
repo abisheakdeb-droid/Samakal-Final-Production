@@ -1,4 +1,4 @@
-const { db } = require('@vercel/postgres');
+import { db } from '@vercel/postgres';
 
 async function migrate() {
   const client = await db.connect();
@@ -63,7 +63,7 @@ async function migrate() {
       console.log('✅ Default navigation menu seeded.');
     }
 
-  } catch (error) {
+  } catch {
     console.error('❌ Migration failed:', error);
   } finally {
     await client.end();

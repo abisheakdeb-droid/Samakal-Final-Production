@@ -71,7 +71,7 @@ async function runTest() {
             console.log('❌ Category middleware redirect failed.');
         }
 
-    } catch (err) {
+    } catch {
         console.error('Test script error:', err);
     }
 }

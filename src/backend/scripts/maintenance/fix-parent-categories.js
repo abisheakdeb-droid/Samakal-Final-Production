@@ -1,6 +1,6 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { db } = require('@vercel/postgres');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { db } from '@vercel/postgres';
 
 loadEnvConfig(cwd());
 
@@ -200,7 +200,7 @@ async function fixParentCategories() {
     `;
     console.table(stats.rows);
 
-  } catch (error) {
+  } catch {
     console.error('❌ Error:', error);
   } finally {
     await client.end();

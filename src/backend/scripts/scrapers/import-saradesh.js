@@ -168,7 +168,7 @@ async function downloadImage(imageUrl, articleSlug) {
     const filepath = path.join(UPLOADS_DIR, filename);
     fs.writeFileSync(filepath, response.data);
     return `/uploads/articles/${filename}`;
-  } catch (error) {
+  } catch {
     console.log(`    ⚠️ Image download failed: ${error.message}`);
     return null;
   }
@@ -189,7 +189,7 @@ async function scrapeArticle(browser, url) {
     });
 
     return { ...articleData, originalUrl: url };
-  } catch (error) {
+  } catch {
     console.error(`  ❌ Failed to scrape ${url}: ${error.message}`);
     return null;
   } finally {
@@ -284,7 +284,7 @@ async function main() {
       // Delay to be polite
       await new Promise(r => setTimeout(r, 1000));
     }
-  } catch (err) {
+  } catch {
     console.error('Fatal Error:', err);
   } finally {
     await browser.close();

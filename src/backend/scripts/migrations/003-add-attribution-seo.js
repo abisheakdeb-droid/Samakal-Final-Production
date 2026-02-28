@@ -1,4 +1,4 @@
-const { db } = require('@vercel/postgres');
+
 
 async function migrate(client) {
   try {
@@ -41,7 +41,7 @@ async function migrate(client) {
 
     console.log('🎉 Phase 3 Migration completed successfully!\n');
 
-  } catch (error) {
+  } catch {
     console.error('❌ Migration failed:', error);
     throw error;
   }
@@ -68,7 +68,7 @@ async function rollback(client) {
     `;
 
     console.log('✅ Rollback completed\n');
-  } catch (error) {
+  } catch {
     console.error('❌ Rollback failed:', error);
     throw error;
   }

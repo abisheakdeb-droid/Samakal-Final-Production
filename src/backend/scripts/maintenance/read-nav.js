@@ -1,5 +1,6 @@
-const { sql } = require('@vercel/postgres');
-require('dotenv').config({ path: '.env.local' });
+import { sql } from '@vercel/postgres';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 async function readNav() {
   console.log('Reading current navigation menu from DB...');
@@ -7,7 +8,7 @@ async function readNav() {
     const result = await sql`SELECT navigation_menu FROM site_settings WHERE id = 1`;
     const nav = result.rows[0].navigation_menu;
     console.log(JSON.stringify(nav, null, 2));
-  } catch (error) {
+  } catch {
     console.error('Failed to read navigation:', error);
   } finally {
     process.exit();

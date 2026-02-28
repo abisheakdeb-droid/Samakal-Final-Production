@@ -1,5 +1,5 @@
 // System Health Check - Using Prisma Client
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function checkImports() {
@@ -82,7 +82,7 @@ async function checkImports() {
 
     console.log('\n✅ Health Check Complete!\n');
 
-  } catch (error) {
+  } catch {
     console.error('❌ Error:', error.message);
   } finally {
     await prisma.$disconnect();

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { Search, Globe, AlertCircle, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { Search, Globe, Sparkles } from 'lucide-react';
 
 interface SEOPanelProps {
   title: string;
@@ -15,12 +15,12 @@ interface SEOPanelProps {
   isGenerating?: boolean;
 }
 
-export default function SEOPanel({ 
-  title, 
-  description, 
-  slug, 
+export default function SEOPanel({
+  title,
+  description,
+  slug,
   canonicalUrl,
-  onTitleChange, 
+  onTitleChange,
   onDescriptionChange,
   onCanonicalUrlChange,
   onGenerateSEO,
@@ -39,21 +39,19 @@ export default function SEOPanel({
           <Search size={18} className="text-blue-600" />
           এসইও এবং মেটাডেটা
         </h3>
-        
+
         <div className="flex bg-white rounded-lg border border-gray-200 p-1">
           <button
             onClick={() => setActiveTab('edit')}
-            className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
-              activeTab === 'edit' ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:text-gray-700'
-            }`}
+            className={`px-3 py-1 text-xs font-medium rounded transition-colors ${activeTab === 'edit' ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:text-gray-700'
+              }`}
           >
             এডিট
           </button>
           <button
             onClick={() => setActiveTab('preview')}
-            className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
-              activeTab === 'preview' ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:text-gray-700'
-            }`}
+            className={`px-3 py-1 text-xs font-medium rounded transition-colors ${activeTab === 'preview' ? 'bg-blue-50 text-blue-600' : 'text-gray-500 hover:text-gray-700'
+              }`}
           >
             প্রিভিউ Look
           </button>
@@ -91,16 +89,16 @@ export default function SEOPanel({
                   {description?.length || 0}/{DESC_LIMIT}
                 </span>
               </div>
-              
+
               {onGenerateSEO && (
-                 <button
-                    onClick={onGenerateSEO}
-                    disabled={isGenerating}
-                    className="mb-2 text-xs flex items-center gap-1.5 text-blue-600 font-medium hover:text-blue-800 transition-colors bg-blue-50 px-2.5 py-1.5 rounded-lg border border-blue-100 hover:border-blue-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                 >
-                    <Sparkles size={12} className={isGenerating ? "animate-spin" : ""} />
-                    {isGenerating ? "Generating..." : "Auto Generate with AI"}
-                 </button>
+                <button
+                  onClick={onGenerateSEO}
+                  disabled={isGenerating}
+                  className="mb-2 text-xs flex items-center gap-1.5 text-blue-600 font-medium hover:text-blue-800 transition-colors bg-blue-50 px-2.5 py-1.5 rounded-lg border border-blue-100 hover:border-blue-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Sparkles size={12} className={isGenerating ? "animate-spin" : ""} />
+                  {isGenerating ? "Generating..." : "Auto Generate with AI"}
+                </button>
               )}
 
               <textarea
@@ -131,7 +129,7 @@ export default function SEOPanel({
           /* Google Search Preview */
           <div className="bg-white p-4 rounded border border-gray-100 shadow-sm">
             <p className="text-xs text-gray-400 uppercase tracking-wider mb-3">Google Search Preview</p>
-            
+
             <div className="flex flex-col gap-1 max-w-[600px] font-sans">
               {/* URL Breadcrumb */}
               <div className="flex items-center gap-2 text-sm text-[#202124]">

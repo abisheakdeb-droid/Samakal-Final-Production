@@ -24,6 +24,7 @@ import ImageLightbox from "@/components/ImageLightbox";
 import { toast } from "sonner";
 import { NewsItem } from "@/types/news";
 import ScrollReveal from "@/components/ScrollReveal";
+import ArticleVideoPlayer from "@/components/ArticleVideoPlayer";
 
 export interface ArticleComment {
   id: string;
@@ -52,6 +53,7 @@ export default function ArticleContent({
   const [sanitizedContent, setSanitizedContent] = useState("");
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [imgError, setImgError] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: "left" | "right") => {
@@ -187,16 +189,8 @@ export default function ArticleContent({
       {/* Featured Media (Video or Image) */}
       <ScrollReveal>
         <div className="mb-8">
-          {article.relatedVideo && article.relatedVideo.source === 'youtube' && article.relatedVideo.id ? (
-            <div className="relative w-full aspect-video rounded-lg overflow-hidden shadow-xl">
-              <iframe
-                src={`https://www.youtube.com/embed/${article.relatedVideo.id}?autoplay=0&rel=0`}
-                title={article.title}
-                className="absolute inset-0 w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
+          {article.relatedVideo && article.relatedVideo.id ? (
+            <ArticleVideoPlayer video={article.relatedVideo} title={article.title} />
           ) : article.image ? (
             <div
               className="relative w-full aspect-video rounded-lg overflow-hidden cursor-pointer group hover:shadow-xl transition-shadow duration-300"
@@ -206,13 +200,14 @@ export default function ArticleContent({
               }}
             >
               <Image
-                src={getProxiedImageUrl(article.image, 1024)}
+                src={imgError ? "/samakal-logo.png" : getProxiedImageUrl(article.image, 1024)}
                 alt={article.title}
                 fill
                 placeholder="blur"
                 blurDataURL={generateBlurPlaceholder(16, 9)}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 1024px"
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
+                onError={() => setImgError(true)}
                 priority
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">

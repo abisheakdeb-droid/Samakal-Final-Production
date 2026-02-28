@@ -1,7 +1,7 @@
 // Quick test to check if DB connection works
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { db } = require('@vercel/postgres');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { db } from '@vercel/postgres';
 
 loadEnvConfig(cwd());
 
@@ -19,7 +19,7 @@ async function test() {
     
     await client.end();
     process.exit(0);
-  } catch (error) {
+  } catch {
     console.error('❌ DB Error:', error.message);
     process.exit(1);
   }

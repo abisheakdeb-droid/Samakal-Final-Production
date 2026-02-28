@@ -165,7 +165,7 @@ async function importNews(client) {
           let createdAt = new Date().toISOString();
           try {
              if (item.isoDate) createdAt = item.isoDate;
-          } catch (e) {}
+          } catch {}
           
           // Image Extraction
           let image = item.imageUrl || 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?q=80&w=2070';
@@ -193,14 +193,14 @@ async function importNews(client) {
           process.stdout.write('✓');
           totalImported++;
         }
-      } catch (err) {
+      } catch {
         console.error(`\nFailed to process feed ${feedConfig.source}:`, err.message);
       }
     }
 
     console.log(`\n\n✅ Successfully imported ${totalImported} new articles.`);
 
-  } catch (error) {
+  } catch {
     console.error('Import failed:', error);
   }
 }

@@ -1,11 +1,11 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { createClient } = require('@vercel/postgres');
-const puppeteer = require('puppeteer');
-const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
-const crypto = require('crypto');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { createClient } from '@vercel/postgres';
+import puppeteer from 'puppeteer';
+import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
+import crypto from 'crypto';
 
 loadEnvConfig(cwd());
 
@@ -39,7 +39,7 @@ async function downloadImage(imageUrl, articleSlug) {
     
     fs.writeFileSync(filepath, response.data);
     return `/uploads/articles/${filename}`;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -84,7 +84,7 @@ async function scrapeArticle(browser, url) {
       imageUrl: articleData.imageUrl,
       originalUrl: url
     };
-  } catch (error) {
+  } catch {
     await page.close().catch(() => {});
     return null;
   }
@@ -130,7 +130,7 @@ async function getArticleLinks(browser) {
     
     await page.close();
     return links;
-  } catch (error) {
+  } catch {
     await page.close().catch(() => {});
     return [];
   }
@@ -166,7 +166,7 @@ async function importArticle(articleData, slug) {
       )
     `;
     return true;
-  } catch (error) {
+  } catch {
     console.error('  ❌ DB Error:', error.message);
     return false;
   } finally {
@@ -213,14 +213,14 @@ async function main() {
             
             await new Promise(r => setTimeout(r, 1000));
             
-        } catch (e) {
+        } catch {
             console.error(`Error processing ${url}:`, e.message);
         }
     }
     
     console.log(`\n🎉 Completed! Total imported: ${success}`);
     
-  } catch (error) {
+  } catch {
     console.error(`\n❌ Fatal error: ${error.message}`);
   } finally {
     await browser.close();

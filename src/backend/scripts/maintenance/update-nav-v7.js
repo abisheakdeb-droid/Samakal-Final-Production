@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-require('dotenv').config({ path: '.env.local' });
-const { sql } = require('@vercel/postgres');
+ 
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
+import { sql } from '@vercel/postgres';
 
 async function updateNavigation() {
   try {
@@ -55,7 +56,7 @@ async function updateNavigation() {
     console.log('Or manually restart the dev server.\n');
 
     process.exit(0);
-  } catch (error) {
+  } catch {
     console.error('❌ Error updating navigation:', error);
     process.exit(1);
   }

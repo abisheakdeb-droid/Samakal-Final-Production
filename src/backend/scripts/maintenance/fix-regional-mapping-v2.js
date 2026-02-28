@@ -1,6 +1,6 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { createClient } = require('@vercel/postgres');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { createClient } from '@vercel/postgres';
 
 loadEnvConfig(cwd());
 
@@ -54,7 +54,7 @@ async function main() {
     `;
         console.log(`✅ Normalized ${finalRes.rowCount} root labels`);
 
-    } catch (err) {
+    } catch {
         console.error('❌ Error during migration:', err);
     } finally {
         await client.end();

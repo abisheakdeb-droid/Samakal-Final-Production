@@ -90,7 +90,7 @@ async function seed() {
         }
 
         console.log('\n🎉 Targeted Seeding Complete!');
-    } catch (err) {
+    } catch {
         console.error('Database Connection Error:', err);
     } finally {
         await client.end();
@@ -223,7 +223,7 @@ async function processTarget(target) {
         }
         console.log(`[Done] - Saved ${insertedCount} items.`);
 
-    } catch (err) {
+    } catch {
         console.log(`[Failed] - ${err.message}`);
     }
 }

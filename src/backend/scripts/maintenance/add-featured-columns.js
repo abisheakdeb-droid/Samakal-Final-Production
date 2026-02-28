@@ -1,6 +1,6 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { db } = require('@vercel/postgres');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { db } from '@vercel/postgres';
 
 loadEnvConfig(cwd());
 
@@ -61,7 +61,7 @@ async function addFeaturedNewsColumns() {
     
     console.log('\n✨ Migration completed successfully!');
     
-  } catch (error) {
+  } catch {
     console.error('❌ Migration Error:', error);
     throw error;
   } finally {

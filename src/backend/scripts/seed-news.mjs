@@ -124,14 +124,14 @@ async function seed() {
                 }
                 console.log(`   └─ ✅ ${insertedCount} articles added.`);
 
-            } catch (err) {
+            } catch {
                 console.error(`   ❌ ${target.category} Failed:`, err.message);
             }
         }
 
         console.log('\n🎉 Success! Database seeded.');
 
-    } catch (err) {
+    } catch {
         console.error('Database Connection Error:', err);
     } finally {
         await client.end();

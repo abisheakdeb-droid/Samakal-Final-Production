@@ -2,9 +2,8 @@
 
 import { sql } from "@/lib/db";
 import { auth } from "@/auth";
-import { revalidatePath } from "next/cache";
 import { mapArticleToNewsItem } from "@/lib/mappers";
-import { ArticleRow, ArticleImageRow, ArticleContributorRow } from "@/types/database";
+import { ArticleRow } from "@/types/database";
 
 // Record a view for an article
 export async function recordView(articleId: string) {
@@ -61,9 +60,9 @@ export async function fetchReadingHistory() {
 
         if (data.rows.length === 0) return [];
 
-         // Helper to fetch images/contributors if we wanted full detail, 
-         // but for history list, basic info is usually enough.
-         // We'll stick to basic ArticleRow mapping.
+        // Helper to fetch images/contributors if we wanted full detail, 
+        // but for history list, basic info is usually enough.
+        // We'll stick to basic ArticleRow mapping.
 
         return data.rows.map(row => {
             const newsItem = mapArticleToNewsItem(row as ArticleRow);

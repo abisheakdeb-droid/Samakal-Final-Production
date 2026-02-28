@@ -75,10 +75,10 @@ export default async function CategoryPage({ params }: PageProps) {
 
   // Determine if this is a parent or subcategory
   // const isSubcat = isSubcategory(slug);
-  const hasChildren = !!SUB_CATEGORIES[slug]; // e.g. 'dhaka' has children (districts)
 
   // --- DATA FETCHING ---
-  let newsItems = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let newsItems: any[] = [];
 
   // Get Bengali category name for database query
   const categoryForQuery = CATEGORY_MAP[slug] || slug;
@@ -214,7 +214,7 @@ export default async function CategoryPage({ params }: PageProps) {
                     </p>
                     <div className="flex items-center justify-between mt-4">
                       <span className="text-sm text-gray-500">
-                        {(primeBig as any).author || "সমকাল প্রতিবেদক"} •{" "}
+                        {primeBig.author || "সমকাল প্রতিবেদক"} •{" "}
                         {formatBanglaDateTime(primeBig.publishedAt)}
                       </span>
                       <NewsActionButtons
@@ -248,7 +248,7 @@ export default async function CategoryPage({ params }: PageProps) {
                             {news.title}
                           </h2>
                           <div className="text-xs text-gray-400">
-                            {formatBanglaDateTime(news.publishedAt)}
+                            {news.author || "ডেস্ক রিপোর্ট"} • {formatBanglaDateTime(news.publishedAt)}
                           </div>
                         </div>
                       </Link>
@@ -286,7 +286,7 @@ export default async function CategoryPage({ params }: PageProps) {
                           {news.title}
                         </h3>
                         <div className="mt-2 text-xs text-gray-400">
-                          {formatBanglaDateTime(news.publishedAt)}
+                          {news.author || "ডেস্ক রিপোর্ট"} • {formatBanglaDateTime(news.publishedAt)}
                         </div>
                       </Link>
                     ))}
@@ -296,7 +296,7 @@ export default async function CategoryPage({ params }: PageProps) {
 
               {/* Level 4: List - Use Infinite Scroll for Latest page */}
               {slug === "latest" ? (
-                <InfiniteLatestNews initialNews={listNews} />
+                <InfiniteLatestNews initialNews={listNews as React.ComponentProps<typeof InfiniteLatestNews>["initialNews"]} />
               ) : (
                 <ScrollReveal>
                   <section className="flex flex-col gap-6">
@@ -324,7 +324,7 @@ export default async function CategoryPage({ params }: PageProps) {
                             {news.summary}
                           </p>
                           <span className="text-xs text-gray-400">
-                            {formatBanglaDateTime(news.publishedAt)}
+                            {news.author || "ডেস্ক রিপোর্ট"} • {formatBanglaDateTime(news.publishedAt)}
                           </span>
                         </div>
                       </Link>
@@ -347,11 +347,11 @@ export default async function CategoryPage({ params }: PageProps) {
                 <aside className="sticky bottom-4">
                   {slug === "latest" ? (
                     <MostReadWidget
-                      opinionNews={sidebarOpinion}
-                      mostReadNews={sidebarMostRead}
+                      opinionNews={sidebarOpinion as never}
+                      mostReadNews={sidebarMostRead as never}
                     />
                   ) : (
-                    <LatestSidebarWidget news={sidebarLatest} />
+                    <LatestSidebarWidget news={sidebarLatest as unknown as React.ComponentProps<typeof LatestSidebarWidget>["news"]} />
                   )}
 
                   {/* Advertisement 1 */}

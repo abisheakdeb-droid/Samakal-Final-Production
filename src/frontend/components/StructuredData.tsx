@@ -89,7 +89,6 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
       id={`structured-data-${type}`}
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      strategy="beforeInteractive"
     />
   );
 }

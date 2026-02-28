@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     }
 }
 
-export async function DELETE(req: Request) {
+export async function DELETE() {
     const session = await auth();
     if (!session?.user?.id) {
         return new NextResponse("Unauthorized", { status: 401 });

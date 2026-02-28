@@ -1,5 +1,6 @@
-const { db } = require('@vercel/postgres');
-require('dotenv').config({ path: '.env.local' });
+import { db } from '@vercel/postgres';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 async function migrate() {
   const client = await db.connect();
@@ -21,7 +22,7 @@ async function migrate() {
     `;
 
     console.log('Migration successful!');
-  } catch (error) {
+  } catch {
     console.error('Migration failed:', error);
   } finally {
     client.release();

@@ -1,6 +1,6 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { db } = require('@vercel/postgres');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { db } from '@vercel/postgres';
 
 async function run() {
   const projectDir = cwd();
@@ -14,15 +14,15 @@ async function run() {
 
   try {
     console.log(`\n📦 Running migration: ${migrationFile}\n`);
-    
-    const migration = require(`./migrations/${migrationFile}.js`);
-    
+
+    const migration = await import(`./${migrationFile}.js`);
+
     if (shouldRollback) {
       await migration.rollback(client);
     } else {
       await migration.migrate(client);
     }
-  } catch (error) {
+  } catch {
     console.error('Migration script error:', error);
     process.exit(1);
   } finally {

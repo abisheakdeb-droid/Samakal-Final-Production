@@ -1,12 +1,12 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
 
 async function run() {
   const projectDir = cwd();
   loadEnvConfig(projectDir);
-  
+
   // Now require the seed script, which should see the env vars
-  require('./seed-admin.js');
+  await import('./seed-admin.js');
 }
 
 run();

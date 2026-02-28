@@ -1,4 +1,4 @@
-const { db } = require('@vercel/postgres');
+import { db } from '@vercel/postgres';
 
 async function inspectSettings(client) {
   try {
@@ -19,7 +19,7 @@ async function inspectSettings(client) {
       console.log(`${col.column_name.padEnd(25)} | ${col.data_type.padEnd(15)} | Nullable: ${col.is_nullable}`);
     });
 
-  } catch (error) {
+  } catch {
     console.error('Error inspecting settings schema:', error);
   }
 }

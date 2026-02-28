@@ -134,7 +134,7 @@ async function fixSaradeshParents() {
 
     console.log(`\n✨ Migration complete. Total articles updated: ${totalUpdated}`);
 
-  } catch (err) {
+  } catch {
     console.error('❌ Error during migration:', err);
   } finally {
     await client.end();

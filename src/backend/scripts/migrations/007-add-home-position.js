@@ -1,7 +1,7 @@
 /* eslint-disable */
-const { createClient } = require('@vercel/postgres');
-const dotenv = require('dotenv');
-const path = require('path');
+import { createClient } from '@vercel/postgres';
+import dotenv from 'dotenv';
+import path from 'path';
 
 // Load environment variables from .env.local
 dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
@@ -39,7 +39,7 @@ async function migrate() {
     `;
         console.log('Index created/verified.');
 
-    } catch (error) {
+    } catch {
         console.error('Migration Error:', error);
     } finally {
         await client.end();

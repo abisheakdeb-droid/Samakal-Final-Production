@@ -1,7 +1,7 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { db } = require('@vercel/postgres');
-const cheerio = require('cheerio');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { db } from '@vercel/postgres';
+import cheerio from 'cheerio';
 
 // Load environment variables
 loadEnvConfig(cwd());
@@ -19,7 +19,7 @@ async function fetchHtml(url) {
     });
     if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
     return await res.text();
-  } catch (error) {
+  } catch {
     console.error(`Error fetching ${url}:`, error.message);
     return null;
   }
@@ -269,7 +269,7 @@ async function scrapeAndSeed() {
 
             await delay(300); // polite delay
 
-        } catch (err) {
+        } catch {
             console.error(`   ❌ Failed to process ${fullLink}:`, err.message);
         }
       }
@@ -279,7 +279,7 @@ async function scrapeAndSeed() {
 
     console.log(`\n🎉 Seeding Completed! Total articles inserted: ${totalInserted}`);
 
-  } catch (error) {
+  } catch {
     console.error('Fatal Error:', error);
   } finally {
     await client.end();

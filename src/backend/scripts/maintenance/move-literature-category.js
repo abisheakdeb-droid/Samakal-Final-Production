@@ -1,5 +1,6 @@
-require('dotenv').config({ path: '.env.local' });
-const { sql } = require('@vercel/postgres');
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
+import { sql } from '@vercel/postgres';
 
 async function moveLiteratureCategory() {
   try {
@@ -24,7 +25,7 @@ async function moveLiteratureCategory() {
       console.log('Sample updated titles:', result.rows.slice(0, 3).map(r => r.title));
     }
 
-  } catch (error) {
+  } catch {
     console.error('❌ Migration failed:', error);
   }
 }

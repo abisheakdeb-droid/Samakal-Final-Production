@@ -256,7 +256,7 @@ async function seed() {
         }
 
         console.log('\n🎉 Universal Seeding Complete!');
-    } catch (err) {
+    } catch {
         console.error('Database Connection Error:', err);
     } finally {
         await client.end();
@@ -323,7 +323,7 @@ async function processTarget(target) {
                         // Use categoryBengali here!
                         await client.query(query, [publicId, title, slug, summary, image, categoryBengali, `<p>${summary}</p>`]);
                         insertedCount++;
-                    } catch (e) {
+                    } catch {
                         // Ignore
                     }
                 }
@@ -332,7 +332,7 @@ async function processTarget(target) {
         if (insertedCount > 0) console.log(`   ✅ ${target.category} (${categoryBengali}): ${insertedCount} items`);
         else console.log(`   ⚠️ ${target.category}: No items`);
 
-    } catch (err) {
+    } catch {
         // console.error(`   ❌ ${target.category}: ${err.message}`);
     }
 }

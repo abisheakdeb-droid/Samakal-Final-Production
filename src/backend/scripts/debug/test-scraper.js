@@ -1,6 +1,6 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } =  require('process');
-const puppeteer = require('puppeteer');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import puppeteer from 'puppeteer';
 
 loadEnvConfig(cwd());
 
@@ -61,7 +61,7 @@ async function testImprovedScraper() {
     }
     
     await page.close();
-  } catch (error) {
+  } catch {
     console.error(`\n❌ Error: ${error.message}`);
   } finally {
     await browser.close();

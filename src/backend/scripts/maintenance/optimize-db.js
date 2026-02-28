@@ -1,6 +1,6 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { db } = require('@vercel/postgres');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { db } from '@vercel/postgres';
 
 loadEnvConfig(cwd());
 
@@ -52,7 +52,7 @@ async function optimizeDatabase(client) {
 
     console.log('\n✅ Database Optimization Complete! System is ready for 1M+ rows.');
 
-  } catch (error) {
+  } catch {
     console.error('❌ Optimization failed:', error);
   }
 }

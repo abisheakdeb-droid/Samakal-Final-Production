@@ -19,7 +19,12 @@ export const getHomepageData = cache(
       const [heroArticlesRaw, sidebarArticlesRaw, latestFeedRaw] = await Promise.all([
         // 1. Hero Data (Prioritize Pinned and Featured)
         prisma.news.findMany({
-          where: { status: 'published' },
+          where: {
+            status: 'published',
+            category: {
+              notIn: ['ছবি', 'ভিডিও']
+            }
+          },
           take: 13,
           orderBy: [
             { is_pinned_home: 'desc' },
@@ -29,13 +34,23 @@ export const getHomepageData = cache(
         }),
         // 2. Sidebar Data (Popular/Trending)
         prisma.news.findMany({
-          where: { status: 'published' },
+          where: {
+            status: 'published',
+            category: {
+              notIn: ['ছবি', 'ভিডিও']
+            }
+          },
           take: 10,
           orderBy: { views: 'desc' },
         }),
         // 3. Main Feed (Latest)
         prisma.news.findMany({
-          where: { status: 'published' },
+          where: {
+            status: 'published',
+            category: {
+              notIn: ['ছবি', 'ভিডিও']
+            }
+          },
           take: 50,
           orderBy: { publishedAt: 'desc' },
         })
@@ -313,6 +328,7 @@ export const fetchLatestArticles = cache(
             FROM articles
             LEFT JOIN users ON articles.author_id = users.id
             WHERE articles.status = 'published' AND articles.published_at <= NOW()
+            AND articles.category NOT IN ('ছবি', 'ভিডিও')
             AND articles.id <> ALL(${excludeIds})
             ORDER BY articles.published_at DESC
             LIMIT ${limit}
@@ -327,6 +343,7 @@ export const fetchLatestArticles = cache(
             FROM articles
             LEFT JOIN users ON articles.author_id = users.id
             WHERE articles.status = 'published' AND articles.published_at <= NOW()
+            AND articles.category NOT IN ('ছবি', 'ভিডিও')
             ORDER BY articles.published_at DESC
             LIMIT ${limit}
             `;
@@ -547,6 +564,7 @@ export const fetchFeaturedArticles = cache(
             FROM articles
             LEFT JOIN users ON articles.author_id = users.id
             WHERE articles.status = 'published' AND articles.published_at <= NOW() AND articles.is_featured = true
+            AND articles.category NOT IN ('ছবি', 'ভিডিও')
             ORDER BY articles.published_at DESC
             LIMIT ${limit}
           `;
@@ -573,6 +591,7 @@ export async function fetchArticlesWithPagination(offset: number = 0, limit: num
       FROM articles
       LEFT JOIN users ON articles.author_id = users.id
       WHERE articles.status = 'published' AND articles.published_at <= NOW()
+      AND articles.category NOT IN ('ছবি', 'ভিডিও')
       ORDER BY articles.published_at DESC
       LIMIT ${limit} OFFSET ${offset}
     `;
@@ -594,7 +613,7 @@ export const fetchMostReadArticles = cache(
             users.name as author
           FROM articles
           LEFT JOIN users ON articles.author_id = users.id
-          WHERE articles.status = 'published'
+          WHERE articles.status = 'published' AND articles.category NOT IN ('ছবি', 'ভিডিও')
           ORDER BY COALESCE(articles.views, 0) DESC, articles.created_at DESC
           LIMIT ${limit}
         `;

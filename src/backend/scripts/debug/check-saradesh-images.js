@@ -1,6 +1,7 @@
 
-const { sql } = require('@vercel/postgres');
-require('dotenv').config({ path: '.env.local' });
+import { sql } from '@vercel/postgres';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 async function checkSaradeshImages() {
   try {
@@ -17,7 +18,7 @@ async function checkSaradeshImages() {
     result.rows.forEach(row => {
       console.log(`- [${row.category}] ${row.title}: ${row.image}`);
     });
-  } catch (error) {
+  } catch {
     console.error('Error checking images:', error);
   }
 }

@@ -36,7 +36,7 @@ async function populateCore() {
         }
 
         console.log('\n🎉 Core Population Complete!');
-    } catch (err) {
+    } catch {
         console.error('Fatal Error:', err);
     } finally {
         await client.end();
@@ -171,13 +171,13 @@ async function processTarget(target) {
                     ]);
                     insertedCount++;
                     await new Promise(r => setTimeout(r, 100));
-                } catch (e) {
+                } catch {
                     console.error(`Error processing ${link}:`, e.message);
                 }
             }
         }
         console.log(`[Done] - Saved ${insertedCount}`);
-    } catch (err) {
+    } catch {
         console.log(`[Failed]`);
     }
 }

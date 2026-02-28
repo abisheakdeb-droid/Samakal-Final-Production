@@ -1,6 +1,6 @@
-const { loadEnvConfig } = require('@next/env');
-const { cwd } = require('process');
-const { db } = require('@vercel/postgres');
+import { loadEnvConfig } from '@next/env';
+import { cwd } from 'process';
+import { db } from '@vercel/postgres';
 
 // Load environment variables
 loadEnvConfig(cwd());
@@ -24,7 +24,7 @@ async function clearContent(client) {
     console.log('✓ Cleared articles');
 
     console.log('\n✅ All content cleared successfully!');
-  } catch (error) {
+  } catch {
     console.error('Error clearing content:', error);
     throw error;
   }
