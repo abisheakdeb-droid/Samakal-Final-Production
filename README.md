@@ -66,22 +66,22 @@
 
 ---
 
-## ✨ বিশেষ ফিচারসমূহ (Special Features)
+## ✨ Special Features
 
-### ১. ফ্লোটিং ভিডিও প্লেয়ার (Featured Video & Floating Player)
+### 1. Floating Video Player (Featured Video & Floating Player)
 
-পাঠকদের এনগেজমেন্ট বাড়াতে আর্টিকেলে একটি প্রিমিয়াম ভিডিও প্লেয়ার যুক্ত করা হয়েছে।
+A premium video player has been integrated into articles to boost reader engagement.
 
-- **ডায়নামিক ফ্লোটিং:** পাঠক যখন স্ক্রল করে নিচে নামেন, তখন ইনলাইন প্লেয়ারটি স্বয়ংক্রিয়ভাবে ছোট হয়ে স্ক্রিনের কোণে ফ্লোট (float) করতে থাকে।
-- **মাল্টি-প্ল্যাটফর্ম সাপোর্ট:** YouTube এবং Facebook ভিডিও নিরবচ্ছিন্নভাবে সাপোর্ট করে।
-- **টেকনিক্যাল ইমপ্লিমেন্টেশন:** `Intersection Observer` API ব্যবহার করা হয়েছে যা পারফরম্যান্সে কোনো প্রভাব ফেলে না। বিস্তারিত: `ArticleVideoPlayer.tsx`
+- **Dynamic Floating:** When a reader scrolls down, the inline player automatically transitions into a small, floating mini-player at the corner of the screen.
+- **Multi-Platform Support:** Seamlessly supports both YouTube and Facebook video embeds.
+- **Technical Implementation:** Utilizes the `Intersection Observer` API for optimal performance with zero overhead. See: `ArticleVideoPlayer.tsx`
 
-### ২. কনসিস্টেন্ট মেটাডেটা (Unified News Metadata)
+### 2. Unified News Metadata
 
-পুরো সিস্টেমের প্রতিটি নিউজ কার্ডে (Homepage, Category Page, Sidebar) এখন অভিন্ন মেটাডেটা ফরম্যাট ব্যবহার করা হয়েছে।
+A consistent metadata format is now enforced across all news cards (Homepage, Category Page, Sidebar).
 
-- **ফরম্যাট:** `[লেখকের নাম] • [প্রকাশের সময় ও তারিখ]`
-- এর ফলে সাইটের সব সেকশনে তথ্যের স্বচ্ছতা এবং ভিজ্যুয়াল হারমোনি বজায় থাকে।
+- **Format:** `[Author Name] • [Publication Date & Time]`
+- This ensures transparency and visual harmony across all sections of the site.
 
 ---
 
