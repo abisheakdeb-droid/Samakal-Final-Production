@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import type { ArticleRow, ArticleImageRow, ArticleContributorRow } from "@/types/database";
-import { News } from "@prisma/client";
+import { News, Prisma } from "@prisma/client";
 import { getBengaliCategory } from "@/utils/category";
 import { normalizeCategory } from "@/utils/normalize-category";
 import { mapArticleToNewsItem } from "@/lib/actions-article-helpers";
@@ -317,39 +317,28 @@ export const fetchLatestArticles = cache(
   unstable_cache(
     async (limit: number = 10, excludeIds: string[] = []) => {
       try {
-        let data;
+        const whereClause: Prisma.NewsWhereInput = {
+          status: 'published',
+          publishedAt: { lte: new Date() },
+          category: { notIn: ['ছবি', 'ভিডিও'] }
+        };
+
         if (excludeIds.length > 0) {
-          data = await sql`
-            SELECT 
-                articles.id, articles.title, articles.slug, articles.status, articles.category,
-                articles.views, articles.image, articles.created_at, articles.content,
-                articles.sub_headline, articles.news_type, articles.location,
-                articles.video_url, users.name as author
-            FROM articles
-            LEFT JOIN users ON articles.author_id = users.id
-            WHERE articles.status = 'published' AND articles.published_at <= NOW()
-            AND articles.category NOT IN ('ছবি', 'ভিডিও')
-            AND articles.id <> ALL(${excludeIds})
-            ORDER BY articles.published_at DESC
-            LIMIT ${limit}
-            `;
-        } else {
-          data = await sql`
-            SELECT 
-                articles.id, articles.title, articles.slug, articles.status, articles.category,
-                articles.views, articles.image, articles.created_at, articles.content,
-                articles.sub_headline, articles.news_type, articles.location,
-                articles.video_url, users.name as author
-            FROM articles
-            LEFT JOIN users ON articles.author_id = users.id
-            WHERE articles.status = 'published' AND articles.published_at <= NOW()
-            AND articles.category NOT IN ('ছবি', 'ভিডিও')
-            ORDER BY articles.published_at DESC
-            LIMIT ${limit}
-            `;
+          whereClause.id = { notIn: excludeIds };
         }
 
-        return data.rows.map(row => mapArticleToNewsItem(row as ArticleRow));
+        const rawArticles = await prisma.news.findMany({
+          where: whereClause,
+          orderBy: { publishedAt: 'desc' },
+          take: limit
+        });
+
+        return rawArticles.map((item) => mapArticleToNewsItem({
+          ...item,
+          created_at: item.createdAt,
+          published_at: item.publishedAt,
+          author_id: item.authorId,
+        } as unknown as ArticleRow));
       } catch (error) {
         console.error('Database Error:', error);
         return [];
@@ -365,180 +354,51 @@ export const fetchArticlesByCategory = cache(
     return unstable_cache(
       async () => {
         const normalizedCategory = normalizeCategory(category);
-        let data;
-
-        // Base Conditions matches existing logic... but injecting AND id <> ALL(${excludeIds})
-
-        // Helper to construct exclude clause
-        // Note: We can't easily dynamic string build with template literals for values, but we can conditional the whole query
-        // This makes it verbose but safe.
-        // Given complexity, let's just handle exclude for the most common path or strictly.
-
-        // Actually, Vercel SQL supports simple composition? No, strict template.
-        // We will branch.
-
-        const hasExclusions = excludeIds.length > 0;
 
         try {
-          if (isParentCategory) {
-            const isSaradesh = normalizedCategory === 'সারাদেশ';
+          const whereClause: Prisma.NewsWhereInput = {
+            status: 'published',
+            publishedAt: { lte: new Date() },
+          };
 
-            if (isSaradesh) {
-              if (hasExclusions) {
-                data = await sql`
-                SELECT 
-                    articles.id, articles.title, articles.slug, articles.status,
-                    articles.category, articles.parent_category, articles.views,
-                    articles.image, articles.created_at, articles.content,
-                    articles.sub_headline, articles.news_type, articles.location,
-                    articles.video_url, users.name as author
-                FROM articles
-                LEFT JOIN users ON articles.author_id = users.id
-                WHERE 
-                    articles.status = 'published' AND articles.published_at <= NOW() AND
-                    (
-                    articles.parent_category = 'সারাদেশ' OR 
-                    articles.category = 'সারাদেশ' OR
-                    articles.parent_category IN ('ঢাকা', 'চট্টগ্রাম', 'রাজশাহী', 'খুলনা', 'বরিশাল', 'সিলেট', 'রংপুর', 'ময়মনসিংহ')
-                    )
-                    AND articles.id <> ALL(${excludeIds})
-                ORDER BY articles.published_at DESC
-                LIMIT ${limit}
-                `;
-              } else {
-                data = await sql`
-                SELECT 
-                    articles.id, articles.title, articles.slug, articles.status,
-                    articles.category, articles.parent_category, articles.views,
-                    articles.image, articles.created_at, articles.content,
-                    articles.sub_headline, articles.news_type, articles.location,
-                    articles.video_url, users.name as author
-                FROM articles
-                LEFT JOIN users ON articles.author_id = users.id
-                WHERE 
-                    articles.status = 'published' AND articles.published_at <= NOW() AND
-                    (
-                    articles.parent_category = 'সারাদেশ' OR 
-                    articles.category = 'সারাদেশ' OR
-                    articles.parent_category IN ('ঢাকা', 'চট্টগ্রাম', 'রাজশাহী', 'খুলনা', 'বরিশাল', 'সিলেট', 'রংপুর', 'ময়মনসিংহ')
-                    )
-                ORDER BY articles.published_at DESC
-                LIMIT ${limit}
-                `;
-              }
+          if (excludeIds.length > 0) {
+            whereClause.id = { notIn: excludeIds };
+          }
+
+          if (isParentCategory) {
+            if (normalizedCategory === 'সারাদেশ') {
+              whereClause.OR = [
+                { parent_category: 'সারাদেশ' },
+                { category: 'সারাদেশ' },
+                { parent_category: { in: ['ঢাকা', 'চট্টগ্রাম', 'রাজশাহী', 'খুলনা', 'বরিশাল', 'সিলেট', 'রংপুর', 'ময়মনসিংহ'] } }
+              ];
             } else {
-              if (hasExclusions) {
-                data = await sql`
-                SELECT 
-                    articles.id, articles.title, articles.slug, articles.status,
-                    articles.category, articles.parent_category, articles.views,
-                    articles.image, articles.created_at, articles.content,
-                    articles.sub_headline, articles.news_type, articles.location,
-                    articles.video_url, users.name as author
-                FROM articles
-                LEFT JOIN users ON articles.author_id = users.id
-                WHERE 
-                    articles.status = 'published' AND articles.published_at <= NOW() AND
-                    (articles.parent_category = ${normalizedCategory} OR articles.category = ${normalizedCategory})
-                    AND articles.id <> ALL(${excludeIds})
-                ORDER BY articles.published_at DESC
-                LIMIT ${limit}
-                `;
-              } else {
-                data = await sql`
-                SELECT 
-                    articles.id, articles.title, articles.slug, articles.status,
-                    articles.category, articles.parent_category, articles.views,
-                    articles.image, articles.created_at, articles.content,
-                    articles.sub_headline, articles.news_type, articles.location,
-                    articles.video_url, users.name as author
-                FROM articles
-                LEFT JOIN users ON articles.author_id = users.id
-                WHERE 
-                    articles.status = 'published' AND articles.published_at <= NOW() AND
-                    (articles.parent_category = ${normalizedCategory} OR articles.category = ${normalizedCategory})
-                ORDER BY articles.published_at DESC
-                LIMIT ${limit}
-                `;
-              }
+              whereClause.OR = [
+                { parent_category: normalizedCategory },
+                { category: normalizedCategory }
+              ];
             }
           } else {
+            whereClause.category = { contains: normalizedCategory, mode: 'insensitive' };
             if (parentCategory) {
-              if (hasExclusions) {
-                data = await sql`
-                SELECT 
-                articles.id, articles.title, articles.slug, articles.status,
-                articles.category, articles.parent_category, articles.views,
-                articles.image, articles.created_at, articles.content,
-                articles.sub_headline, articles.news_type, articles.location,
-                articles.video_url, users.name as author
-                FROM articles
-                LEFT JOIN users ON articles.author_id = users.id
-                WHERE 
-                articles.status = 'published' AND articles.published_at <= NOW() AND
-                articles.category ILIKE ${normalizedCategory} AND
-                articles.parent_category = ${parentCategory}
-                AND articles.id <> ALL(${excludeIds})
-                ORDER BY articles.published_at DESC
-                LIMIT ${limit}
-            `;
-              } else {
-                data = await sql`
-                SELECT 
-                articles.id, articles.title, articles.slug, articles.status,
-                articles.category, articles.parent_category, articles.views,
-                articles.image, articles.created_at, articles.content,
-                articles.sub_headline, articles.news_type, articles.location,
-                articles.video_url, users.name as author
-                FROM articles
-                LEFT JOIN users ON articles.author_id = users.id
-                WHERE 
-                articles.status = 'published' AND articles.published_at <= NOW() AND
-                articles.category ILIKE ${normalizedCategory} AND
-                articles.parent_category = ${parentCategory}
-                ORDER BY articles.published_at DESC
-                LIMIT ${limit}
-            `;
-              }
-            } else {
-              if (hasExclusions) {
-                data = await sql`
-                SELECT 
-                articles.id, articles.title, articles.slug, articles.status,
-                articles.category, articles.parent_category, articles.views,
-                articles.image, articles.created_at, articles.content,
-                articles.sub_headline, articles.news_type, articles.location,
-                articles.video_url, users.name as author
-                FROM articles
-                LEFT JOIN users ON articles.author_id = users.id
-                WHERE 
-                articles.status = 'published' AND articles.published_at <= NOW() AND
-                articles.category ILIKE ${normalizedCategory}
-                AND articles.id <> ALL(${excludeIds})
-                ORDER BY articles.published_at DESC
-                LIMIT ${limit}
-            `;
-              } else {
-                data = await sql`
-                SELECT 
-                articles.id, articles.title, articles.slug, articles.status,
-                articles.category, articles.parent_category, articles.views,
-                articles.image, articles.created_at, articles.content,
-                articles.sub_headline, articles.news_type, articles.location,
-                articles.video_url, users.name as author
-                FROM articles
-                LEFT JOIN users ON articles.author_id = users.id
-                WHERE 
-                articles.status = 'published' AND articles.published_at <= NOW() AND
-                articles.category ILIKE ${normalizedCategory}
-                ORDER BY articles.published_at DESC
-                LIMIT ${limit}
-            `;
-              }
+              whereClause.parent_category = parentCategory;
             }
           }
 
-          return data.rows.map(row => mapArticleToNewsItem(row as ArticleRow));
+          const rawArticles = await prisma.news.findMany({
+            where: whereClause,
+            orderBy: { publishedAt: 'desc' },
+            take: limit
+          });
+
+          return rawArticles.map(item =>
+            mapArticleToNewsItem({
+              ...item,
+              created_at: item.createdAt,
+              published_at: item.publishedAt,
+              author_id: item.authorId,
+            } as unknown as ArticleRow)
+          );
         } catch (error) {
           console.error('Database Error:', error);
           return [];
@@ -680,100 +540,52 @@ export async function fetchArticlesBySearch({ query, category, dateRange, limit 
 }) {
   try {
     const decodedQuery = decodeURIComponent(query);
-    const searchPattern = `%${decodedQuery}%`;
-    let data;
 
-    if (!dateRange || dateRange === 'all') {
-      if (!category || category === 'all') {
-        data = await sql`
-                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
-                        articles.views, articles.image, articles.created_at, articles.content, 
-                        articles.sub_headline, users.name as author
-                    FROM articles
-                    LEFT JOIN users ON articles.author_id = users.id
-                    WHERE articles.status = 'published' AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
-                    ORDER BY articles.created_at DESC LIMIT ${limit} OFFSET ${offset}
-                `;
-      } else {
-        data = await sql`
-                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
-                        articles.views, articles.image, articles.created_at, articles.content, 
-                        articles.sub_headline, users.name as author
-                    FROM articles
-                    LEFT JOIN users ON articles.author_id = users.id
-                    WHERE articles.status = 'published' AND (articles.category = ${category} OR articles.parent_category = ${category})
-                        AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
-                    ORDER BY articles.created_at DESC LIMIT ${limit} OFFSET ${offset}
-                `;
-      }
-    } else {
-      const hasCategory = category && category !== 'all';
-      if (dateRange === 'today') {
-        data = hasCategory ? await sql`
-                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
-                        articles.views, articles.image, articles.created_at, articles.content, 
-                        articles.sub_headline, users.name as author
-                    FROM articles
-                    LEFT JOIN users ON articles.author_id = users.id
-                    WHERE articles.status = 'published' AND articles.created_at >= NOW() - INTERVAL '24 HOURS'
-                        AND (articles.category = ${category} OR articles.parent_category = ${category})
-                        AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
-                    ORDER BY articles.created_at DESC LIMIT ${limit} OFFSET ${offset}
-                ` : await sql`
-                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
-                        articles.views, articles.image, articles.created_at, articles.content, 
-                        articles.sub_headline, users.name as author
-                    FROM articles
-                    LEFT JOIN users ON articles.author_id = users.id
-                    WHERE articles.status = 'published' AND articles.created_at >= NOW() - INTERVAL '24 HOURS'
-                        AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
-                    ORDER BY articles.created_at DESC LIMIT ${limit} OFFSET ${offset}
-                `;
-      } else if (dateRange === 'week') {
-        data = hasCategory ? await sql`
-                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
-                        articles.views, articles.image, articles.created_at, articles.content, 
-                        articles.sub_headline, users.name as author
-                    FROM articles
-                    LEFT JOIN users ON articles.author_id = users.id
-                    WHERE articles.status = 'published' AND articles.created_at >= NOW() - INTERVAL '7 DAYS'
-                        AND (articles.category = ${category} OR articles.parent_category = ${category})
-                        AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
-                    ORDER BY articles.created_at DESC LIMIT ${limit} OFFSET ${offset}
-                ` : await sql`
-                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
-                        articles.views, articles.image, articles.created_at, articles.content, 
-                        articles.sub_headline, users.name as author
-                    FROM articles
-                    LEFT JOIN users ON articles.author_id = users.id
-                    WHERE articles.status = 'published' AND articles.created_at >= NOW() - INTERVAL '7 DAYS'
-                        AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
-                    ORDER BY articles.created_at DESC LIMIT ${limit} OFFSET ${offset}
-                `;
-      } else { // month
-        data = hasCategory ? await sql`
-                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
-                        articles.views, articles.image, articles.created_at, articles.content, 
-                        articles.sub_headline, users.name as author
-                    FROM articles
-                    LEFT JOIN users ON articles.author_id = users.id
-                    WHERE articles.status = 'published' AND articles.created_at >= NOW() - INTERVAL '30 DAYS'
-                        AND (articles.category = ${category} OR articles.parent_category = ${category})
-                        AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
-                    ORDER BY articles.created_at DESC LIMIT ${limit} OFFSET ${offset}
-                ` : await sql`
-                    SELECT articles.id, articles.title, articles.slug, articles.category, articles.parent_category,
-                        articles.views, articles.image, articles.created_at, articles.content, 
-                        articles.sub_headline, users.name as author
-                    FROM articles
-                    LEFT JOIN users ON articles.author_id = users.id
-                    WHERE articles.status = 'published' AND articles.created_at >= NOW() - INTERVAL '30 DAYS'
-                        AND (articles.title ILIKE ${searchPattern} OR articles.sub_headline ILIKE ${searchPattern} OR articles.content ILIKE ${searchPattern})
-                    ORDER BY articles.created_at DESC LIMIT ${limit} OFFSET ${offset}
-                `;
-      }
+    const whereClause: Prisma.NewsWhereInput = {
+      status: 'published',
+    };
+
+    if (decodedQuery) {
+      whereClause.OR = [
+        { title: { contains: decodedQuery, mode: 'insensitive' } },
+        { sub_headline: { contains: decodedQuery, mode: 'insensitive' } },
+        { content: { contains: decodedQuery, mode: 'insensitive' } }
+      ];
     }
-    return data.rows.map((row) => mapArticleToNewsItem(row as ArticleRow));
+
+    if (dateRange && dateRange !== 'all') {
+      const dateLimit = new Date();
+      if (dateRange === 'today') dateLimit.setHours(dateLimit.getHours() - 24);
+      else if (dateRange === 'week') dateLimit.setDate(dateLimit.getDate() - 7);
+      else if (dateRange === 'month') dateLimit.setDate(dateLimit.getDate() - 30);
+
+      whereClause.createdAt = { gte: dateLimit };
+    }
+
+    if (category && category !== 'all') {
+      whereClause.AND = [
+        {
+          OR: [
+            { category },
+            { parent_category: category }
+          ]
+        }
+      ];
+    }
+
+    const rawArticles = await prisma.news.findMany({
+      where: whereClause,
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+      skip: offset
+    });
+
+    return rawArticles.map((item) => mapArticleToNewsItem({
+      ...item,
+      created_at: item.createdAt,
+      published_at: item.publishedAt,
+      author_id: item.authorId,
+    } as unknown as ArticleRow));
   } catch (error) {
     console.error('Search Error:', error);
     return [];

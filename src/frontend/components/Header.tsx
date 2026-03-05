@@ -227,7 +227,7 @@ export default function Header({ settings }: HeaderProps) {
             />
           </Link>
           <div className="hidden md:flex gap-4 items-center text-sm text-gray-600 dark:text-gray-400">
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2" suppressHydrationWarning>
               ঢাকা <span className="text-gray-300">|</span> {date}
             </span>
             <Link
@@ -386,13 +386,11 @@ export default function Header({ settings }: HeaderProps) {
                     if (avatarSrc) {
                       return (
                         <div className="relative w-7 h-7 rounded-full overflow-hidden">
-                          <Image
+                          <img
                             src={avatarSrc}
                             alt={session?.user?.name || "User"}
-                            sizes="100vw"
-                            fill
-                            className="object-cover"
-                            unoptimized
+                            className="object-cover w-full h-full"
+                            referrerPolicy="no-referrer"
                           />
                         </div>
                       );

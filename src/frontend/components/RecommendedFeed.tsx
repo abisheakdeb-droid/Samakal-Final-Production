@@ -3,6 +3,7 @@ import { NewsItem } from "@/types/news";
 import Link from "next/link";
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
+import { formatBanglaDateTime } from "@/lib/utils";
 
 export default async function RecommendedFeed() {
   const articles = await fetchRecommendedArticles(4);
@@ -43,7 +44,7 @@ export default async function RecommendedFeed() {
                   {article.title}
                 </h3>
                 <p className="text-xs text-gray-500 mt-2">
-                  {article.author} • {article.date}
+                  {article.author || "ডেস্ক রিপোর্ট"} • {article.published_at ? formatBanglaDateTime(article.published_at) : article.date}
                 </p>
               </div>
             </Link>

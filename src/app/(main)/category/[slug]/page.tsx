@@ -215,7 +215,7 @@ export default async function CategoryPage({ params }: PageProps) {
                     <div className="flex items-center justify-between mt-4">
                       <span className="text-sm text-gray-500">
                         {primeBig.author || "সমকাল প্রতিবেদক"} •{" "}
-                        {formatBanglaDateTime(primeBig.publishedAt)}
+                        {formatBanglaDateTime(primeBig.published_at)}
                       </span>
                       <NewsActionButtons
                         title={primeBig.title}
@@ -248,7 +248,7 @@ export default async function CategoryPage({ params }: PageProps) {
                             {news.title}
                           </h2>
                           <div className="text-xs text-gray-400">
-                            {news.author || "ডেস্ক রিপোর্ট"} • {formatBanglaDateTime(news.publishedAt)}
+                            {news.author || "ডেস্ক রিপোর্ট"} • {formatBanglaDateTime(news.published_at)}
                           </div>
                         </div>
                       </Link>
@@ -286,7 +286,7 @@ export default async function CategoryPage({ params }: PageProps) {
                           {news.title}
                         </h3>
                         <div className="mt-2 text-xs text-gray-400">
-                          {news.author || "ডেস্ক রিপোর্ট"} • {formatBanglaDateTime(news.publishedAt)}
+                          {news.author || "ডেস্ক রিপোর্ট"} • {formatBanglaDateTime(news.published_at)}
                         </div>
                       </Link>
                     ))}
@@ -324,7 +324,7 @@ export default async function CategoryPage({ params }: PageProps) {
                             {news.summary}
                           </p>
                           <span className="text-xs text-gray-400">
-                            {news.author || "ডেস্ক রিপোর্ট"} • {formatBanglaDateTime(news.publishedAt)}
+                            {news.author || "ডেস্ক রিপোর্ট"} • {formatBanglaDateTime(news.published_at)}
                           </span>
                         </div>
                       </Link>

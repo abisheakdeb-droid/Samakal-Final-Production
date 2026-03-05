@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import BreakingTicker from "@/components/BreakingTicker";
 import FloatingVideoPlayer from "@/components/FloatingVideoPlayer";
 import SkipToContent from "@/components/SkipToContent";
 import { VideoPlayerProvider } from "@/contexts/VideoPlayerContext";
@@ -60,7 +59,7 @@ export default async function MainLayout({
         <Toaster position="top-center" richColors />
         <SkipToContent />
         <Header settings={settings} />
-        <BreakingTicker customTicker={settings.breaking_news_ticker} />
+        {/* <BreakingTicker customTicker={settings.breaking_news_ticker} /> */}
         {children}
       </div>
       <FloatingVideoPlayer />

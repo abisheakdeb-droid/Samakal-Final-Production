@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { fetchArticlesWithPagination } from "@/lib/actions-article";
 import { localizeTime } from "@/utils/bn";
+import { formatBanglaDateTime } from "@/lib/utils";
 import { generateBlurPlaceholder } from "@/utils/image";
 import { useCallback } from "react";
 
@@ -14,6 +15,8 @@ interface NewsItem {
   image: string;
   summary: string;
   time: string;
+  author?: string;
+  published_at?: string | Date;
 }
 
 export default function InfiniteLatestNews({
@@ -93,7 +96,7 @@ export default function InfiniteLatestNews({
                 {article.summary}
               </p>
               <span className="text-xs text-gray-400">
-                {localizeTime(article.time)}
+                {article.author || "ডেস্ক রিপোর্ট"} • {article.published_at ? formatBanglaDateTime(article.published_at) : localizeTime(article.time)}
               </span>
             </div>
           </Link>

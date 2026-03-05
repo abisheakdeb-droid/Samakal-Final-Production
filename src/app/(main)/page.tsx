@@ -115,7 +115,8 @@ export default async function Home() {
   // Slice Hero Data
   const heroNews = leadNewsFull[0];
   const subHeroNews = leadNewsFull.slice(1, 3);
-  const gridNews = leadNewsFull.slice(3, 13);
+  const belowHeroNews = leadNewsFull[3]; // Landscape card below hero
+  const gridNews = leadNewsFull.slice(4, 14);
 
   // Category slug mapping
   const categorySlugMap: Record<string, string> = {
@@ -144,10 +145,59 @@ export default async function Home() {
             {/* TOP ROW: Hero (Left) + Sub-leads (Right) */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
               {/* 1. HERO NEWS (Span 8) */}
-              <div className="md:col-span-8">
+              <div className="md:col-span-8 flex flex-col">
                 <ScrollReveal direction="up" delay={1}>
                   {heroNews ? <HeroCard news={heroNews} /> : null}
                 </ScrollReveal>
+
+                {/* Divider between hero and landscape card */}
+                {belowHeroNews && (
+                  <div className="w-full h-px bg-gray-200 dark:bg-gray-700 mt-4"></div>
+                )}
+
+                {/* Landscape news card below hero to fill empty space */}
+                {belowHeroNews && (
+                  <Link
+                    href={`/article/${belowHeroNews.id}`}
+                    className="group flex gap-4 mt-4 flex-1 bg-white dark:bg-gray-900 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-all duration-300"
+                  >
+                    {/* Image Left */}
+                    <div className="w-[240px] shrink-0 relative bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                      <Image
+                        src={belowHeroNews.image}
+                        alt={belowHeroNews.title}
+                        sizes="200px"
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute top-2 left-2">
+                        <span className="bg-brand-red text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm">
+                          {belowHeroNews.category}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Content Right */}
+                    <div className="py-4 pr-4 flex flex-col justify-center flex-1">
+                      <h3 className="text-lg font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-brand-red transition-colors mb-2 line-clamp-2">
+                        {belowHeroNews.title}
+                      </h3>
+                      <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-2">
+                        {belowHeroNews.summary}
+                      </p>
+                      <div className="flex items-center gap-2 mt-auto">
+                        <span className="text-[11px] text-gray-500 dark:text-gray-400">
+                          {belowHeroNews.author || "ডেস্ক রিপোর্ট"}
+                        </span>
+                        <span className="text-[10px] text-gray-400 font-medium">
+                          {belowHeroNews.published_at
+                            ? formatBanglaDateTime(belowHeroNews.published_at)
+                            : belowHeroNews.time || belowHeroNews.date}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                )}
               </div>
 
               {/* 2. SUB-LEADS (Span 4 - Stacked Vertical: 3 Items) */}
@@ -155,10 +205,10 @@ export default async function Home() {
                 {/* Explicit Vertical Divider - Absolute Positioned */}
                 <div className="hidden md:block absolute -left-3 top-0 bottom-0 w-px bg-gray-300 dark:bg-gray-700"></div>
 
-                <div className="flex flex-col h-full gap-6">
+                <div className="flex flex-col h-full">
                   {/* First Item: Large Vertical Card */}
                   {subHeroNews[0] && (
-                    <div className="relative group flex-1">
+                    <div className="relative group flex-1 pb-6 border-b border-gray-200 dark:border-gray-700">
                       <Link
                         href={`/article/${subHeroNews[0].id}`}
                         className="flex flex-col h-full group bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-800 transition-all duration-300"
@@ -206,7 +256,7 @@ export default async function Home() {
 
                   {/* Second Item: Large Vertical Card (Matching First Item) */}
                   {subHeroNews[1] && (
-                    <div className="relative group flex-1">
+                    <div className="relative group flex-1 pt-6">
                       <Link
                         href={`/article/${subHeroNews[1].id}`}
                         className="flex flex-col h-full group bg-white dark:bg-gray-900 rounded-xl overflow-hidden shadow-sm hover:shadow-md border border-gray-200 dark:border-gray-800 transition-all duration-300"

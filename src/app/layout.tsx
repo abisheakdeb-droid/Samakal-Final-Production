@@ -63,8 +63,9 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import TrafficTracker from "@/components/TrafficTracker";
 import ThemeProvider from "@/components/ThemeProvider";
 import Providers from "@/components/Providers";
+import { auth } from "@/backend/lib/auth/auth";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -76,7 +77,7 @@ export default function RootLayout({
         className={`${notoSerifBengali.variable} font-serif antialiased bg-background text-foreground`}
       >
         <ThemeProvider>
-          <Providers>
+          <Providers session={await auth()}>
             <NextTopLoader
               color="#f59e0b"
               initialPosition={0.08}

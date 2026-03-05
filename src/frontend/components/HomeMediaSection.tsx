@@ -5,6 +5,7 @@ import Image from "next/image";
 import { PlayCircle, Camera, ChevronRight, Clock } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import { CATEGORY_MAP } from "@/config/categories";
+import { formatBanglaDateTime } from "@/lib/utils";
 
 import { NewsItem } from "@/types/news";
 import { PhotoAlbum } from "@/lib/actions-media";
@@ -77,12 +78,21 @@ export default function HomeMediaSection({
                   </div>
 
                   <div className="absolute bottom-0 left-0 p-8 w-full">
-                    <span className="inline-block bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
+                    <span className="inline-block bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-3">
                       {CATEGORY_MAP[videos[0].category] || videos[0].category}
                     </span>
-                    <h3 className="text-2xl md:text-4xl font-bold leading-tight group-hover:text-red-400 transition-colors">
+                    <h3 className="text-2xl md:text-4xl font-bold leading-tight group-hover:text-red-400 transition-colors mb-3">
                       {videos[0].title}
                     </h3>
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-gray-300 font-medium">
+                      <span>{videos[0].author || "ডেস্ক রিপোর্ট"}</span>
+                      <span>•</span>
+                      <span>
+                        {videos[0].published_at
+                          ? formatBanglaDateTime(videos[0].published_at)
+                          : videos[0].time || videos[0].date}
+                      </span>
+                    </div>
                   </div>
                 </Link>
               )}
@@ -113,9 +123,18 @@ export default function HomeMediaSection({
                         <Clock size={8} className="inline mr-1" /> ০২:৩০
                       </span>
                     </div>
-                    <h4 className="text-sm font-bold line-clamp-2 group-hover:text-red-400 transition-colors">
+                    <h4 className="text-sm font-bold line-clamp-2 group-hover:text-red-400 transition-colors mb-2">
                       {video.title}
                     </h4>
+                    <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-gray-400 font-medium">
+                      <span>{video.author || "ডেস্ক রিপোর্ট"}</span>
+                      <span>•</span>
+                      <span>
+                        {video.published_at
+                          ? formatBanglaDateTime(video.published_at)
+                          : video.time || video.date}
+                      </span>
+                    </div>
                   </Link>
                 </ScrollReveal>
               ))}
@@ -147,10 +166,19 @@ export default function HomeMediaSection({
                           {album.images?.length || 0} টি ছবি
                         </span>
                       </div>
-                      <div className="absolute bottom-0 left-0 p-5">
-                        <h4 className="text-lg font-bold group-hover:text-red-400 transition-colors line-clamp-2">
+                      <div className="absolute bottom-0 left-0 p-5 w-full">
+                        <h4 className="text-lg font-bold group-hover:text-red-400 transition-colors line-clamp-2 mb-2">
                           {album.title}
                         </h4>
+                        <div className="flex flex-wrap items-center gap-2 text-[11px] text-gray-300 font-medium">
+                          <span>{album.author_name || "ডেস্ক রিপোর্ট"}</span>
+                          <span>•</span>
+                          <span>
+                            {album.published_at
+                              ? formatBanglaDateTime(album.published_at)
+                              : ""}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </Link>
