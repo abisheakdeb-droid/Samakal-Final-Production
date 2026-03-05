@@ -1,0 +1,13 @@
+
+> samakal-redesign@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by process 58389, using available port 3001 instead.
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.0.172:3001
+- Environments: .env.local, .env
+
+✓ Starting...
+✓ Ready in 769ms
+[?25h

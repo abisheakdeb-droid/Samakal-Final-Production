@@ -11,6 +11,12 @@ const toBanglaNumeral = (num: number) => {
   return num.toString().split("").map(d => banglaNumerals[parseInt(d)] || d).join("");
 };
 
+// Helper to get Bangla day
+export const getBanglaDay = (dayIndex: number) => {
+  const banglaDays = ["রবিবার", "সোমবার", "মঙ্গলবার", "বুধবার", "বৃহস্পতিবার", "শুক্রবার", "শনিবার"];
+  return banglaDays[dayIndex];
+};
+
 // Helper to get Bangla month
 const getBanglaMonth = (monthIndex: number) => {
   const banglaMonths = [

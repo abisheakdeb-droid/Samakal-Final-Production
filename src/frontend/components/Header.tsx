@@ -48,7 +48,7 @@ import UserDropdown from "@/components/auth/UserDropdown";
 import { useSession, signOut } from "next-auth/react";
 import { SiteSettings } from "@/lib/actions-settings";
 import { isDescendantOf } from "@/config/sub-categories";
-import { formatBanglaDate } from "@/lib/utils";
+import { formatBanglaDate, getBanglaDay } from "@/lib/utils";
 import { useUI } from "@/context/UIContext";
 
 export function BreadcrumbToggle() {
@@ -207,7 +207,9 @@ export default function Header({ settings }: HeaderProps) {
 
   const processedNavItems = navItems;
 
-  const date = formatBanglaDate(new Date());
+  const curDate = new Date();
+  const dateStr = formatBanglaDate(curDate);
+  const dayStr = getBanglaDay(curDate.getDay());
 
   return (
     <>
@@ -228,7 +230,7 @@ export default function Header({ settings }: HeaderProps) {
           </Link>
           <div className="hidden md:flex gap-4 items-center text-sm text-gray-600 dark:text-gray-400">
             <span className="flex items-center gap-2" suppressHydrationWarning>
-              ঢাকা <span className="text-gray-300">|</span> {date}
+              ঢাকা <span className="text-gray-300">|</span> {dayStr}, {dateStr}
             </span>
             <Link
               href="https://epaper.samakal.com/"
